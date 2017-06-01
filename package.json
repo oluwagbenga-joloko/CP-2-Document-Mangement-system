@@ -1,0 +1,45 @@
+{
+  "name": "dms",
+  "version": "1.0.0",
+  "description": "a document management system",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node server.js ",
+    "test:server": "NODE_ENV=test nyc ./node_modules/mocha/bin/_mocha --compilers js:babel-register server/tests/**/*.spec.js"
+  },
+  "author": "Oluwagbenga Joloko",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.24.1",
+    "bcrypt": "^1.0.2",
+    "body-parser": "^1.17.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.3",
+    "faker": "^4.1.0",
+    "jsonwebtoken": "^7.4.1",
+    "morgan": "^1.8.1",
+    "pg": "^6.2.2",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^3.30.4",
+    "sequelize-isunique-validator": "^1.1.1"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.5.1",
+    "babel-register": "^6.24.1",
+    "chai": "^4.0.0",
+    "chai-http": "^3.0.0",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^15.0.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^5.0.3",
+    "eslint-plugin-react": "^7.0.1",
+    "mocha": "^3.4.2",
+    "nodemon": "^1.11.0",
+    "npm-run-all": "^4.0.2",
+    "nyc": "^10.3.2",
+    "sequelize-cli": "^2.7.0",
+    "supertest": "^3.0.0"
+  }
+}

@@ -1,0 +1,337 @@
+import chai, { expect } from 'chai';
+import chaiHttp from 'chai-http';
+import app from '../../../server';
+import fakeData from '../testUtils/FakeData';
+import db from '../../models';
+import Seeddb from '../testUtils/SeedDb';
+
+chai.use(chaiHttp);
+const request = chai.request(app),
+  adminUser = fakeData.validAdmin,
+  regulerUser1 = fakeData.regulerUser1,
+  randomRole1 = fakeData.generateRandomRole(),
+  randomRole2 = fakeData.generateRandomRole(),
+  invalidRole = fakeData.invalidRole,
+  emptyRole = fakeData.emptyRole,
+  updateRole = fakeData.generateRandomRole();
+let adminToken, regularToken;
+
+describe('Routes : Roles', () => {
+  before((done) => {
+    Seeddb.init().then(() => {
+      request
+        .post('/api/users/login')
+        .send({ email: adminUser.email, password: adminUser.password })
+        .end((err, res) => {
+          adminToken = res.body.token;
+        });
+      request
+        .post('/api/users/login')
+        .send({ email: regulerUser1.email, password: regulerUser1.password })
+        .end((err, res) => {
+          regularToken = res.body.token;
+          done();
+        });
+    });
+  });
+  after((done) => {
+    db.sequelize.sync({ force: true }).then(() => {
+      console.log('data base reset succesful');
+      done();
+    });
+  });
+  describe('POST /api/roles/', () => {
+    it('it should allow admin to create roles', (done) => {
+      request
+        .post('/api/roles')
+        .set({ 'x-access-token': adminToken })
+        .send(randomRole1)
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res.body.success).to.equal(true);
+          //expect(res.body.role.title).to.equal(randomRole1.title);
+          done();
+        });
+    });
+    it('it should allow admin to create roles with existing titles', (done) => {
+      request
+        .post('/api/roles')
+        .set({ 'x-access-token': adminToken })
+        .send(randomRole1)
+        .end((err, res) => {
+          expect(res).to.have.status(409);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.role).to.equal(undefined);
+          expect(res.body.msg).to.equal('Role already exists');
+          done();
+        });
+    });
+    it('it should allow admin to create roles with invalid characters to be created', (done) => {
+      request
+        .post('/api/roles')
+        .set({ 'x-access-token': adminToken })
+        .send(invalidRole)
+        .end((err, res) => {
+          console.log('in role spec',regulerUser1)
+          expect(res).to.have.status(409);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.role).to.equal(undefined);
+          expect(res.body.msg).to.equal('Only letter and numbers are allowed');
+          done();
+        });
+    });
+    it('it should allow admin to create roles with empty title', (done) => {
+      request
+        .post('/api/roles')
+        .set({ 'x-access-token': adminToken })
+        .send(emptyRole)
+        .end((err, res) => {
+          expect(res).to.have.status(409);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.role).to.equal(undefined);
+          expect(res.body.msg).to.equal('title cannot be empty');
+          done();
+        });
+    });
+    it('it should not allow regular user to create roles', (done) => {
+      request
+        .post('/api/roles')
+        .set({ 'x-access-token': regularToken })
+        .send(randomRole2)
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.role).to.equal(undefined);
+          done();
+        });
+    });
+  });
+  describe('GET /api/roles/', () => {
+    it('it should allow admin to get all roles', (done) => {
+      request
+        .get('/api/roles')
+        .set({ 'x-access-token': adminToken })
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.success).to.equal(true);
+          expect(res.body.roles).to.be.an('array');
+          expect(res.body.roles[0].title).to.be.equal('Admin');
+          expect(res.body.roles[1].title).to.be.equal('Regular user');
+          expect(res.body.roles[3].title).to.be.equal(randomRole1.title);
+          done();
+        });
+    });
+    it('it should not allow regular user to get roles', (done) => {
+      request
+        .get('/api/roles')
+        .set({ 'x-access-token': regularToken })
+        .send(randomRole2)
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.roles).to.equal(undefined);
+          done();
+        });
+    });
+  });
+  describe('GET /api/roles/:id', () => {
+    it('it should allow admin to get specified role', (done) => {
+      request
+        .get('/api/roles/1')
+        .set({ 'x-access-token': adminToken })
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.success).to.equal(true);
+          expect(res.body.role).to.be.an('object');
+          expect(res.body.role.id).to.equal(1);
+          done();
+        });
+    });
+    it('it should allow admin to get non existent role', (done) => {
+      request
+        .get('/api/roles/7888')
+        .set({ 'x-access-token': adminToken })
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.role).to.equal(undefined);
+          expect(res.body.msg).to.equal('Role not found');
+          done();
+        });
+    });
+    it('it should not allow regular user to get role', (done) => {
+      request
+        .get('/api/roles/2')
+        .set({ 'x-access-token': regularToken })
+        .send(randomRole2)
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.roles).to.equal(undefined);
+          done();
+        });
+    });
+  });
+  describe('PUT /api/roles/:id', () => {
+    it('it should allow not allow admin to update admin roles', (done) => {
+      request
+        .put('/api/roles/1')
+        .set({ 'x-access-token': adminToken })
+        .send(updateRole)
+        .end((err, res) => {
+          expect(res).to.have.status(409);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.msg).to.be.equal('Cannot update Admin role');
+          done();
+        });
+    });
+    it('it should allow not allow admin to update Regular user roles', (done) => {
+      request
+        .put('/api/roles/2')
+        .set({ 'x-access-token': adminToken })
+        .send(updateRole)
+        .end((err, res) => {
+          expect(res).to.have.status(409);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.msg).to.be.equal('Cannot update Regular user role');
+          done();
+        });
+    });
+    it('it should allow not allow admin to update non existent roles', (done) => {
+      request
+        .put('/api/roles/56666')
+        .set({ 'x-access-token': adminToken })
+        .send(updateRole)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.msg).to.be.equal('Role not found');
+          done();
+        });
+    });
+    it('it should allow admin to update roles with existing titles', (done) => {
+      request
+        .put('/api/roles/3')
+        .set({ 'x-access-token': adminToken })
+        .send(randomRole1)
+        .end((err, res) => {
+          expect(res).to.have.status(409);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.role).to.equal(undefined);
+          expect(res.body.msg).to.equal('Role already exists');
+          done();
+        });
+    });
+    it('it should  nonot allow admin to update roles with invalid characters in title', (done) => {
+      request
+        .put('/api/roles/4')
+        .set({ 'x-access-token': adminToken })
+        .send(invalidRole)
+        .end((err, res) => {
+          expect(res).to.have.status(409);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.role).to.equal(undefined);
+          expect(res.body.msg).to.equal('Only letter and numbers are allowed');
+          done();
+        });
+    });
+    it('it should not allow admin to update roles with empty title', (done) => {
+      request
+        .put('/api/roles/4')
+        .set({ 'x-access-token': adminToken })
+        .send(emptyRole)
+        .end((err, res) => {
+          expect(res).to.have.status(409);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.role).to.equal(undefined);
+          expect(res.body.msg).to.equal('title cannot be empty');
+          done();
+        });
+    });
+    it('it should allow admin to update roles that exists and are not admin or regular role', (done) => {
+      request
+        .put('/api/roles/4')
+        .set({ 'x-access-token': adminToken })
+        .send(updateRole)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.success).to.equal(true);
+          expect(res.body.role.title).to.equal(updateRole.title);
+          done();
+        });
+    });
+    it('it should not allow regular users to update roles', (done) => {
+      request
+        .put('/api/roles/4')
+        .set({ 'x-access-token': regularToken })
+        .send(randomRole2)
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.msg).to.equal('unauthorized');
+          done();
+        });
+    });
+  });
+  describe('DELETE /api/roles/:id', () => {
+    it('it should allow not allow admin to delete admin roles', (done) => {
+      request
+        .delete('/api/roles/1')
+        .set({ 'x-access-token': adminToken })
+        .end((err, res) => {
+          expect(res).to.have.status(409);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.msg).to.be.equal('Cannot delete Admin role');
+          done();
+        });
+    });
+    it('it should allow not allow admin to delete Regular user roles', (done) => {
+      request
+        .delete('/api/roles/2')
+        .set({ 'x-access-token': adminToken })
+        .end((err, res) => {
+          expect(res).to.have.status(409);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.msg).to.be.equal('Cannot delete Regular user role');
+          done();
+        });
+    });
+    it('it should allow not allow admin to delete non existent roles', (done) => {
+      request
+        .delete('/api/roles/56666')
+        .set({ 'x-access-token': adminToken })
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.msg).to.be.equal('Role not found');
+          done();
+        });
+    });
+    it('it should allow not allow admin to delete roles that exists and are not admin or regular role', (done) => {
+      request
+        .delete('/api/roles/3')
+        .set({ 'x-access-token': adminToken })
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.success).to.equal(true);
+          done();
+        });
+    });
+    it('it should not allow regular users to delete roles', (done) => {
+      request
+        .delete('/api/roles/4')
+        .set({ 'x-access-token': regularToken })
+        .send(randomRole2)
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.msg).to.equal('unauthorized');
+          done();
+        });
+    });
+  });
+});
+

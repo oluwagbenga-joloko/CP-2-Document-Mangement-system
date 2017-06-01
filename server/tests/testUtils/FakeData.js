@@ -176,4 +176,3 @@ const fakeData = {
   },
 };
 export default fakeData;
-// console.log(fakeData);

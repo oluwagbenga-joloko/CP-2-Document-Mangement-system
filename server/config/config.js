@@ -9,9 +9,10 @@ module.exports = {
 
   },
   test: {
-    url: process.env.DATABASE_URL_TEST,
-    dialect: 'postgres',
-    logging: true,
+    password: null,
+    database: 'doc-test',
+    host: '127.0.0.1',
+    dialect: 'postgres'
   },
   production: {
     username: 'root',

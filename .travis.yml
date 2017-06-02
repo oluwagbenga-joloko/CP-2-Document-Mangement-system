@@ -12,6 +12,7 @@ postgres:
 before_script:
   - psql -c 'create database travis;' -U postgres
   - dropdb --if-exists travis && createdb travis
+  - sequelize db:migrate:undo:all
   - npm install
   - sequelize db:migrate
 script:

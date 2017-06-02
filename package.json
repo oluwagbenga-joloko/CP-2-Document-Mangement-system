@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "babel-cli": "^6.24.1",
-    "bcrypt": "^1.0.2",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.2",
     "dotenv": "^4.0.0",
     "express": "^4.15.3",
@@ -21,8 +21,7 @@
     "npmlog": "^4.1.0",
     "pg": "^6.2.2",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^3.30.4",
-    "sequelize-isunique-validator": "^1.1.1"
+    "sequelize": "^3.30.4"
   },
   "devDependencies": {
     "babel": "^6.23.0",
@@ -38,9 +37,7 @@
     "eslint-plugin-react": "^7.0.1",
     "mocha": "^3.4.2",
     "nodemon": "^1.11.0",
-    "npm-run-all": "^4.0.2",
     "nyc": "^10.3.2",
-    "sequelize-cli": "^2.7.0",
-    "supertest": "^3.0.0"
+    "sequelize-cli": "^2.7.0"
   }
 }

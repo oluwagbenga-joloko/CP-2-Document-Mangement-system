@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node server.js ",
+    "coverage": "NODE_ENV=test nyc report --reporter=text-lcov | coveralls > lcov.info",
     "test": "NODE_ENV=test nyc ./node_modules/mocha/bin/_mocha --compilers js:babel-register server/tests/**/*.spec.js --timeout=600000"
   },
   "author": "Oluwagbenga Joloko",

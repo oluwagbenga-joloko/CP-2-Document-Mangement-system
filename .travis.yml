@@ -14,5 +14,9 @@ before_script:
   - dropdb --if-exists travis && createdb travis
   - npm install
   - sequelize db:migrate
+after_success:
+  - npm run coverage
+after_failure:
+  - npm run coverage
 script:
   - npm test

@@ -8,7 +8,7 @@ import documentRouter from './server/routes/DocumentRoutes';
 import searchRouter from './server/routes/SearchRoutes';
 
 const app = express();
-const port = process.env.Port || 5000;
+const port = process.env.Port || 4000;
 
 app.use(logger('dev'));
 

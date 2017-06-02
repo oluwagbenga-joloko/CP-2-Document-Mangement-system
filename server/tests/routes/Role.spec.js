@@ -25,13 +25,13 @@ describe('Routes : Roles', () => {
         .send({ email: adminUser.email, password: adminUser.password })
         .end((err, res) => {
           adminToken = res.body.token;
-        });
-      request
-        .post('/api/users/login')
-        .send({ email: regulerUser1.email, password: regulerUser1.password })
-        .end((err, res) => {
-          regularToken = res.body.token;
-          done();
+          request
+           .post('/api/users/login')
+           .send({ email: regulerUser1.email, password: regulerUser1.password })
+           .end((err, res) => {
+             regularToken = res.body.token;
+             done();
+           });
         });
     });
   });

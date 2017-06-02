@@ -174,8 +174,9 @@ const userController = {
           }
         })
       .catch(error => res.status(400).send(error));
+    } else {
+      res.send({ succes: false, msg: 'email and password required' });
     }
-    res.send({ succes: false, msg: 'email and password required' });
   },
   search(req, res) {
     return User

@@ -2,17 +2,19 @@ import webpack from 'webpack';
 import path from 'path';
 
 export default {
-  debug: true,
   devtool: 'inline-source-map',
-  noInfo: false,
   entry: [
-    'eventsource-polyfill', // necessary for hot reloading with IE
-    'webpack-hot-middleware/client?reload=true', // note that it reloads the page if hot module reloading fails.
+    'eventsource-polyfill',
+  // necessary for hot reloading with IE
+    'webpack-hot-middleware/client?reload=true',
+  // note that it reloads the page if hot module reloading fails.
     path.resolve(__dirname, 'client/src/index')
   ],
   target: 'web',
   output: {
-    path: `${__dirname}/client/dist`, // Note: Physical files are only output by the production build task `npm run build`.
+    path: `${__dirname}/client/public`,
+/* Note: Physical files are only output by
+ the production build task `npm run build`.*/
     publicPath: '/',
     filename: 'bundle.js'
   },
@@ -21,16 +23,39 @@ export default {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.LoaderOptionsPlugin({
+      debug: true
+    }),
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        noInfo: true
+      }
+    })
   ],
   module: {
-    loaders: [
-      { test: /\.js$/, include: path.join(__dirname, 'src'), loaders: ['babel'] },
-      { test: /(\.css)$/, loaders: ['style', 'css'] },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
-      { test: /\.(woff|woff2)$/, loader: 'url?prefix=font/&limit=5000' },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream' },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml' }
+    rules: [
+      { test: /\.(js|jsx)$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel-loader'
+      },
+      { test: /\.scss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader']
+      },
+      {
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        use: 'file'
+      },
+      {
+        test: /\.(woff|woff2)$/,
+        use: 'url?prefix=font/&limit=5000'
+      },
+      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        use: 'url?limit=10000&mimetype=application/octet-stream'
+      },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        use: 'url?limit=10000&mimetype=image/svg+xml'
+      }
     ]
   }
 };

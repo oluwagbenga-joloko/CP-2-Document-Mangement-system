@@ -2,10 +2,9 @@ require('dotenv').config();
 
 module.exports = {
   development: {
-    password: null,
-    database: 'datab',
-    host: '127.0.0.1',
-    dialect: 'mysql'
+    url: process.env.DATABASE_URL_DEV,
+    dialect: 'postgres',
+    logging: false
 
   },
   test: {

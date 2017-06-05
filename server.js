@@ -12,7 +12,7 @@ import documentRouter from './server/routes/DocumentRoutes';
 import searchRouter from './server/routes/SearchRoutes';
 
 const app = express();
-const port = process.env.Port || 7900;
+const port = process.env.PORT || 7900;
 const compiler = webpack(config);
 
 app.use(logger('dev'));
@@ -38,7 +38,7 @@ app.get('*', (req, res) => {
 });
 app.listen(port, () => {
   log.info('express app started on port', `${port}`);
-// open(`http://localhost:${port}`);
+  open(`http://localhost:${port}`);
 });
 
 export default app;

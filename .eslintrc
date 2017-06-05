@@ -8,8 +8,8 @@
     "browser": true
   },
   "plugins": [
-        "react"
-    ],
+    "react"
+  ],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true

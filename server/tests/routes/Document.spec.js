@@ -304,7 +304,7 @@ describe('Routes : Documents', () => {
         .delete(`/api/documents/${privateDocId1}`)
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
-          expect(res).to.have.status(200);
+                   expect(res).to.have.status(200);
           expect(res.body.success).to.equal(true);
           done();
         });

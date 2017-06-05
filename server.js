@@ -38,7 +38,7 @@ app.get('*', (req, res) => {
 });
 app.listen(port, () => {
   log.info('express app started on port', `${port}`);
-  open(`http://localhost:${port}`);
+  //open(`http://localhost:${port}`);
 });
 
 export default app;

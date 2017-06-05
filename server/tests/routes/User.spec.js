@@ -48,7 +48,7 @@ describe('Routes : Users', () => {
           expect(res.body.user.firstName).to.equal(validUser.firstName);
           expect(res.body.user.lastName).to.equal(validUser.lastName);
           expect(res.body.user.email).to.equal(validUser.email);
-          expect(res.body.token).to.not.equal(undefined);
+              expect(res.body.token).to.not.equal(undefined);
           expect(res.body.msg).to.equal('user created succesfully');
           done();
         });

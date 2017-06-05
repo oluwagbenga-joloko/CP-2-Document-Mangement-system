@@ -8,7 +8,7 @@ export default {
   // necessary for hot reloading with IE
     'webpack-hot-middleware/client?reload=true',
   // note that it reloads the page if hot module reloading fails.
-    path.resolve(__dirname, 'client/src/index')
+    path.resolve(__dirname, 'client/src/index.jsx')
   ],
   target: 'web',
   output: {

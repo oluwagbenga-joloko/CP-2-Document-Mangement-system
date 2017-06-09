@@ -6,6 +6,13 @@ import { Provider } from 'react-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
 import configStore from './store/configStore';
 import routes from './routes.jsx';
+import './styles/styles.scss';
+import toastr from 'toastr';
+import setAtherizationToken from './utils/setAuthorizationToken';
+
+toastr.options.timeOut = 20;
+const token = localStorage.getItem('token');
+setAtherizationToken(token);
 
 const store = configStore();
 

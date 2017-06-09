@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import login from '../actions/loginAction';
+import { login } from '../actions/AuthAction';
 
 /**
  * @desc the login Component
@@ -100,7 +100,7 @@ class Login extends Component {
 }
 const mapDispatchToProps = dispatch => bindActionCreators({ login }, dispatch);
 const mapStateToProps = state => ({
-  status: state.loginReducer
+  status: state.authReducer
 });
 Login.defaultProps = {
   status: false,

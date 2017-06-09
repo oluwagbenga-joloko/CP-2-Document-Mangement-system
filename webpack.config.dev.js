@@ -2,6 +2,11 @@ import webpack from 'webpack';
 import path from 'path';
 
 export default {
+  node: {
+    net: 'empty',
+    tls: 'empty',
+    dns: 'empty'
+  },
   devtool: 'inline-source-map',
   entry: [
     'eventsource-polyfill',

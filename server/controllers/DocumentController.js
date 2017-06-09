@@ -3,7 +3,7 @@ import { Document } from '../models';
 const DocumentController = {
   create(req, res) {
     const DocumentDetails = {
-      userId: req.decoded.userId,
+      userId: req.decoded.id,
       title: req.body.title,
       content: req.body.content,
       access: req.body.access,
@@ -29,8 +29,8 @@ const DocumentController = {
         if (!document) {
           res.status(404).send({ success: false, msg: 'document not found' });
         } else if (
-          req.decoded.userId === 1 ||
-          req.decoded.userId === document.userId ||
+          req.decoded.id === 1 ||
+          req.decoded.id === document.userId ||
           document.access === 'public' ||
           (
           document.access === 'role' &&
@@ -51,12 +51,12 @@ const DocumentController = {
       if (!document) {
         res.status(404).send({ success: false, msg: 'document not found' });
       } else if (
-        req.decoded.userId === 1 ||
-        req.decoded.userId === document.userId
+        req.decoded.id === 1 ||
+        req.decoded.id === document.userId
       ) {
         return document
          .destroy()
-         .then(() => res.status(200).send({ success: true }))
+         .then(() => res.status(200).send({ success: true, msg: 'document deleted' }))
          .catch(error => res.status(400).send({ success: false, error }));
       } else {
         res.status(401).send({ success: false, msg: 'unauthorized' });
@@ -75,11 +75,11 @@ const DocumentController = {
     .then((document) => {
       if (!document) {
         res.status(404).send({ success: false, msg: 'document not found' });
-      } else if (req.decoded.userId === document.userId) {
+      } else if (req.decoded.id === document.userId) {
         return document
           .update(DocumentDetails)
-          .then(() => res.status(200).send({ success: true, document }))
-          .catch(error => res.status(400).send({ success: false, error }));
+          .then(() => res.status(200).send({ success: true, document, msg: 'document update success' }))
+          .catch(error => res.status(400).send({ success: false, msg: error.errors[0].message }));
       } else {
         res.status(401).send({ success: false, msg: 'unauthorized' });
       }

@@ -20,7 +20,7 @@ const userController = {
             lastName: req.body.lastName,
             email: req.body.email,
             roleId: 2,
-            userId: user.id
+            id: user.id
           }, process.env.SECRET, { expiresIn: '6h' }, (err, token) => {
             res.status(201).send({
               success: true,
@@ -56,7 +56,7 @@ const userController = {
     .catch(error => res.status(401).send({ sucess: false, error }));
   },
   retrieve(req, res) {
-    if (req.decoded.userId === 1 || req.decoded.userId === Number(req.params.id)) {
+    if (req.decoded.id === 1 || req.decoded.id === Number(req.params.id)) {
       return User
       .findById(req.params.id)
       .then((user) => {
@@ -71,7 +71,7 @@ const userController = {
     res.status(401).send({ success: false, msg: 'unauthorized' });
   },
   delete(req, res) {
-    if (req.decoded.userId === 1 || req.decoded.userId === Number(req.params.id)) {
+    if (req.decoded.id === 1 || req.decoded.id === Number(req.params.id)) {
       if (Number(req.params.id) === 1) {
         res.status(403).send({ success: false, msg: 'cannot delete admin profile' });
       } else {
@@ -93,7 +93,7 @@ const userController = {
     }
   },
   update(req, res) {
-    if (req.decoded.userId === Number(req.params.id)) {
+    if (req.decoded.id === Number(req.params.id)) {
       const userDetails = {
         firstName: req.body.firstName,
         email: req.body.email,
@@ -107,7 +107,7 @@ const userController = {
           .then(() => res.status(200).send({ success: true, user }))
           .catch(error => res.status(400).send({ success: false, error })))
         .catch(error => res.status(400).send({ success: false, error }));
-    } else if (req.decoded.userId === 1) {
+    } else if (req.decoded.id === 1) {
       return User
         .findById(req.params.id)
         .then((user) => {
@@ -163,9 +163,11 @@ const userController = {
                   res.status(404).send({ success: false, msg: 'invalid password' });
                 } else {
                   jwt.sign({
+                    firstName: user.firstName,
+                    lastName: user.lastName,
                     email: user.email,
                     roleId: user.roleId,
-                    userId: user.id
+                    id: user.id
                   }, process.env.SECRET, { expiresIn: '6h' }, (err, token) => {
                     res.send({ success: true, msg: 'login succesful', token, user });
                   });

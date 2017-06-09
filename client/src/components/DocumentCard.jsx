@@ -15,7 +15,7 @@ const DocumentCard = ({ title, content, access, id, deleteDocument }) => (
           className=" waves-effect waves-light"
           role="button"
           tabIndex="-1"
-          onClick={(e) => { e.preventDefault(); deleteDocument(id); }}
+          onClick={(e) => { e.preventDefault(); deleteDocument(title, id); }}
         >
           <i className="material-icons">delete</i>
         </a>

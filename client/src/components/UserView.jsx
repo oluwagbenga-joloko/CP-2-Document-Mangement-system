@@ -2,15 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { getMydocuments, deleteDocument } from '../actions/DocumentActions';
-import DocumentCard from './DocumentCard.jsx';
 import swal from 'sweetalert';
+import { getAllUsers, deleteUser } from '../actions/userActions';
+import UserCard from './UserCard.jsx';
+
+
 /**
  * @desc documentview component
  * @class DocumentView
  * @extends {Component}
  */
-class DocumentView extends Component {
+class UserView extends Component {
   /**
    * Creates an instance of DocumentView.
    * @param {any} props property of element
@@ -19,10 +21,9 @@ class DocumentView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      documents: [{}],
+      users: [{}],
     };
-    console.log(this.state);
-    this.handleDelete = this.handleDelete.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
   }
   /**
    * @desc runs before component mounts
@@ -30,9 +31,15 @@ class DocumentView extends Component {
    * @returns {*} has no return value;
    */
   componentWillMount() {
-    this.props.getMydocuments(this.props.userId).then((res) => {
-      console.log('iside vies', res);
-      this.setState({ documents: this.props.documents });
+    // console.log('sweetalert');
+    // swal({
+    //   title: 'Sweet!',
+    //   text: "Here's a custom image.",
+    //   imageUrl: 'images/thumbs-up.jpg'
+    // });
+    console.log(getAllUsers);
+    this.props.getAllUsers().then(() => {
+      this.setState({ users: this.props.users });
     });
   }
   /**
@@ -43,36 +50,38 @@ class DocumentView extends Component {
    */
   componentWillReceiveProps(nextProps) {
     console.log(nextProps);
-    if (this.props.documents.length !== nextProps.documents.length) {
-      console.log(nextProps.documents);
+    if (this.props.users.length !== nextProps.users.length) {
+      console.log(nextProps.users);
       // const documents =
-      this.setState({ documents: nextProps.documents });
+      this.setState({ users: nextProps.users });
       console.log(this.state);
     }
   }
   /**
    * @desc hanldes delete of document
-   * @param {number} id id of element to be deleted
+   * @param {string} firstName first Name of user to be deleted
+   * @param {string} lastName last Name of user to be deleted
+   * @param {number} userId id of user to be deleted
    * @returns {*} has no return value;
    * @memberof DocumentView
    */
-  handleDelete(title, id) {
+  deleteUser(firstName, lastName, userId) {
     swal({
-      title: `Are you sure you want to delete this document with ${title}?`,
-      text: 'You will not be able to recover this document file!',
+      title: `Are you sure you want to delete ${firstName} ${lastName}?`,
+      text: 'You will not be able to recover this imaginary file!',
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#DD6B55',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, cancel plx!',
-      closeOnConfirm: true,
+      closeOnConfirm: false,
       closeOnCancel: false
     },
 (isConfirm) => {
   if (isConfirm) {
     swal('Deleted!', 'Your imaginary file has been deleted.', 'success');
-    this.props.deleteDocument(id).then(() => {
-      this.props.getMydocuments(this.props.userId);
+    this.props.deleteUser(userId).then(() => {
+      this.props.getAllUsers();
     });
   } else {
     swal('Cancelled', 'Your imaginary file is safe :)', 'error');
@@ -85,39 +94,41 @@ class DocumentView extends Component {
    * @memberof DocumentView
    */
   render() {
-    const documents = this.state.documents.map((document) => {
+    const users = this.state.users.map((user) => {
       const props = {
-        title: document.title,
-        content: document.content,
-        access: document.access,
-        id: document.id,
-        deleteDocument: this.handleDelete
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        userId: user.id,
+        deleteUser: this.deleteUser,
+        userRoleId: user.roleId
       };
-      return <DocumentCard {...props} />;
+      return <UserCard {...props} />;
     });
     return (
       <div>
-        <h1>Your documents</h1>
+        <h1>users</h1>
         <div className="row">
-          {documents}
+          <ul className="collection">
+            {users}
+          </ul>
         </div>
       </div>
     );
   }
 }
 const mapDispatchToProps = dispatch => bindActionCreators({
-  getMydocuments,
-  deleteDocument
+  getAllUsers,
+  deleteUser
 }, dispatch);
 
 const mapStateToProps = state => ({
-  documents: state.documentReducer.Documents,
+  users: state.userReducer.users,
   userId: state.authReducer.user.id
 });
-DocumentView.propTypes = {
-  documents: PropTypes.arrayOf(PropTypes.shape).isRequired,
-  userId: PropTypes.number.isRequired,
-  getMydocuments: PropTypes.func.isRequired,
-  deleteDocument: PropTypes.func.isRequired
+UserView.propTypes = {
+  getAllUsers: PropTypes.func.isRequired,
+  deleteUser: PropTypes.func.isRequired,
+  users: PropTypes.arrayOf(PropTypes.shape).isRequired
 };
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentView);
+export default connect(mapStateToProps, mapDispatchToProps)(UserView);

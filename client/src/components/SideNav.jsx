@@ -38,9 +38,9 @@ const SideNav = ({ user, url }) => (
       </li>
       {user.roleId === 1 &&
       <li>
-        <a className="waves-effect" href="#!">
+        <Link className="waves-effect" to={`${url}/users`}>
           Manage users
-        </a>
+        </Link>
       </li>
       }
     </ul>

@@ -7,6 +7,7 @@ import createBrowserHistory from 'history/createBrowserHistory';
 import configStore from './store/configStore';
 import routes from './routes.jsx';
 import './styles/styles.scss';
+import '../../node_modules/sweetalert/dist/sweetalert.css';
 import toastr from 'toastr';
 import setAtherizationToken from './utils/setAuthorizationToken';
 

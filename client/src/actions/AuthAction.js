@@ -28,6 +28,7 @@ const signUpSuccess = payload => ({
 const signUp = details => dispatch => axios
   .post('/api/users', details)
   .then((res) => {
+    setAtherizationToken(res.data.token);
     localStorage.setItem('token', res.data.token);
     dispatch(signUpSuccess(res.data));
   })

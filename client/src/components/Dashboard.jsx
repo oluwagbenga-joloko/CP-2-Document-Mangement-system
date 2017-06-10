@@ -9,6 +9,7 @@ import DocumentView from './DocumentView.jsx';
 import CreateDocument from './CreateDocument.jsx';
 import { logout } from '../actions/AuthAction';
 import { createDocument, getMydocument } from '../actions/DocumentActions';
+import UserView from './UserView.jsx';
 /**
  * @desc DAshboard home
  * @class Dashboard
@@ -62,6 +63,11 @@ class Dashboard extends Component {
             path={`${this.props.match.url}/documents/:id`}
             component={CreateDocument}
           />
+          <Route
+            path={`${this.props.match.url}/users`}
+            component={UserView}
+          />
+
         </main>
       </div>
     );

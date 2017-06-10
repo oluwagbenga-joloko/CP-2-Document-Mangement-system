@@ -21,5 +21,9 @@ const actionTypes = keyMirror({
   UPDATE_DOCUMENT: null,
   UPDATE_DOCUMENT_SUCCESS: null,
   UPDATE_DOCUMENT_FAILURE: null,
+  GET_ALL_USERS_SUCCESS: null,
+  GET_ALL_USERS: null,
+  DELETE_USER: null,
+  DELETE_USER_SUCCESS: null,
 });
 export default actionTypes;

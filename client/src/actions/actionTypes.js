@@ -25,5 +25,8 @@ const actionTypes = keyMirror({
   GET_ALL_USERS: null,
   DELETE_USER: null,
   DELETE_USER_SUCCESS: null,
+  SEARCH_USER: null,
+  SEARCH_USER_SUCCESS: null,
+  SEARCH_DOCUMENT_SUCCESS: null,
 });
 export default actionTypes;

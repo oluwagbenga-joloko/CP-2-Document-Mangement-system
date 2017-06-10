@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import TopNav from './TopNav.jsx';
 import SideNav from './SideNav.jsx';
 import DocumentView from './DocumentView.jsx';
+import GeneralDocuments from './GeneralDocuments.jsx';
 import CreateDocument from './CreateDocument.jsx';
 import { logout } from '../actions/AuthAction';
 import { createDocument, getMydocument } from '../actions/DocumentActions';
@@ -24,7 +25,8 @@ class Dashboard extends Component {
  */
   constructor(props) {
     super(props);
-    console.log(this.props.match.url);
+    this.state = {
+    };
   }
   /**
    * @desc renders html
@@ -67,7 +69,13 @@ class Dashboard extends Component {
             path={`${this.props.match.url}/users`}
             component={UserView}
           />
-
+          <Route
+            path={`${this.props.match.url}/generalDocuments`}
+            render={props => (<GeneralDocuments
+              {...props}
+              user={this.props.loggedIn.user}
+            />)}
+          />
         </main>
       </div>
     );

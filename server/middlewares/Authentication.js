@@ -4,7 +4,8 @@ require('dotenv').config();
 
 const authentication = {
   verifyUser(req, res, next) {
-    const token = req.headers['x-access-token'] || req.headers.authorization || null;
+    const token = req.headers['x-access-token']
+    || req.headers.authorization || null;
     if (!token) {
       res.status(401).send({
         success: false,

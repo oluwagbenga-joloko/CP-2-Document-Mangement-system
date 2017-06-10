@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import swal from 'sweetalert';
-import { getAllUsers, deleteUser } from '../actions/userActions';
+import queryString from 'query-string';
+import { getAllUsers, deleteUser, searchUser } from '../actions/userActions';
+import SearchBar from './SearchBar.jsx';
 import UserCard from './UserCard.jsx';
 
 
@@ -22,8 +24,10 @@ class UserView extends Component {
     super(props);
     this.state = {
       users: [{}],
+      query: ''
     };
     this.deleteUser = this.deleteUser.bind(this);
+    this.searchUser = this.searchUser.bind(this);
   }
   /**
    * @desc runs before component mounts
@@ -31,16 +35,17 @@ class UserView extends Component {
    * @returns {*} has no return value;
    */
   componentWillMount() {
-    // console.log('sweetalert');
-    // swal({
-    //   title: 'Sweet!',
-    //   text: "Here's a custom image.",
-    //   imageUrl: 'images/thumbs-up.jpg'
-    // });
-    console.log(getAllUsers);
-    this.props.getAllUsers().then(() => {
-      this.setState({ users: this.props.users });
-    });
+    const parsed = queryString.parse(this.props.location.search);
+    if (parsed.query) {
+      this.setState({ query: parsed.query });
+      this.props.searchUser(parsed.query).then(() => {
+        this.setState({ users: this.props.users });
+      });
+    } else {
+      this.props.getAllUsers().then(() => {
+        this.setState({ users: this.props.users });
+      });
+    }
   }
   /**
    * @desc runs when compoent recieves new props;
@@ -49,12 +54,11 @@ class UserView extends Component {
    *  @returns {*} has no return value;
    */
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    if (this.props.users.length !== nextProps.users.length) {
-      console.log(nextProps.users);
-      // const documents =
+    if (this.props.location.search !== nextProps.location.search) {
+      const parsed = queryString.parse(nextProps.location.search);
+      this.props.searchUser(parsed.query);
+    } else {
       this.setState({ users: nextProps.users });
-      console.log(this.state);
     }
   }
   /**
@@ -108,6 +112,10 @@ class UserView extends Component {
     return (
       <div>
         <h1>users</h1>
+        <SearchBar
+          url={this.props.location.pathname}
+          query={this.state.query}
+        />
         <div className="row">
           <ul className="collection">
             {users}
@@ -119,7 +127,8 @@ class UserView extends Component {
 }
 const mapDispatchToProps = dispatch => bindActionCreators({
   getAllUsers,
-  deleteUser
+  deleteUser,
+  searchUser
 }, dispatch);
 
 const mapStateToProps = state => ({
@@ -127,6 +136,10 @@ const mapStateToProps = state => ({
   userId: state.authReducer.user.id
 });
 UserView.propTypes = {
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+    search: PropTypes.string }).isRequired,
+  searchUser: PropTypes.func.isRequired,
   getAllUsers: PropTypes.func.isRequired,
   deleteUser: PropTypes.func.isRequired,
   users: PropTypes.arrayOf(PropTypes.shape).isRequired

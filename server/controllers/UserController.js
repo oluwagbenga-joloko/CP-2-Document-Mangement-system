@@ -185,7 +185,8 @@ const userController = {
       where: {
         $or: [
           { firstName: { $ilike: `%${req.query.q}%` } },
-          { lastName: { $ilike: `%${req.query.q}%` } }
+          { lastName: { $ilike: `%${req.query.q}%` } },
+          { email: { $ilike: `%${req.query.q}%` } }
         ]
       }
     })

@@ -2,46 +2,68 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import queryString from 'query-string';
 import swal from 'sweetalert';
-import { getMydocuments, deleteDocument } from '../actions/DocumentActions';
+import {
+  deleteDocument,
+  searchDocuments
+} from '../actions/DocumentActions';
 import DocumentCard from './DocumentCard.jsx';
+import SearchBar from './SearchBar.jsx';
 
 /**
- * @desc documentview component
- * @class DocumentView
+ * @desc GeneralDocument component
+ * @class GeneralDocument
  * @extends {Component}
  */
-class DocumentView extends Component {
+class GeneralDocuments extends Component {
   /**
-   * Creates an instance of DocumentView.
+   * Creates an instance of GeneralDocument.
    * @param {any} props property of element
-   * @memberof DocumentView
+   * @memberof GeneralDocument
    */
   constructor(props) {
     super(props);
     this.state = {
       documents: [{}],
+      query: ''
     };
     this.handleDelete = this.handleDelete.bind(this);
   }
   /**
    * @desc runs before component mounts
-   * @memberof DocumentView
+   * @memberof GeneralDocument
    * @returns {*} has no return value;
    */
   componentWillMount() {
-    this.props.getMydocuments(this.props.userId).then(() => {
-      this.setState({ documents: this.props.documents });
-    });
+    const parsed = queryString.parse(this.props.location.search);
+    if (parsed.query) {
+      this.setState({ query: parsed.query });
+      this.props.searchDocuments(parsed.query).then(() => {
+        this.setState({ documents: this.props.documents });
+      });
+    } else {
+      this.setState({ query: parsed.query });
+      this.props.searchDocuments(this.state.query).then(() => {
+        this.setState({ documents: this.props.documents });
+      });
+    }
   }
   /**
    * @desc runs when compoent recieves new props;
    * @param {any} nextProps next property of element
-   * @memberof DocumentView
+   * @memberof GeneralDocument
    *  @returns {*} has no return value;
    */
   componentWillReceiveProps(nextProps) {
-    if (this.props.documents.length !== nextProps.documents.length) {
+    if (this.props.location.search !== nextProps.location.search) {
+      const parsed = queryString.parse(nextProps.location.search);
+      if (parsed.query) {
+        this.props.searchDocuments(parsed.query);
+      } else {
+        this.props.searchDocuments('');
+      }
+    } else {
       this.setState({ documents: nextProps.documents });
     }
   }
@@ -50,7 +72,7 @@ class DocumentView extends Component {
    * @param {string} title title of element to be deleted
    * @param {number} id id of element to be deleted
    * @returns {*} has no return value;
-   * @memberof DocumentView
+   * @memberof GeneralDocument
    */
   handleDelete(title, id) {
     swal({
@@ -68,7 +90,7 @@ class DocumentView extends Component {
   if (isConfirm) {
     swal('Deleted!', 'Your imaginary file has been deleted.', 'success');
     this.props.deleteDocument(id).then(() => {
-      this.props.getMydocuments(this.props.userId);
+      this.props.searchDocuments(this.state.query);
     });
   } else {
     swal('Cancelled', 'Your imaginary file is safe :)', 'error');
@@ -78,7 +100,7 @@ class DocumentView extends Component {
   /**
    * @desc renders html
    * @returns {*} html
-   * @memberof DocumentView
+   * @memberof GeneralDocument
    */
   render() {
     const documents = this.state.documents.map((document) => {
@@ -93,7 +115,11 @@ class DocumentView extends Component {
     });
     return (
       <div>
-        <h1>Your documents</h1>
+        <h1>general documents</h1>
+        <SearchBar
+          url={this.props.location.pathname}
+          query={this.state.query}
+        />
         <div className="row">
           {documents}
         </div>
@@ -102,18 +128,21 @@ class DocumentView extends Component {
   }
 }
 const mapDispatchToProps = dispatch => bindActionCreators({
-  getMydocuments,
-  deleteDocument
+  deleteDocument,
+  searchDocuments
 }, dispatch);
 
 const mapStateToProps = state => ({
   documents: state.documentReducer.Documents,
   userId: state.authReducer.user.id
 });
-DocumentView.propTypes = {
+GeneralDocuments.propTypes = {
   documents: PropTypes.arrayOf(PropTypes.shape).isRequired,
-  userId: PropTypes.number.isRequired,
-  getMydocuments: PropTypes.func.isRequired,
-  deleteDocument: PropTypes.func.isRequired
+  location: PropTypes.shape({
+    search: PropTypes.string,
+    pathname: PropTypes.string
+  }).isRequired,
+  searchDocuments: PropTypes.func.isRequired,
+  deleteDocument: PropTypes.func.isRequired,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentView);
+export default connect(mapStateToProps, mapDispatchToProps)(GeneralDocuments);

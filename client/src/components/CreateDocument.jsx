@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import {
   getDocument,
   createDocument,
   updateDocument
   } from '../actions/DocumentActions';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 
 /**
  * @desc compeent used to creat update and view document
@@ -92,13 +92,20 @@ class CreateDocument extends Component {
     }
   }
   /**
+   * @desc handles edit click
+   * @param {any} event hmtl event
+   * @memberof CreateDocument
+   * @returns {null} no return value
+   */
+  handleEditClick(event) {
+    event.preventDefault();
+    this.setState({ edit: true });
+  }
+  /**
    * @desc renders Html
    * @returns {*} html
    * @memberof Login
    */
-  handleEditClick(event) {
-    this.setState({ edit: true });
-  }
   render() {
     return (
       <div className="row">
@@ -147,10 +154,21 @@ class CreateDocument extends Component {
             </div>
           </div>
           { !this.state.edit && this.state.owner &&
-            <div className="waves-effect waves-light btn" onClick={this.handleEditClick}><i className="material-icons left">mode_edit</i>Edit</div>
+            <div
+              className="waves-effect waves-light btn"
+              onClick={this.handleEditClick}
+            >
+              <i className="material-icons left">mode_edit</i>Edit
+            </div>
           }
           { this.state.edit &&
-            <div className="waves-effect waves-light btn"><i className="material-icons left">save</i> <input type="submit" value="Save" /></div>
+            <div className="waves-effect waves-light btn">
+              <i
+                className="material-icons left"
+              >save
+             </i>
+              <input type="submit" value="Save" />
+            </div>
           }
         </form>
       </div>
@@ -169,7 +187,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch);
 
 CreateDocument.propTypes = {
-  user: PropTypes.shape,
+  user: PropTypes.shape.isRequired,
   document: PropTypes.shape.isRequired,
   getDocument: PropTypes.func.isRequired,
   createDocument: PropTypes.func.isRequired,

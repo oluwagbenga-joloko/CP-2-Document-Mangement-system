@@ -36,6 +36,11 @@ const SideNav = ({ user, url }) => (
         my document
         </Link>
       </li>
+      <li>
+        <Link className="waves-effect" to={`${url}/generalDocuments`}>
+          General Documents
+        </Link>
+      </li>
       {user.roleId === 1 &&
       <li>
         <Link className="waves-effect" to={`${url}/users`}>

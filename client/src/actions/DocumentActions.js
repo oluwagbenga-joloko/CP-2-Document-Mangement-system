@@ -82,11 +82,23 @@ const deleteDocument = payload => dispatch => axios
  }).catch((error) => {
   //  dispatch(deleteDocumentFailure(error.response.data));
  });
+const searchDocumentsSuccess = payload => ({
+  type: actionTypes.SEARCH_DOCUMENT_SUCCESS, payload
+});
+
+const searchDocuments = payload => dispatch => axios
+  .get(`api/search/documents/?q=${payload}`)
+  .then((res) => {
+    console.log('dfdfdfdfd');
+    console.log(res.data);
+    dispatch(searchDocumentsSuccess(res.data));
+  });
 export {
   createDocument,
   getMydocuments,
   getDocument,
   updateDocument,
-  deleteDocument
+  deleteDocument,
+  searchDocuments,
 };
 

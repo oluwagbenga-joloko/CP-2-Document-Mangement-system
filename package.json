@@ -4,7 +4,7 @@
   "description": "a document management system",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node server.js ",
+    "start": "nodemon --exec babel-node server.js ",
     "coverage": "NODE_ENV=test nyc report --reporter=text-lcov | coveralls > lcov.info",
     "test": "NODE_ENV=test nyc ./node_modules/mocha/bin/_mocha --compilers js:babel-register server/tests/**/*.spec.js --timeout=60000"
   },
@@ -31,6 +31,7 @@
     "pg": "^6.2.2",
     "pg-hstore": "^2.3.2",
     "prop-types": "^15.5.10",
+    "query-string": "^4.3.4",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.5",

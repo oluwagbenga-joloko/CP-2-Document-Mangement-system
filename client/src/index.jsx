@@ -18,7 +18,6 @@ setAtherizationToken(token);
 const store = configStore();
 
 const history = createBrowserHistory();
-console.log('in index');
 
 render(
   <Provider store={store}>

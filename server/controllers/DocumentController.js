@@ -87,7 +87,8 @@ const DocumentController = {
    .catch(error => res.status(400).send({ success: false, error }));
   },
   search(req, res) {
-    if (req.query.userId === 1) {
+    
+    if (req.decoded.roleId === 1) {
       return Document
         .findAll({
           where: {
@@ -97,9 +98,11 @@ const DocumentController = {
             ]
           }
         })
-    .then(users => res.status(200).send({ success: true, users }))
+    .then(documents => res.status(200).send({ success: true, documents }))
     .catch(error => res.status(401).send({ sucess: false, error }));
-    }
+  } else {
+    console.log(req.decoded.roleId);
+    console.log(typeof(req.decoded.roleId));
     return Document
         .findAll({
           where: {
@@ -108,7 +111,7 @@ const DocumentController = {
                 { access: 'public', },
                 { $and: [
                   { access: 'role' },
-                  { ownerRoleId: '1' }
+                  { ownerRoleId: req.decoded.roleId }
                 ] },
               ],
             },
@@ -121,8 +124,8 @@ const DocumentController = {
             ]
           }
         })
-    .then(users => res.status(200).send({ success: true, users }))
+    .then(documents => res.status(200).send({ success: true, documents }))
     .catch(error => res.status(401).send({ sucess: false, error }));
-  }
+  }}
 };
 export default DocumentController;

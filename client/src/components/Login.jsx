@@ -1,9 +1,12 @@
+/* global $ */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import toastr from 'toastr';
 import { login } from '../actions/AuthAction';
+
 
 /**
  * @desc the login Component
@@ -20,11 +23,26 @@ class Login extends Component {
     super(props);
     this.state = {
       password: '',
-      email: ''
+      email: '',
+      errorMsg: 'ddfdfdfdfdfdfdfdfdfdfdf',
+      showError: false
 
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+  }
+   /**
+   * @desc runs before component recieves props;
+   * @param {any} nextProps property of element;
+   * @return {null} no return value;
+   * @memberof SignUp
+   */
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.status.success) {
+      this.setState({
+        errorMsg: nextProps.status.msg,
+        showError: true
+      });
+    }
   }
   /**
    * @desc handles change of form input
@@ -36,7 +54,39 @@ class Login extends Component {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
-    this.setState({ [name]: value });
+    this.setState({ [name]: value, showError: false });
+    const that = this;
+    $('#loginForm').validate({
+      rules: {
+        password: {
+          required: true,
+          nowhitespace: true,
+        },
+        email: {
+          nowhitespace: true,
+          required: true,
+          email: true
+        },
+      },
+      messages: {
+        email: {
+          required: 'Please enter a your email',
+          email: 'please enter a valid email'
+        },
+        password: {
+          required: 'Please provide a password',
+        },
+      },
+      errorElement: 'div',
+      errorPlacement(error, element) {
+        error.insertAfter(element);
+      },
+      submitHandler() {
+        that.props.login(that.state).then(() => {
+          toastr.success('Login successfully');
+        });
+      }
+    });
   }
   /**
    * @desc handles form submission
@@ -44,10 +94,10 @@ class Login extends Component {
    * @returns {null} returns no value
    * @memberof Login
    */
-  handleSubmit(event) {
-    event.preventDefault();
-    this.props.login(this.state);
-  }
+  // handleSubmit(event) {
+  //   event.preventDefault();
+  //   this.props.login(this.state);
+  // }
   /**
    * @desc renders Html
    * @returns {*} html
@@ -63,37 +113,71 @@ class Login extends Component {
       />);
     }
     return (
-      <div className="row">
-        <form className="col s10" onSubmit={this.handleSubmit}>
+      <div className="row login">
+        <div className="col s12 m6 div logo" >
+          <h1 className="center-align">
+            <span className="logo1">Document</span>
+            <span className="logo2">It</span>
+          </h1>
+          <h1 className="logintext center-align ">
+            Manage all your Documents in one Place
+          </h1>
+        </div>
+        <div className="col s12 m6 login_body">
           <div className="row">
-            <div className="input-field col s12">
-              <input
-                id="email"
-                type="email"
-                className="validate"
-                name="email"
-                value={this.state.email}
-                onChange={this.handleChange}
-              />
-              <label htmlFor="email">Email</label>
-            </div>
-          </div>
-          <div className="row">
-            <div className="input-field col s12">
-              <input
-                id="password"
-                type="password"
-                className="validate"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleChange}
-              />
-              <label htmlFor="password">Password</label>
-            </div>
-          </div>
+            <div className="col s10  offset-s1">
+              <div className="card form z-depth-4">
+                <div className="card-content login-content">
+                  <form id="loginForm">
+                    <div className="row">
+                      <div className="input-field col s12">
+                        <i className="material-icons prefix">email</i>
+                        <input
+                          id="email"
+                          type="email"
+                          className="validate"
+                          name="email"
+                          value={this.state.email}
+                          onChange={this.handleChange}
+                        />
+                        <label htmlFor="email">Email</label>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="input-field col s12">
+                        <i className="material-icons prefix">lock_outline</i>
+                        <input
+                          id="password"
+                          type="password"
+                          className="validate"
+                          name="password"
+                          value={this.state.password}
+                          onChange={this.handleChange}
+                        />
+                        <label htmlFor="password">Password</label>
+                      </div>
+                    </div>
+                    {this.state.showError &&
+                    <div className="custom-error-login center-align header-dash">{this.state.errorMsg}</div>
+                    }
+                    <div className="row">
+                      <button
+                        className="btn waves-effect waves-light col s6 offset-s3 z-depth-4 loginbtn"
+                        type="submit"
+                      >Login
+              </button>
+                    </div>
 
-          <input type="submit" value="Submit" />
-        </form>
+                  </form>
+                  <div className="divider" />
+                  <p className="center-align">Don`t have an account ?
+                    <Link className="center-align" to="/signup">Sign Up</Link>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

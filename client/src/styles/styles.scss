@@ -1,4 +1,17 @@
+$primary:#006db3;
+$primarylight: #559be5;
+$primaryDark:#004383;
+$secondary: #e00049;
+$background: #FFFFFF;
+$font1:  'Pacifico', cursive;
+$font2: 'Oswald', sans-serif;
+$font3: 'Open Sans', sans-serif;
+$font4: 'Josefin Slab', serif;
  @import './toastr';
+ html {
+    font-family: $font3;
+    background: $background;
+  }
  header, main, footer {
       padding-left: 300px;
     }
@@ -12,5 +25,219 @@
    color: red;
 }
 .deleteUser {
+      padding-left: 10px;
+    padding-right: 10px;
+    top: 15px;
+    background: $secondary;
+    color: white;
   float: right;
+}
+.login {
+  background: $primary;
+  position: absolute;
+  width: 100%;
+  min-height: 100%;
+}
+.form {
+  // margin-top: 150px;
+}
+.login-content{
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+.inline {
+  display: inline
+}
+.logo1 {
+  color: white;
+  font-size: 100px;
+  font-family: $font1;
+}
+.logo2 {
+  color:white;
+  font-size: 100px;
+  font-family: $font2;
+}
+.logintext {
+  color: white;
+  font-size: 50px;
+  font-family: $font3;
+}
+.logo {
+  margin-top: 200px;
+}
+.login_body{
+  margin-top: 175px;
+}
+.signup_body{
+  margin-top: 140px;
+}
+
+.input-field {
+  label {
+    color: $primaryDark;
+  }
+  input[type=email]:focus + label, input[type=password]:focus + label, input[type=text]:focus + label {
+    color: $secondary;
+  }
+  input[type=email].valid, input[type=password].valid input[type=text].valid{
+    border-bottom: 1px solid $primary;
+    box-shadow: 0 1px 0 0 $primary;
+  }
+  input[type=email].invalid, input[type=password].invalid input[type=text].invalid{
+    border-bottom: 1px solid $secondary;
+    box-shadow: 0 1px 0 0 $secondary;
+  }
+  input[type=email], input[type=password] ,input[type=text]{
+     border-bottom: 1px solid $primaryDark;
+    &:focus{
+       border-bottom: 1px solid $secondary;
+       box-shadow: 0 1px 0 0 $secondary;
+    }
+  }
+  .prefix{
+    color:$primaryDark;
+  }
+  .prefix.active {
+  color: $secondary;
+  }
+}
+input[type=search] {
+  border-bottom: none !important;
+    box-shadow: none !important;
+    margin-bottom: 0 !important;
+}
+.loginbtn {
+  background: $secondary;
+  &:hover,&:visited,&:focus{
+  background: $secondary;
+  };
+}
+.error {
+  margin-left: 40px;
+  color: $secondary;
+}
+.custom-error{
+  @extend .error;
+}
+.custom-error-login{
+  color: $secondary;
+  margin-bottom: 20px !important;
+
+}
+#logo1 {
+margin-left: 40px;
+font-family: $font1;
+}
+#logo2{
+font-family: $font2;
+}
+nav {
+  background-color: $primary !important;
+}
+.side_nav_head {
+  background-color: $primaryDark;
+   padding-bottom: 140px;
+}
+.side_nav_avatar {
+  margin-top: 17px;
+  color: white;
+  font-size: 45px;
+}
+.side_nav_name {
+  font-size: 17px;
+  color:white;
+  font-family: $font2;
+}
+.userView {
+  padding-bottom: 200px;
+}
+.nav_divider {
+  margin-top: 50px !important;
+}
+.side-nav-link{
+  font-size: 17px !important;
+  color: $secondary !important;
+}
+.side-nav-link-av{
+  font-size: 20px !important;
+    color: $secondary !important;
+}
+.header-dash{
+  margin-right: 10px ;
+  margin-top: -10px;
+  padding-top: 1px !important;
+  background: white;
+  color:  $primaryDark ;
+  font-family: $font3;
+}
+main {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+.search-btn,.search-btn:hover, .search-btn:visited, .search-btn:focus  {
+  padding: 0;
+  background: white;
+  color: black;
+  padding-top: 4px;
+} 
+.search-icon {
+  font-size: 25px !important;
+}
+.doc-card {
+color: $primaryDark;
+overflow: hidden;
+height: 250px;
+}
+.doc-card-content {
+  color: $primaryDark;
+  font-family: $font4;
+    font-size: 16px;
+
+}
+.doc-card-title {
+  color:$secondary;
+    font-size: 30px;
+    font-family: $font1;
+}
+.card-delete {
+  color: $secondary;
+  padding-left: 10px;
+}
+.card-view {
+  color: $primaryDark;
+}
+.access {
+  font-size: 14px;
+  color: $primaryDark;
+}
+.doc-divider {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+.user-icon {
+  background-color: $primary !important;
+  font-size: 20px;
+  color: white;
+}
+.create-title {
+  font-size: 22px !important;
+}
+.access-option {
+  margin-left: 15px !important;
+  margin-top: 10px !important;
+
+}
+.access-title {
+  font-size: 22px !important;
+}
+.title-div{
+  margin-top: 10px;
+}
+.save-btn {
+  @extend .loginbtn;
+  margin-left: 23px;
+}
+.margin-5px {
+  margin-left: 8px;
 }

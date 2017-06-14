@@ -4,13 +4,13 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import swal from 'sweetalert';
+import ReactPaginate from 'react-paginate';
 import {
   deleteDocument,
   searchDocuments
-} from '../actions/DocumentActions';
+} from '../../actions/DocumentActions';
 import DocumentCard from './DocumentCard.jsx';
-import SearchBar from './SearchBar.jsx';
-
+import SearchBar from '../dashboard/SearchBar.jsx';
 /**
  * @desc GeneralDocument component
  * @class GeneralDocument
@@ -26,9 +26,14 @@ class GeneralDocuments extends Component {
     super(props);
     this.state = {
       documents: [{}],
-      query: ''
+      query: '',
+      limit: 10,
+      pageCount: null,
+      initialPage: 0,
+      showPaginate: false,
     };
     this.handleDelete = this.handleDelete.bind(this);
+    this.handlePageClick = this.handlePageClick.bind(this);
   }
   /**
    * @desc runs before component mounts
@@ -37,17 +42,20 @@ class GeneralDocuments extends Component {
    */
   componentWillMount() {
     const parsed = queryString.parse(this.props.location.search);
-    if (parsed.query) {
-      this.setState({ query: parsed.query });
-      this.props.searchDocuments(parsed.query).then(() => {
-        this.setState({ documents: this.props.documents });
+    this.setState({ query: parsed.query ? parsed.query : '' });
+    const payload = {
+      query: parsed.query ? parsed.query : '',
+      limit: parsed.limit ? parsed.limit : 10,
+      offset: parsed.offset ? parsed.offset : 0,
+    };
+    this.props.searchDocuments(payload).then(() => {
+      this.setState({
+        documents: this.props.documents,
+        pageCount: Math.ceil(this.props.count / 10),
+        showPaginate: true,
+        initialPage: Math.ceil(parsed.offset / 10)
       });
-    } else {
-      this.setState({ query: parsed.query });
-      this.props.searchDocuments(this.state.query).then(() => {
-        this.setState({ documents: this.props.documents });
-      });
-    }
+    });
   }
   /**
    * @desc runs when compoent recieves new props;
@@ -58,13 +66,18 @@ class GeneralDocuments extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.location.search !== nextProps.location.search) {
       const parsed = queryString.parse(nextProps.location.search);
-      if (parsed.query) {
-        this.props.searchDocuments(parsed.query);
-      } else {
-        this.props.searchDocuments('');
-      }
+      this.setState({ query: parsed.query ? parsed.query : '' });
+      const payload = {
+        query: parsed.query ? parsed.query : '',
+        limit: parsed.limit,
+        offset: parsed.offset,
+      };
+      this.props.searchDocuments(payload);
     } else {
-      this.setState({ documents: nextProps.documents });
+      this.setState({
+        documents: nextProps.documents,
+        pageCount: Math.ceil(nextProps.count / 10)
+      });
     }
   }
   /**
@@ -90,12 +103,29 @@ class GeneralDocuments extends Component {
   if (isConfirm) {
     swal('Deleted!', 'Your imaginary file has been deleted.', 'success');
     this.props.deleteDocument(id).then(() => {
-      this.props.searchDocuments(this.state.query);
+      const parsed = queryString.parse(this.props.location.search);
+      const payload = {
+        query: parsed.query ? parsed.query : '',
+        limit: parsed.limit,
+        offset: parsed.offset,
+      };
+      this.props.searchDocuments(payload);
     });
   } else {
     swal('Cancelled', 'Your imaginary file is safe :)', 'error');
   }
 });
+  }
+  /**
+   * @desc hanldes pagination
+   * @param {any} data button clicked
+   * @returns {null} no return value
+   * @memberof GeneralDocuments
+   */
+  handlePageClick(data) {
+    const selected = data.selected;
+    const offset = Math.ceil(selected * this.state.limit);
+    this.props.history.replace(`${this.props.location.pathname}?query=${this.state.query}&limit=${10}&offset=${offset}`);
   }
   /**
    * @desc renders html
@@ -109,13 +139,17 @@ class GeneralDocuments extends Component {
         content: document.content,
         access: document.access,
         id: document.id,
-        deleteDocument: this.handleDelete
+        deleteDocument: this.handleDelete,
+        userId: this.props.userId,
+        ownerId: document.userId,
+        roleId: this.props.roleId,
+
       };
       return <DocumentCard {...props} />;
     });
     return (
       <div>
-        <h1>general documents</h1>
+        <h3 className=" header-dash">General Documents</h3>
         <SearchBar
           url={this.props.location.pathname}
           query={this.state.query}
@@ -123,6 +157,22 @@ class GeneralDocuments extends Component {
         <div className="row">
           {documents}
         </div>
+        {this.state.showPaginate &&
+        <ReactPaginate
+          initialPage={this.state.initialPage}
+          previousLabel={'previous'}
+          nextLabel={'next'}
+          breakLabel={<a href="">...</a>}
+          breakClassName={'break-me'}
+          pageCount={this.state.pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={this.handlePageClick}
+          containerClassName={'pagination'}
+          subContainerClassName={'pages pagination'}
+          activeClassName={'active'}
+        />
+        }
       </div>
     );
   }
@@ -134,7 +184,9 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 
 const mapStateToProps = state => ({
   documents: state.documentReducer.Documents,
-  userId: state.authReducer.user.id
+  count: state.documentReducer.count,
+  userId: state.authReducer.user.id,
+  roleId: state.authReducer.user.roleId,
 });
 GeneralDocuments.propTypes = {
   documents: PropTypes.arrayOf(PropTypes.shape).isRequired,
@@ -144,5 +196,8 @@ GeneralDocuments.propTypes = {
   }).isRequired,
   searchDocuments: PropTypes.func.isRequired,
   deleteDocument: PropTypes.func.isRequired,
+  count: PropTypes.number.isRequired,
+  userId: PropTypes.number.isRequired,
+  roleId: PropTypes.number.isRequired
 };
 export default connect(mapStateToProps, mapDispatchToProps)(GeneralDocuments);

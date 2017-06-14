@@ -5,6 +5,8 @@ const authReducer = (state = checkAuth(), action) => {
   switch (action.type) {
     case actionTypes.LOGIN_SUCCESS:
       return action.payload;
+    case actionTypes.UPDATE_USER_SUCCESS:
+      return action.payload;
     case actionTypes.LOGIN_FALUIRE:
       return action.payload;
     case actionTypes.SIGN_UP_FALUIRE:

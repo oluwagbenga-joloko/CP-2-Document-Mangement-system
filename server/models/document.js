@@ -1,6 +1,5 @@
 export default (sequelize, DataTypes) => {
   const Document = sequelize.define('Document', {
-
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,

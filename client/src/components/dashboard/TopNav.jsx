@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const TopNav = ({ logout }) => (
+const TopNav = () => (
   <header>
     <nav>
       <div className="nav-wrapper">
-        <a href="" className="brand-logo">Logo</a>
+        <a className="brand-logo">
+          <span id="logo1">Document</span>
+          <span id="logo2">IT</span></a>
         <ul id="nav-mobile" className="right hide-on-med-and-down">
           <a
             data-activates="slide-out"
@@ -13,17 +15,6 @@ const TopNav = ({ logout }) => (
           >
             <i className="material-icons">dashboard</i>
           </a>
-          <li><a href="sass.html">Sass</a></li>
-          <li><a href="badges.html">Components</a></li>
-          <li>
-            <a
-              href=""
-              role="button"
-              tabIndex="0"
-              onClick={(e) => { e.preventDefault(); logout(); }}
-            >
-              logout
-            </a></li>
         </ul>
       </div>
     </nav>

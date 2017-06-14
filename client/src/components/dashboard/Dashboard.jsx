@@ -5,12 +5,14 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import TopNav from './TopNav.jsx';
 import SideNav from './SideNav.jsx';
-import DocumentView from './DocumentView.jsx';
-import GeneralDocuments from './GeneralDocuments.jsx';
-import CreateDocument from './CreateDocument.jsx';
-import { logout } from '../actions/AuthAction';
-import { createDocument, getMydocument } from '../actions/DocumentActions';
-import UserView from './UserView.jsx';
+import UserDocuments from '../documents/UserDocuments.jsx';
+import GeneralDocuments from '../documents/GeneralDocuments.jsx';
+import CreateDocument from '../documents/CreateDocument.jsx';
+import SingleDocument from '../documents/SingleDocument.jsx';
+import EditProfile from '../users/EditProfile.jsx';
+import { logout } from '../../actions/AuthAction';
+import { createDocument, getMydocument } from '../../actions/DocumentActions';
+import AllUsers from '../users/AllUsers.jsx';
 /**
  * @desc DAshboard home
  * @class Dashboard
@@ -44,8 +46,12 @@ class Dashboard extends Component {
     }
     return (
       <div>
-        <TopNav logout={this.props.logout} />
-        <SideNav url={this.props.match.url} user={this.props.loggedIn.user} />
+        <TopNav />
+        <SideNav
+          url={this.props.match.url}
+          user={this.props.loggedIn.user}
+          logout={this.props.logout}
+        />
         <main>
           <Route
             path={`${this.props.match.url}/createdocument`}
@@ -56,18 +62,23 @@ class Dashboard extends Component {
           />
           <Route
             path={`${this.props.match.url}/mydocuments`}
-            render={props => (<DocumentView
+            render={props => (<UserDocuments
               {...props}
               user={this.props.loggedIn.user}
             />)}
           />
           <Route
-            path={`${this.props.match.url}/documents/:id`}
+            path={`${this.props.match.url}/editdocuments/:id`}
             component={CreateDocument}
           />
           <Route
+            path={`${this.props.match.url}/viewdocuments/:id`}
+            component={SingleDocument}
+          />
+
+          <Route
             path={`${this.props.match.url}/users`}
-            component={UserView}
+            component={AllUsers}
           />
           <Route
             path={`${this.props.match.url}/generalDocuments`}
@@ -75,6 +86,10 @@ class Dashboard extends Component {
               {...props}
               user={this.props.loggedIn.user}
             />)}
+          />
+          <Route
+            path={`${this.props.match.url}/editprofile`}
+            component={EditProfile}
           />
         </main>
       </div>

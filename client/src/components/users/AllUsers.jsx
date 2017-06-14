@@ -4,8 +4,9 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import swal from 'sweetalert';
 import queryString from 'query-string';
-import { getAllUsers, deleteUser, searchUser } from '../actions/userActions';
-import SearchBar from './SearchBar.jsx';
+import ReactPaginate from 'react-paginate';
+import { getAllUsers, deleteUser, searchUser } from '../../actions/userActions';
+import SearchBar from '../dashboard/SearchBar.jsx';
 import UserCard from './UserCard.jsx';
 
 
@@ -14,7 +15,7 @@ import UserCard from './UserCard.jsx';
  * @class DocumentView
  * @extends {Component}
  */
-class UserView extends Component {
+class AllUsers extends Component {
   /**
    * Creates an instance of DocumentView.
    * @param {any} props property of element
@@ -24,10 +25,15 @@ class UserView extends Component {
     super(props);
     this.state = {
       users: [{}],
-      query: ''
+      query: '',
+      limit: 10,
+      pageCount: null,
+      initialPage: 0,
+      showPaginate: false,
+
     };
     this.deleteUser = this.deleteUser.bind(this);
-    this.searchUser = this.searchUser.bind(this);
+    this.handlePageClick = this.handlePageClick.bind(this);
   }
   /**
    * @desc runs before component mounts
@@ -36,16 +42,19 @@ class UserView extends Component {
    */
   componentWillMount() {
     const parsed = queryString.parse(this.props.location.search);
-    if (parsed.query) {
-      this.setState({ query: parsed.query });
-      this.props.searchUser(parsed.query).then(() => {
-        this.setState({ users: this.props.users });
-      });
-    } else {
-      this.props.getAllUsers().then(() => {
-        this.setState({ users: this.props.users });
-      });
-    }
+    this.setState({ query: parsed.query ? parsed.query : '' });
+    const payload = {
+      query: parsed.query ? parsed.query : '',
+      limit: parsed.limit ? parsed.limit : 10,
+      offset: parsed.offset ? parsed.offset : 0,
+    };
+    this.props.searchUser(payload).then(() => {
+      this.setState({
+        users: this.props.users,
+        pageCount: Math.ceil(this.props.count / 10),
+        showPaginate: true,
+        initialPage: Math.ceil(parsed.offset / 10) });
+    });
   }
   /**
    * @desc runs when compoent recieves new props;
@@ -56,9 +65,17 @@ class UserView extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.location.search !== nextProps.location.search) {
       const parsed = queryString.parse(nextProps.location.search);
-      this.props.searchUser(parsed.query);
+      this.setState({ query: parsed.query ? parsed.query : '' });
+      const payload = {
+        query: parsed.query ? parsed.query : '',
+        limit: parsed.limit ? parsed.limit : 10,
+        offset: parsed.offset ? parsed.offset : 0,
+      };
+      this.props.searchUser(payload);
     } else {
-      this.setState({ users: nextProps.users });
+      this.setState({
+        users: nextProps.users,
+        pageCount: Math.ceil(nextProps.count / 10) });
     }
   }
   /**
@@ -85,7 +102,14 @@ class UserView extends Component {
   if (isConfirm) {
     swal('Deleted!', 'Your imaginary file has been deleted.', 'success');
     this.props.deleteUser(userId).then(() => {
-      this.props.getAllUsers();
+      const parsed = queryString.parse(this.props.location.search);
+      this.setState({ query: parsed.query ? parsed.query : '' });
+      const payload = {
+        query: parsed.query ? parsed.query : '',
+        limit: parsed.limit,
+        offset: parsed.offset,
+      };
+      this.props.searchUser(payload);
     });
   } else {
     swal('Cancelled', 'Your imaginary file is safe :)', 'error');
@@ -93,11 +117,23 @@ class UserView extends Component {
 });
   }
   /**
+   * @desc handles click of pagination
+   * @param {any} data value of clicked pagination button;
+   * @returns {null} no return value
+   * @memberof AllUsers
+   */
+  handlePageClick(data) {
+    const selected = data.selected;
+    const offset = Math.ceil(selected * this.state.limit);
+    this.props.history.replace(`${this.props.location.pathname}?query=${this.state.query}&limit=${10}&offset=${offset}`);
+  }
+  /**
    * @desc renders html
    * @returns {*} html
    * @memberof DocumentView
    */
   render() {
+    console.log(this.state, this.props.count);
     const users = this.state.users.map((user) => {
       const props = {
         firstName: user.firstName,
@@ -111,7 +147,7 @@ class UserView extends Component {
     });
     return (
       <div>
-        <h1>users</h1>
+        <h3 className=" header-dash">Users</h3>
         <SearchBar
           url={this.props.location.pathname}
           query={this.state.query}
@@ -121,6 +157,22 @@ class UserView extends Component {
             {users}
           </ul>
         </div>
+        {this.state.showPaginate &&
+        <ReactPaginate
+          initialPage={this.state.initialPage}
+          previousLabel={'previous'}
+          nextLabel={'next'}
+          breakLabel={<a href="">...</a>}
+          breakClassName={'break-me'}
+          pageCount={this.state.pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={this.handlePageClick}
+          containerClassName={'pagination'}
+          subContainerClassName={'pages pagination'}
+          activeClassName={'active'}
+        />
+        }
       </div>
     );
   }
@@ -133,15 +185,16 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 
 const mapStateToProps = state => ({
   users: state.userReducer.users,
+  count: state.userReducer.count,
   userId: state.authReducer.user.id
 });
-UserView.propTypes = {
+AllUsers.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
     search: PropTypes.string }).isRequired,
   searchUser: PropTypes.func.isRequired,
-  getAllUsers: PropTypes.func.isRequired,
   deleteUser: PropTypes.func.isRequired,
-  users: PropTypes.arrayOf(PropTypes.shape).isRequired
+  users: PropTypes.arrayOf(PropTypes.shape).isRequired,
+  count: PropTypes.number.isRequired,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(UserView);
+export default connect(mapStateToProps, mapDispatchToProps)(AllUsers);

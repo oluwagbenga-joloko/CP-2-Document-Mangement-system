@@ -12,7 +12,10 @@ const DocumentController = {
     return Document
       .create(DocumentDetails)
       .then(document => res.status(201).send({ success: true, document }))
-      .catch(error => res.status(400).send({ success: false, msg: error.errors[0].message }));
+      .catch(error => res.status(400).send({
+        success: false,
+        msg: error.errors[0].message
+      }));
   },
   list(req, res) {
     return Document
@@ -39,7 +42,9 @@ const DocumentController = {
         ) {
           res.status(200).send({ success: true, document });
         } else {
-          res.status(401).send({ success: false, msg: 'unauthorized', document });
+          res.status(401).send({ success: false,
+            msg: 'unauthorized',
+            document });
         }
       })
       .catch(error => res.status(401).send({ sucess: false, error }));
@@ -56,7 +61,9 @@ const DocumentController = {
       ) {
         return document
          .destroy()
-         .then(() => res.status(200).send({ success: true, msg: 'document deleted' }))
+         .then(() => res.status(200).send({
+           success: true,
+           msg: 'document deleted' }))
          .catch(error => res.status(400).send({ success: false, error }));
       } else {
         res.status(401).send({ success: false, msg: 'unauthorized' });
@@ -78,8 +85,15 @@ const DocumentController = {
       } else if (req.decoded.id === document.userId) {
         return document
           .update(DocumentDetails)
-          .then(() => res.status(200).send({ success: true, document, msg: 'document update success' }))
-          .catch(error => res.status(400).send({ success: false, msg: error.errors[0].message }));
+          .then(() => res.status(200).send({
+            success: true,
+            document,
+            msg: 'document update success'
+          }))
+          .catch(error => res.status(400).send({
+            success: false,
+            msg: error.errors[0].message
+          }));
       } else {
         res.status(401).send({ success: false, msg: 'unauthorized' });
       }
@@ -87,10 +101,11 @@ const DocumentController = {
    .catch(error => res.status(400).send({ success: false, error }));
   },
   search(req, res) {
-    
     if (req.decoded.roleId === 1) {
       return Document
-        .findAll({
+        .findAndCountAll({
+          limit: Number(req.query.limit) || null,
+          offset: Number(req.query.offset) || null,
           where: {
             $or: [
               { title: { $ilike: `%${req.query.q}%` } },
@@ -98,13 +113,16 @@ const DocumentController = {
             ]
           }
         })
-    .then(documents => res.status(200).send({ success: true, documents }))
+    .then(result => res.status(200).send({
+      success: true,
+      documents: result.rows,
+      count: result.count }))
     .catch(error => res.status(401).send({ sucess: false, error }));
-  } else {
-    console.log(req.decoded.roleId);
-    console.log(typeof(req.decoded.roleId));
-    return Document
-        .findAll({
+    } else {
+      return Document
+        .findAndCountAll({
+          limit: Number(req.query.limit) || null,
+          offset: Number(req.query.offset) || null,
           where: {
             $and: [{
               $or: [
@@ -124,8 +142,12 @@ const DocumentController = {
             ]
           }
         })
-    .then(documents => res.status(200).send({ success: true, documents }))
+    .then(result => res.status(200).send({
+      success: true,
+      documents: result.rows,
+      count: result.count }))
     .catch(error => res.status(401).send({ sucess: false, error }));
-  }}
+    }
+  }
 };
 export default DocumentController;

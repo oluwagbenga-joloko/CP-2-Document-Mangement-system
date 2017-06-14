@@ -28,5 +28,7 @@ const actionTypes = keyMirror({
   SEARCH_USER: null,
   SEARCH_USER_SUCCESS: null,
   SEARCH_DOCUMENT_SUCCESS: null,
+  UPDATE_USER_SUCCESS: null,
+  UPDATE_USER: null,
 });
 export default actionTypes;

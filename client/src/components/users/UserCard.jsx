@@ -11,7 +11,7 @@ const UserCard = ({
   userRoleId
 }) => (
   <li className="collection-item avatar">
-    <i className="material-icons circle red">perm_identity</i>
+    <i className="material-icons circle user-icon">perm_identity</i>
     <span className="title">Title</span>
     { userRoleId !== 1 &&
       <a
@@ -21,7 +21,7 @@ const UserCard = ({
           e.preventDefault();
           deleteUser(firstName, lastName, userId);
         }}
-      ><i className="material-icons left">delete_forever</i>Delete User</a>
+      ><i className="material-icons left">delete_forever</i>Delete</a>
     }
     <p>Name: {firstName} {lastName}
       <br />

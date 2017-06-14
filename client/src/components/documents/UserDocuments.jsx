@@ -3,19 +3,19 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import swal from 'sweetalert';
-import { getMydocuments, deleteDocument } from '../actions/DocumentActions';
+import { getMydocuments, deleteDocument } from '../../actions/DocumentActions';
 import DocumentCard from './DocumentCard.jsx';
 
 /**
- * @desc documentview component
- * @class DocumentView
+ * @desc Userdocuments component
+ * @class UserDocuments
  * @extends {Component}
  */
-class DocumentView extends Component {
+class UserDocuments extends Component {
   /**
-   * Creates an instance of DocumentView.
+   * Creates an instance of UserDocuments.
    * @param {any} props property of element
-   * @memberof DocumentView
+   * @memberof UserDocuments
    */
   constructor(props) {
     super(props);
@@ -26,7 +26,7 @@ class DocumentView extends Component {
   }
   /**
    * @desc runs before component mounts
-   * @memberof DocumentView
+   * @memberof UserDocuments
    * @returns {*} has no return value;
    */
   componentWillMount() {
@@ -37,7 +37,7 @@ class DocumentView extends Component {
   /**
    * @desc runs when compoent recieves new props;
    * @param {any} nextProps next property of element
-   * @memberof DocumentView
+   * @memberof UserDocuments
    *  @returns {*} has no return value;
    */
   componentWillReceiveProps(nextProps) {
@@ -50,7 +50,7 @@ class DocumentView extends Component {
    * @param {string} title title of element to be deleted
    * @param {number} id id of element to be deleted
    * @returns {*} has no return value;
-   * @memberof DocumentView
+   * @memberof UserDocuments
    */
   handleDelete(title, id) {
     swal({
@@ -78,7 +78,7 @@ class DocumentView extends Component {
   /**
    * @desc renders html
    * @returns {*} html
-   * @memberof DocumentView
+   * @memberof UsereDocuments
    */
   render() {
     const documents = this.state.documents.map((document) => {
@@ -92,9 +92,10 @@ class DocumentView extends Component {
       return <DocumentCard {...props} />;
     });
     return (
+
       <div>
-        <h1>Your documents</h1>
-        <div className="row">
+        <h3 className=" header-dash">My Documents</h3>
+        <div className="row" >
           {documents}
         </div>
       </div>
@@ -110,10 +111,10 @@ const mapStateToProps = state => ({
   documents: state.documentReducer.Documents,
   userId: state.authReducer.user.id
 });
-DocumentView.propTypes = {
+UserDocuments.propTypes = {
   documents: PropTypes.arrayOf(PropTypes.shape).isRequired,
   userId: PropTypes.number.isRequired,
   getMydocuments: PropTypes.func.isRequired,
   deleteDocument: PropTypes.func.isRequired
 };
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentView);
+export default connect(mapStateToProps, mapDispatchToProps)(UserDocuments);

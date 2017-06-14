@@ -7,7 +7,10 @@ const doumentReducer = (state = { Documents: [], document: {} }, action) => {
     case actionTypes.GET_MY_DOCUMENTS_SUCCESS:
       return { ...state, allDocs: true, Documents: action.payload.documents };
     case actionTypes.SEARCH_DOCUMENT_SUCCESS:
-      return { ...state, allDocs: true, Documents: action.payload.documents };
+      return { ...state,
+        allDocs: true,
+        Documents: action.payload.documents,
+        count: action.payload.count };
     case actionTypes.GET_DOCUMENT_SUCCESS:
       return { ...state, getdoc: true, document: action.payload.document };
     case actionTypes.UPDATE_DOCUMENT_SUCCESS:

@@ -49,31 +49,39 @@ class SearchBar extends Component {
    */
   render() {
     return (
+      <div >
 
-      <form onSubmit={this.handleSubmit}>
-        <div className="input-field inline">
-          <input
-            id="search"
-            type="search"
-            required
-            name="query"
-            value={this.state.query}
-            onChange={this.handleChange}
-          />
-          <label className="label-icon" htmlFor="search">
-            <i className="material-icons">search</i>
-          </label>
-          <i className="material-icons">close</i>
+        <div className="row">
+          <div className="col s12 m8">
+            <form onSubmit={this.handleSubmit}>
+              <div className="row z-depth-2">
+                <div className="col s10">
+                  <input
+                    placeHolder="Search"
+                    id="search"
+                    type="search"
+                    name="query"
+                    value={this.state.query}
+                    onChange={this.handleChange}
+                  />
+                </div>
+                <div className="col s2 right-align">
+                  <button
+                    className={`btn waves-effect waves-light
+                     left-align z-depth-0 search-btn`}
+                    type="submit"
+                  >
+                    <i className="material-icons search-icon">search</i>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div className="card-content" />
         </div>
-        <button
-          className="btn waves-effect waves-light"
-          type="submit"
-          name="action"
-        >
-          Submit
-          <i className="material-icons right">send</i>
-        </button>
-      </form>);
+      </div>
+    );
   }
 }
 SearchBar.propTypes = {

@@ -3,27 +3,28 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import toastr from 'toastr';
-import { Redirect, Link } from 'react-router-dom';
-import { signUp } from '../actions/AuthAction';
+import { Redirect } from 'react-router-dom';
+import { updateUser } from '../../actions/userActions';
+
 /**
- * @desc signUp Component
- * @class SignUp
+ * @desc EditProfile Component
+ * @class EditProfile
  * @extends {Component}
  */
-class SignUp extends Component {
+class EditProfile extends Component {
   /**
-   * Creates an instance of SignUp.
+   * Creates an instance of EditProfile.
    * @param {any} props property of Component
-   * @memberof SignUp
+   * @memberof EditProfile
    */
   constructor(props) {
     super(props);
     this.state = {
-      firstName: '',
-      lastName: '',
+      firstName: this.props.user.firstName,
+      lastName: this.props.user.lastName,
       password: '',
-      email: '',
+      userId: this.props.user.id,
+      email: this.props.user.email,
       errorMsg: '',
       showError: false
 
@@ -72,7 +73,7 @@ class SignUp extends Component {
           minlength: 2
         },
         password: {
-          required: true,
+          required: false,
           minlength: 5,
           nowhitespace: true,
         },
@@ -96,7 +97,6 @@ class SignUp extends Component {
           email: 'please enter a valid email'
         },
         password: {
-          required: 'Please provide a password',
           minlength: 'Your password must be at least 5 characters long'
         },
       },
@@ -105,9 +105,11 @@ class SignUp extends Component {
         error.insertAfter(element);
       },
       submitHandler() {
-        that.props.signUp(that.state).then(() => {
-          toastr.success('Account created successfully');
-        });
+        console.log(that.state);
+        that.props.updateUser(that.state);
+        // that.props.signUp(that.state).then(() => {
+        //   toastr.success('Account created successfully');
+        // });
       }
     });
   }
@@ -117,29 +119,12 @@ class SignUp extends Component {
    * @memberof SignUp
    */
   render() {
-    if (this.props.status.success) {
-      return (<Redirect
-        push
-        to={{
-          pathname: '/dashboard',
-        }}
-      />);
-    }
     return (
-      <div className="row login">
-        <div className="col s12 m6 div logo" >
-          <h1 className="center-align">
-            <span className="logo1">Document</span>
-            <span className="logo2">It</span>
-          </h1>
-          <h1 className="logintext center-align ">
-            Manage all your Documents in one Place
-          </h1>
-        </div>
-        <div className="col s12 m6 signup_body">
+      <div className="row">
+        <div className="col s12 editProfile-body">
           <div className="row">
-            <div className="col s10  offset-s1">
-              <div className="card form z-depth-4">
+            <div className="col s10  offset-s1 ">
+              <div className="card form z-depth-0">
                 <div className="card-content login-content">
                   <form
                     id="signupForm"
@@ -186,11 +171,10 @@ class SignUp extends Component {
                           onChange={this.handleChange}
                         />
                         { this.state.showError &&
-                        <div className="custom-error">
-                          {this.state.errorMsg}
-                        </div>
-                        }
+                        <div className="custom-error">{this.state.errorMsg}</div>
+                    }
                         <label htmlFor="email" className="active">Email</label>
+
                       </div>
                     </div>
                     <div className="row">
@@ -200,6 +184,7 @@ class SignUp extends Component {
                           id="password"
                           type="password"
                           name="password"
+                          placeholder="Leave Blank if you dont to edit"
                           value={this.state.password}
                           onChange={this.handleChange}
                         />
@@ -210,39 +195,44 @@ class SignUp extends Component {
                       </div>
                     </div>
                     <div className="row">
-                      <button
-                        className="btn waves-effect waves-light col s6 offset-s3 z-depth-4 loginbtn"
-                        type="submit"
 
-                      >Sign Up
-              </button>
+                      <button
+                        className={`btn waves-effect 
+                        waves-light col s4 offset-s1 z-depth-4 save-btn`}
+                        type="submit"
+                      >Save<i className="material-icons left">save</i>
+                      </button>
                     </div>
 
                   </form>
-                  <div className="divider" />
-                  <p className="center-align">Have an account ?
-                    <Link className="center-align" to="/login"> login</Link>
-                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    );
+    )
+;
   }
 }
-const mapDispatchToProps = dispatch => bindActionCreators({ signUp }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  updateUser
+}, dispatch);
 const mapStateToProps = state => ({
-  status: state.authReducer
+  user: state.authReducer.user
 });
-SignUp.defaultProps = {
+EditProfile.defaultProps = {
   status: false,
   signUp: () => undefined
 };
-SignUp.propTypes = {
+EditProfile.propTypes = {
   status: PropTypes.func,
-  signUp: PropTypes.func,
+  user: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    id: PropTypes.number,
+    email: PropTypes.string,
+  }).isRequired
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);

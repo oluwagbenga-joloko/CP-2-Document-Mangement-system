@@ -96,7 +96,7 @@ class UserDocuments extends Component {
       <div>
         <h3 className=" header-dash">My Documents</h3>
         <div className="row" >
-        {documents}
+          {documents}
         </div>
       </div>
     );

@@ -12,7 +12,10 @@ const DocumentController = {
     return Document
       .create(DocumentDetails)
       .then(document => res.status(201).send({ success: true, document }))
-      .catch(error => res.status(400).send({ success: false, msg: error.errors[0].message }));
+      .catch(error => res.status(400).send({
+        success: false,
+        msg: error.errors[0].message
+      }));
   },
   list(req, res) {
     return Document
@@ -39,7 +42,9 @@ const DocumentController = {
         ) {
           res.status(200).send({ success: true, document });
         } else {
-          res.status(401).send({ success: false, msg: 'unauthorized', document });
+          res.status(401).send({ success: false,
+            msg: 'unauthorized',
+            document });
         }
       })
       .catch(error => res.status(401).send({ sucess: false, error }));
@@ -56,7 +61,9 @@ const DocumentController = {
       ) {
         return document
          .destroy()
-         .then(() => res.status(200).send({ success: true, msg: 'document deleted' }))
+         .then(() => res.status(200).send({
+           success: true,
+           msg: 'document deleted' }))
          .catch(error => res.status(400).send({ success: false, error }));
       } else {
         res.status(401).send({ success: false, msg: 'unauthorized' });
@@ -78,8 +85,15 @@ const DocumentController = {
       } else if (req.decoded.id === document.userId) {
         return document
           .update(DocumentDetails)
-          .then(() => res.status(200).send({ success: true, document, msg: 'document update success' }))
-          .catch(error => res.status(400).send({ success: false, msg: error.errors[0].message }));
+          .then(() => res.status(200).send({
+            success: true,
+            document,
+            msg: 'document update success'
+          }))
+          .catch(error => res.status(400).send({
+            success: false,
+            msg: error.errors[0].message
+          }));
       } else {
         res.status(401).send({ success: false, msg: 'unauthorized' });
       }
@@ -99,7 +113,10 @@ const DocumentController = {
             ]
           }
         })
-    .then(result => res.status(200).send({ success: true, documents: result.rows, count: result.count }))
+    .then(result => res.status(200).send({
+      success: true,
+      documents: result.rows,
+      count: result.count }))
     .catch(error => res.status(401).send({ sucess: false, error }));
     } else {
       return Document
@@ -125,8 +142,12 @@ const DocumentController = {
             ]
           }
         })
-    .then(result => res.status(200).send({ success: true, documents: result.rows, count: result.count }))
+    .then(result => res.status(200).send({
+      success: true,
+      documents: result.rows,
+      count: result.count }))
     .catch(error => res.status(401).send({ sucess: false, error }));
-    }} 
+    }
+  }
 };
 export default DocumentController;

@@ -140,7 +140,10 @@ class EditProfile extends Component {
                           value={this.state.firstName}
                           onChange={this.handleChange}
                         />
-                        <label htmlFor="first_name" className="active">First Name</label>
+                        <label
+                          htmlFor="first_name"
+                          className="active"
+                        >First Name</label>
                       </div>
                       <div className="input-field col s6">
                         <i className="material-icons prefix">account_box</i>
@@ -151,7 +154,10 @@ class EditProfile extends Component {
                           value={this.state.lastName}
                           onChange={this.handleChange}
                         />
-                        <label htmlFor="last_name" className="active">Last Name</label>
+                        <label
+                          htmlFor="last_name"
+                          className="active"
+                        >Last Name</label>
                       </div>
                     </div>
                     <div className="row">
@@ -182,13 +188,17 @@ class EditProfile extends Component {
                           value={this.state.password}
                           onChange={this.handleChange}
                         />
-                        <label htmlFor="password" className="active">Password</label>
+                        <label
+                          htmlFor="password"
+                          className="active"
+                        >Password</label>
                       </div>
                     </div>
                     <div className="row">
 
                       <button
-                        className="btn waves-effect waves-light col s4 offset-s1 z-depth-4 save-btn"
+                        className={`btn waves-effect 
+                        waves-light col s4 offset-s1 z-depth-4 save-btn`}
                         type="submit"
                       >Save<i className="material-icons left">save</i>
                       </button>
@@ -205,7 +215,9 @@ class EditProfile extends Component {
 ;
   }
 }
-const mapDispatchToProps = dispatch => bindActionCreators({ updateUser }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  updateUser
+}, dispatch);
 const mapStateToProps = state => ({
   user: state.authReducer.user
 });
@@ -215,8 +227,12 @@ EditProfile.defaultProps = {
 };
 EditProfile.propTypes = {
   status: PropTypes.func,
-  signUp: PropTypes.function,
-  user: PropTypes.shape({ firstName: PropTypes.string.isRequired,  })
+  user: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    id: PropTypes.number,
+    email: PropTypes.string,
+  }).isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);

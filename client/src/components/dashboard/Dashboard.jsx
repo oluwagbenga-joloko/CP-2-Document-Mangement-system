@@ -40,7 +40,7 @@ class Dashboard extends Component {
       return (<Redirect
         push
         to={{
-          pathname: '/login',
+          pathname: '/',
         }}
       />);
     }
@@ -54,7 +54,8 @@ class Dashboard extends Component {
         />
         <main>
           <Route
-            path={`${this.props.match.url}/createdocument`}
+            exact
+            path={`${this.props.match.url}/`}
             render={props => (<CreateDocument
               {...props}
               create={this.props.createDocument}

@@ -27,7 +27,7 @@ app.use(require('webpack-dev-middleware')(compiler, {
 
 app.use(require('webpack-hot-middleware')(compiler));
 
-app.use(express.static(path.join(__dirname, 'client/public')));
+app.use(express.static(path.join(__dirname, 'client/src')));
 app.use('/api/roles', roleRouter);
 app.use('/api/users', userRouter);
 app.use('/api/documents', documentRouter);

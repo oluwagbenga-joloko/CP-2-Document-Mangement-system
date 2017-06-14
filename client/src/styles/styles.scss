@@ -21,9 +21,6 @@ $font4: 'Josefin Slab', serif;
         padding-left: 0;
       }
     }
-    input[type="text"][disabled] {
-   color: red;
-}
 .deleteUser {
       padding-left: 10px;
     padding-right: 10px;
@@ -33,10 +30,10 @@ $font4: 'Josefin Slab', serif;
   float: right;
 }
 .login {
-  background: $primary;
-  position: absolute;
-  width: 100%;
-  min-height: 100%;
+  background: $primary !important;
+  position: absolute !important;
+  width: 100% !important;
+  min-height: 100% !important;
 }
 .form {
   // margin-top: 150px;

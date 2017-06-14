@@ -6,7 +6,13 @@
   "scripts": {
     "start": "nodemon --exec babel-node server.js ",
     "coverage": "NODE_ENV=test nyc report --reporter=text-lcov | coveralls > lcov.info",
-    "test": "NODE_ENV=test nyc ./node_modules/mocha/bin/_mocha --compilers js:babel-register server/tests/**/*.spec.js --timeout=60000"
+    "test": "NODE_ENV=test nyc ./node_modules/mocha/bin/_mocha --compilers js:babel-register server/tests/**/*.spec.js --timeout=60000",
+    "clean-dist": "npm run remove-dist && mkdir -p client/dist",
+    "remove-dist": "node_modules/.bin/rimraf client/dist",
+    "build:html": "babel-node tools/buildHtml.js",
+    "prebuild": "npm-run-all clean-dist build:html",
+    "build": "babel-node tools/build.js",
+    "postbuild": "babel-node serverProd.js"
   },
   "author": "Oluwagbenga Joloko",
   "license": "ISC",
@@ -79,7 +85,6 @@
     "eslint-watch": "3.1.0",
     "eventsource-polyfill": "0.9.6",
     "expect": "1.20.2",
-    "extract-text-webpack-plugin": "2.1.0",
     "file-loader": "0.11.1",
     "jsdom": "11.0.0",
     "mocha": "^3.4.2",

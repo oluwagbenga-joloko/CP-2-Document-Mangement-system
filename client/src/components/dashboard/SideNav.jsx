@@ -19,10 +19,9 @@ const SideNav = ({ user, url, logout }) => (
         </div></li>
 
       <li><div className="divider nav_divider" /></li>
-      <li><a href={`${url}/creatdocument`} className="subheader">header</a></li>
       <li>
         <Link
-          to={`${url}/createdocument`}
+          to={`${url}`}
           className="waves-effect side-nav-link"
         >
           <i className="material-icons side-nav-link-av">add_circle</i>

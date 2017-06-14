@@ -13,7 +13,7 @@ module.exports = {
     logging: false
   },
   production: {
-    url: process.env.DATABASE_URL_PROD,
+    url: process.env.DATABASE_URL,
     dialect: 'postgres',
     logging: false,
     ssl: true,

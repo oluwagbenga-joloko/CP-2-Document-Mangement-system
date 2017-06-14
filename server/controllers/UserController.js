@@ -44,7 +44,7 @@ const userController = {
   },
   list(req, res) {
     return User
-    .findAll({
+    .findAndCountAll({
       limit: Number(req.query.limit) || null,
       offset: Number(req.query.offset) || null,
       include: [{
@@ -52,7 +52,7 @@ const userController = {
         as: 'Documents',
       }]
     })
-    .then(users => res.status(200).send({ success: true, users }))
+    .then(result => res.status(200).send({ success: true, users: result.rows, count: result.count }))
     .catch(error => res.status(401).send({ sucess: false, error }));
   },
   retrieve(req, res) {
@@ -94,19 +94,36 @@ const userController = {
   },
   update(req, res) {
     if (req.decoded.id === Number(req.params.id)) {
-      const userDetails = {
-        firstName: req.body.firstName,
-        email: req.body.email,
-        lastName: req.body.lastName,
-        password: req.body.password,
-      };
+      let userDetails;
+      if (req.body.password) {
+        userDetails = {
+          firstName: req.body.firstName,
+          email: req.body.email,
+          lastName: req.body.lastName,
+          password: req.body.password,
+        };
+      } else {
+        userDetails = {
+          firstName: req.body.firstName,
+          email: req.body.email,
+          lastName: req.body.lastName
+        };
+      }
       return User
         .findById(req.params.id)
         .then(user => user
           .update(userDetails)
-          .then(() => res.status(200).send({ success: true, user }))
-          .catch(error => res.status(400).send({ success: false, error })))
-        .catch(error => res.status(400).send({ success: false, error }));
+          .then(() => res.status(200).send({
+            success: true,
+            user,
+            msg: 'profile update success' }))
+          .catch(error => res.status(400).send({ success: false,
+            error,
+            msg: error.errors[0].message
+          })))
+        .catch(error => res.status(400).send({ success: false,
+          error,
+          msg: error.errors[0].message }));
     } else if (req.decoded.id === 1) {
       return User
         .findById(req.params.id)
@@ -121,12 +138,20 @@ const userController = {
                 if (role.id !== 1) {
                   user.update({ roleId: role.id })
                    .then(() => res.status(200).send({ success: true, user }))
-                   .catch(error => res.status(400).send({ success: false, error }));
+                   .catch(error => res.status(400).send({ success: false,
+                     error
+                   }));
                 } else {
-                  res.status(409).send({ success: false, msg: 'cannot make user admin' });
+                  res.status(409).send({
+                    success: false,
+                    msg: 'cannot make user admin'
+                  });
                 }
               } else {
-                res.status(404).send({ success: false, msg: 'role not does not exist' });
+                res.status(404).send({
+                  success: false,
+                  msg: 'role not does not exist'
+                });
               }
             })
             .catch(error => res.status(400).send({ success: false, error }));
@@ -160,7 +185,9 @@ const userController = {
             user.verifyPassword(req.body.password)
               .then((validPassword) => {
                 if (!validPassword) {
-                  res.status(404).send({ success: false, msg: 'invalid password' });
+                  res.status(404).send({
+                    success: false,
+                    msg: 'invalid password' });
                 } else {
                   jwt.sign({
                     firstName: user.firstName,
@@ -181,7 +208,9 @@ const userController = {
   },
   search(req, res) {
     return User
-    .findAll({
+    .findAndCountAll({
+      limit: Number(req.query.limit) || null,
+      offset: Number(req.query.offset) || null,
       where: {
         $or: [
           { firstName: { $ilike: `%${req.query.q}%` } },
@@ -190,12 +219,16 @@ const userController = {
         ]
       }
     })
-    .then(users => res.status(200).send({ success: true, users }))
+    .then(result => res.status(200).send({ success: true,
+      users: result.rows,
+      count: result.count,
+      result
+    }))
     .catch(error => res.status(401).send({ sucess: false, error }));
   },
 
   logout(req, res) {
-    res.send({ succes: false });
+    res.send({ success: false });
   }
 };
 export default userController;

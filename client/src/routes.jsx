@@ -1,8 +1,8 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import SignUp from './components/SignUp.jsx';
-import Login from './components/Login.jsx';
-import Dashboard from './components/Dashboard.jsx'
+import SignUp from './components/authentication/SignUp.jsx';
+import Login from './components/authentication/Login.jsx';
+import Dashboard from './components/dashboard/Dashboard.jsx';
 
 
 const routes = (

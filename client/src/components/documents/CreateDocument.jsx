@@ -2,11 +2,27 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import TinyMCE from 'react-tinymce';
 import {
   getDocument,
   createDocument,
   updateDocument
-  } from '../actions/DocumentActions';
+  } from '../../actions/DocumentActions';
+
+const STYLES = {
+  container: {
+    fontFamily: 'Helvetica Neue, sans-serif',
+    padding: '0 25px'
+  },
+  output: {
+    border: '1px solid #999',
+    borderRadius: 5,
+    fontFamily: 'Courier New, monospace',
+    padding: 10,
+    height: 250,
+    overflow: 'auto'
+  }
+};
 
 /**
  * @desc compeent used to creat update and view document
@@ -24,15 +40,16 @@ class CreateDocument extends Component {
     super(props);
     this.state = {
       title: '',
-      content: '',
       access: '',
       edit: false,
       owner: false,
+      showTinyMce: false,
 
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleEditClick = this.handleEditClick.bind(this);
+    this.handleEditorChange = this.handleEditorChange.bind(this);
   }
   /**
    * @desc handles change of form input
@@ -45,7 +62,7 @@ class CreateDocument extends Component {
       const id = this.props.match.params.id;
       this.props.getDocument(id);
     } else {
-      this.setState({ edit: true });
+      this.setState({ edit: true, showTinyMce: true, owner: true });
     }
   }
   /**
@@ -58,7 +75,7 @@ class CreateDocument extends Component {
     const { document, user } = this.props;
     if (document !== nextProps.document) {
       const newdocument = nextProps.document;
-      this.setState({ ...newdocument });
+      this.setState({ showTinyMce: true, ...newdocument });
       if (newdocument.userId === user.id) {
         this.setState({ owner: true });
       }
@@ -74,6 +91,7 @@ class CreateDocument extends Component {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
+    console.log(name, value);
     this.setState({ [name]: value });
   }
   /**
@@ -101,19 +119,33 @@ class CreateDocument extends Component {
     event.preventDefault();
     this.setState({ edit: true });
   }
-  /**
+ /**
+  * @desc handles change of TinyMCE editor
+  * @param {any} e html event
+  * @returns {null} no return value
+  * @memberof CreateDocument
+  */
+  handleEditorChange(e) {
+    this.setState({ content: e.target.getContent() });
+  }
+   /**
    * @desc renders Html
    * @returns {*} html
    * @memberof Login
    */
   render() {
+    console.log('this.state.content', this.state.content);
     return (
-      <div className="row">
-        <form className="col s10" onSubmit={this.handleSubmit}>
+      <div >
+        { this.state.showTinyMce &&
+        <form onSubmit={this.handleSubmit}>
           <div className="row">
-            <div className="input-field col s12">
+            <div className="col s3 m1 title-div">
+              <h4 className="create-title">Title</h4>
+            </div>
+            <div className="input-field col s9 m4">
               <input
-                disabled={!this.state.edit}
+                disabled={!this.state.owner}
                 id="title"
                 type="text"
                 className="validate"
@@ -121,25 +153,17 @@ class CreateDocument extends Component {
                 value={this.state.title}
                 onChange={this.handleChange}
               />
-              <label htmlFor="title">tiitle</label>
+
             </div>
-            <div className="row">
-              <div className="input-field col s12">
-                <textarea
-                  disabled={!this.state.edit}
-                  name="content"
-                  id="textarea1"
-                  className="materialize-textarea"
-                  value={this.state.content}
-                  onChange={this.handleChange}
-                />
-                <label htmlFor="textarea1">content</label>
-              </div>
+            <div className="col s3 m1 title-div">
+              <h4 className="access-title">Access</h4>
             </div>
-            <div className="input-field col s12">
+
+            <div className="input-field col s8 m4 access-option">
+
               <select
-                disabled={!this.state.edit}
                 className="browser-default"
+                disabled={!this.state.owner}
                 id="Select"
                 name="access"
                 value={`${this.state.access}`}
@@ -150,27 +174,25 @@ class CreateDocument extends Component {
                 <option value="private">private</option>
                 <option value="role">role</option>
               </select>
-              <label htmlFor="Select"className="active" >access</label>
             </div>
           </div>
-          { !this.state.edit && this.state.owner &&
-            <div
-              className="waves-effect waves-light btn"
-              onClick={this.handleEditClick}
-            >
-              <i className="material-icons left">mode_edit</i>Edit
-            </div>
-          }
-          { this.state.edit &&
-            <div className="waves-effect waves-light btn">
-              <i
-                className="material-icons left"
-              >save
-             </i>
-              <input type="submit" value="Save" />
-            </div>
+          <div style={STYLES.container} className="row">
+            <TinyMCE
+              content={this.state.content}
+              onChange={this.handleEditorChange}
+            />
+            <br />
+          </div>
+          { this.state.owner &&
+            <button
+              className={`btn waves-effect
+              waves-light col s6 offset-s3 z-depth-4 save-btn`}
+              type="submit"
+            >Save<i className="material-icons left">save</i>
+              </button>
           }
         </form>
+        }
       </div>
     );
   }

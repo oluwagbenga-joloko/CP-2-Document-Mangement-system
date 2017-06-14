@@ -6,25 +6,18 @@ import actionTypes from './actionTypes';
 const createDocumentSuccess = payload => ({
   type: actionTypes.CREATE_DOCUMENT_SUCCESS, payload
 });
-const createDocumentFaluire = payload => ({
-  type: actionTypes.CREATE_DOCUMENT_FALUIRE, payload
-});
 const createDocument = payload => dispatch => axios
   .post('/api/documents', payload)
   .then((res) => {
     toastr.success('document created successfully');
     dispatch(createDocumentSuccess(res.data));
   })
-  .catch((error) => {
-    toastr.error(error.response.data.msg);
-    dispatch(createDocumentFaluire(error.response.data));
+  .catch((err) => {
+    toastr.error(err.response.data.msg);
+    throw (err);
   });
 
 const getMydocumentsSuccess = payload => ({
-  type: actionTypes.GET_MY_DOCUMENTS_SUCCESS,
-  payload
-});
-const getMydocumentsfailure = payload => ({
   type: actionTypes.GET_MY_DOCUMENTS_SUCCESS,
   payload
 });
@@ -34,14 +27,12 @@ const getMydocuments = payload => dispatch => axios
     dispatch(getMydocumentsSuccess(res.data));
   })
   .catch((err) => {
-    dispatch(getMydocumentsfailure(err.respponse.data));
+    toastr.error(err.response.data.msg);
+    throw (err);
   });
 
 const getDocumentSuccess = payload => ({
   type: actionTypes.GET_DOCUMENT_SUCCESS, payload
-});
-const getDocumentFailure = payload => ({
-  type: actionTypes.GET_MY_DOCUMENTS_FAILURE, payload
 });
 
 const getDocument = payload => dispatch => axios
@@ -49,48 +40,44 @@ const getDocument = payload => dispatch => axios
   .then((res) => {
     dispatch(getDocumentSuccess(res.data));
   })
-  .catch((error) => {
-    dispatch(getDocumentFailure(error.response.data));
+  .catch((err) => {
+    toastr.error(err.response.data.msg);
+    throw (err);
   });
 const updateDocumentSuccess = payload => ({
   type: actionTypes.UPDATE_DOCUMENT_SUCCESS, payload
 });
-const updateDocumentFailure = payload => ({
-  type: actionTypes.DELETE_DOCUMENT_SUCCESS, payload
-});
+
 const updateDocument = payload => dispatch => axios
   .put(`api/documents/${payload.id}`, payload)
   .then((res) => {
     toastr.success(res.data.msg);
     dispatch(updateDocumentSuccess(res.data));
-  }).catch((error) => {
-    toastr.error(error.response.data.msg);
-    dispatch(updateDocumentFailure(error.response.data));
+  }).catch((err) => {
+    toastr.error(err.response.data.msg);
+    throw (err);
   });
 
 const deleteDocumentSuccess = payload => ({
   type: actionTypes.DELETE_DOCUMENT_SUCCESS, payload
 });
-// const deleteDocumentFailure = payload => ({
-//   // type: actionTypes.DELETE_DOCUMENT_, payload
-// });
+
 const deleteDocument = payload => dispatch => axios
  .delete(`api/documents/${payload}`)
  .then((res) => {
    toastr.success(res.data.msg);
    dispatch(deleteDocumentSuccess(res.data));
- }).catch((error) => {
-  //  dispatch(deleteDocumentFailure(error.response.data));
+ }).catch((err) => {
+   toastr.error(err.response.data.msg);
+   throw (err);
  });
 const searchDocumentsSuccess = payload => ({
   type: actionTypes.SEARCH_DOCUMENT_SUCCESS, payload
 });
 
 const searchDocuments = payload => dispatch => axios
-  .get(`api/search/documents/?q=${payload}`)
+  .get(`api/search/documents/?q=${payload.query}&offset=${payload.offset}&limit=${payload.limit}`)
   .then((res) => {
-    console.log('dfdfdfdfd');
-    console.log(res.data);
     dispatch(searchDocumentsSuccess(res.data));
   });
 export {

@@ -17,13 +17,14 @@ const login = details => dispatch => axios
   })
   .catch((error) => {
     dispatch(loginFaliure(error.response.data));
+    throw (error);
   });
 
 const signUpFaliure = payload => ({
-  type: actionTypes.SIGN_UP_SUCCESS, payload
+  type: actionTypes.SIGN_UP_FALUIRE, payload
 });
 const signUpSuccess = payload => ({
-  type: actionTypes.SIGN_UP_FALUIRE, payload
+  type: actionTypes.SIGN_UP_SUCCESS, payload
 });
 const signUp = details => dispatch => axios
   .post('/api/users', details)
@@ -34,6 +35,7 @@ const signUp = details => dispatch => axios
   })
   .catch((error) => {
     dispatch(signUpFaliure(error.response.data));
+    throw (error);
   });
 
 const logout = () => {

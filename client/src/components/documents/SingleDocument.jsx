@@ -31,7 +31,6 @@ class SingleDocument extends Component {
       createdAt: ''
 
     };
-    this.handleEditClick = this.handleEditClick.bind(this);
   }
   /**
    * @desc handles change of form input

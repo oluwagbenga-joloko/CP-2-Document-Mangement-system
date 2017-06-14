@@ -52,7 +52,11 @@ const userController = {
         as: 'Documents',
       }]
     })
-    .then(result => res.status(200).send({ success: true, users: result.rows, count: result.count }))
+    .then(result => res.status(200).send({
+      success: true,
+      users: result.rows,
+      count: result.count
+    }))
     .catch(error => res.status(401).send({ sucess: false, error }));
   },
   retrieve(req, res) {
@@ -73,7 +77,10 @@ const userController = {
   delete(req, res) {
     if (req.decoded.id === 1 || req.decoded.id === Number(req.params.id)) {
       if (Number(req.params.id) === 1) {
-        res.status(403).send({ success: false, msg: 'cannot delete admin profile' });
+        res.status(403).send({
+          success: false,
+          msg: 'cannot delete admin profile'
+        });
       } else {
         return User
         .findById(req.params.id)

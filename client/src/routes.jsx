@@ -8,7 +8,7 @@ import Dashboard from './components/dashboard/Dashboard.jsx';
 const routes = (
   <div>
     <Switch>
-      <Route path="/signup" component={SignUp} />
+      <Route exact path="/" component={SignUp} />
       <Route path="/login" component={Login} />
       <Route path="/Dashboard" component={Dashboard} />
     </Switch>

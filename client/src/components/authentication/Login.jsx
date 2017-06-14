@@ -170,7 +170,7 @@ class Login extends Component {
                   </form>
                   <div className="divider" />
                   <p className="center-align">Don`t have an account ?
-                    <Link className="center-align" to="/signup">Sign Up</Link>
+                    <Link className="center-align" to="/">Sign Up</Link>
                   </p>
                 </div>
               </div>

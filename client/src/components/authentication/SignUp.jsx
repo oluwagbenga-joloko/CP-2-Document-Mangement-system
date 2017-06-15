@@ -211,7 +211,8 @@ class SignUp extends Component {
                     </div>
                     <div className="row">
                       <button
-                        className="btn waves-effect waves-light col s6 offset-s3 z-depth-4 loginbtn"
+                        className={`btn waves-effect waves-light 
+                        col s6 offset-s3 z-depth-4 loginbtn`}
                         type="submit"
 
                       >Sign Up

@@ -4,7 +4,7 @@
   "description": "a document management system",
   "main": "index.js",
   "scripts": {
-    "start": "./node_modules/.bin/babel-node serverProd.js",
+    "start": "nodemon --exec babel-node serverDev.js ",
     "coverage": "NODE_ENV=test nyc report --reporter=text-lcov | coveralls > lcov.info",
     "test": "NODE_ENV=test nyc ./node_modules/mocha/bin/_mocha --compilers js:babel-register server/tests/**/*.spec.js --timeout=60000",
     "clean-dist": "npm run remove-dist && mkdir -p client/dist",

@@ -5,12 +5,14 @@ import striptags from 'striptags';
 
 const DocumentCard = ({
   title, content, access, id, deleteDocument,
-  userId, ownerId, roleId }) => (
+  userId, ownerId, creator }) => (
     <div className="col s12 m4">
       <div className="card white">
         <div className="card-content doc-card">
           <span className="card-title doc-card-title">{title}</span>
           <p className="access">Access: {access}</p>
+          <p className="access">creator: {creator}</p>
+
           <div className="divider card-divider" />
           <p className="doc-card-content">{striptags(content)}</p>
         </div>
@@ -40,7 +42,7 @@ DocumentCard.propTypes = {
   id: PropTypes.number.isRequired,
   userId: PropTypes.number.isRequired,
   ownerId: PropTypes.number.isRequired,
-  roleId: PropTypes.number.isRequired,
+  creator: PropTypes.string.isRequired,
   deleteDocument: PropTypes.func.isRequired
 };
 

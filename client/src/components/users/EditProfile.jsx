@@ -105,7 +105,6 @@ class EditProfile extends Component {
         error.insertAfter(element);
       },
       submitHandler() {
-        console.log(that.state);
         that.props.updateUser(that.state);
         // that.props.signUp(that.state).then(() => {
         //   toastr.success('Account created successfully');
@@ -171,7 +170,9 @@ class EditProfile extends Component {
                           onChange={this.handleChange}
                         />
                         { this.state.showError &&
-                        <div className="custom-error">{this.state.errorMsg}</div>
+                        <div className="custom-error">
+                          {this.state.errorMsg}
+                        </div>
                     }
                         <label htmlFor="email" className="active">Email</label>
 

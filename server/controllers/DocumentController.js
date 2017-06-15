@@ -1,4 +1,4 @@
-import { Document } from '../models';
+import { Document, User } from '../models';
 
 const DocumentController = {
   create(req, res) {
@@ -20,8 +20,10 @@ const DocumentController = {
   list(req, res) {
     return Document
     .findAll({
-      limit: Number(req.query.limit) || null,
-      offset: Number(req.query.offset) || null })
+      include: {
+        model: User
+      }
+    })
     .then(documents => res.status(200).send({ success: true, documents }))
     .catch(error => res.status(401).send({ sucess: false, error }));
   },
@@ -101,6 +103,7 @@ const DocumentController = {
    .catch(error => res.status(400).send({ success: false, error }));
   },
   search(req, res) {
+    const query = req.query.q || '';
     if (req.decoded.roleId === 1) {
       return Document
         .findAndCountAll({
@@ -108,18 +111,23 @@ const DocumentController = {
           offset: Number(req.query.offset) || null,
           where: {
             $or: [
-              { title: { $ilike: `%${req.query.q}%` } },
-              { content: { $ilike: `%${req.query.q}%` } }
+              { title: { $ilike: `%${query}%` } },
+              { content: { $ilike: `%${query}%` } }
             ]
-          }
+          },
+          include: {
+            model: User,
+            attributes: ['firstName', 'lastName']
+          },
+          order: [['updatedAt', 'DESC']]
         })
     .then(result => res.status(200).send({
       success: true,
       documents: result.rows,
       count: result.count }))
     .catch(error => res.status(401).send({ sucess: false, error }));
-    } else {
-      return Document
+    }
+    return Document
         .findAndCountAll({
           limit: Number(req.query.limit) || null,
           offset: Number(req.query.offset) || null,
@@ -135,19 +143,49 @@ const DocumentController = {
             },
             {
               $or: [
-                { title: { $ilike: `%${req.query.q}%` } },
-                { content: { $ilike: `%${req.query.q}%` } }
+                { title: { $ilike: `%${query}%` } },
+                { content: { $ilike: `%${query}%` } }
               ]
             }
             ]
-          }
+          },
+          include: {
+            model: User,
+            attributes: ['firstName', 'lastName']
+          },
+          order: [['updatedAt', 'DESC']]
         })
     .then(result => res.status(200).send({
       success: true,
       documents: result.rows,
       count: result.count }))
     .catch(error => res.status(401).send({ sucess: false, error }));
-    }
+  },
+  searchUserDocument(req, res) {
+    const id = req.decoded.id;
+    const query = req.query.q;
+    return Document
+      .findAndCountAll({
+        limit: Number(req.query.limit) || null,
+        offset: Number(req.query.offset) || null,
+        where: {
+          userId: id,
+          $or: [
+            { title: { $ilike: `%${query}%` } },
+            { content: { $ilike: `%${query}%` } }
+          ]
+        },
+        include: {
+          model: User,
+          attributes: ['firstName', 'lastName']
+        },
+        order: [['updatedAt', 'DESC']]
+      })
+    .then(result => res.status(200).send({
+      success: true,
+      documents: result.rows,
+      count: result.count }))
+    .catch(error => res.status(401).send({ sucess: false, error }));
   }
 };
 export default DocumentController;

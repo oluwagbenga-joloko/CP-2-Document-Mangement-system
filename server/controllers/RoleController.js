@@ -19,7 +19,6 @@ const roleController = {
     .catch(error => res.status(401).send({ sucess: false, error }));
   },
   retrieve(req, res) {
-    console.log(req.params);
     return Role
       .findById(req.params.id)
       .then((role) => {

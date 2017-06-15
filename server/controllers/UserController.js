@@ -48,8 +48,7 @@ const userController = {
       limit: Number(req.query.limit) || null,
       offset: Number(req.query.offset) || null,
       include: [{
-        model: Document,
-        as: 'Documents',
+        model: Role
       }]
     })
     .then(result => res.status(200).send({
@@ -101,25 +100,28 @@ const userController = {
   },
   update(req, res) {
     if (req.decoded.id === Number(req.params.id)) {
+      let hooks;
       let userDetails;
-      if (req.body.password) {
+      if (req.body.password !== '') {
         userDetails = {
           firstName: req.body.firstName,
           email: req.body.email,
           lastName: req.body.lastName,
           password: req.body.password,
         };
+        hooks = true;
       } else {
         userDetails = {
           firstName: req.body.firstName,
           email: req.body.email,
           lastName: req.body.lastName
         };
+        hooks = false;
       }
       return User
         .findById(req.params.id)
         .then(user => user
-          .update(userDetails)
+          .update(userDetails, { hooks })
           .then(() => res.status(200).send({
             success: true,
             user,
@@ -203,7 +205,11 @@ const userController = {
                     roleId: user.roleId,
                     id: user.id
                   }, process.env.SECRET, { expiresIn: '6h' }, (err, token) => {
-                    res.send({ success: true, msg: 'login succesful', token, user });
+                    res.send({
+                      success: true,
+                      msg: 'login succesful',
+                      token,
+                      user });
                   });
                 }
               });
@@ -224,7 +230,12 @@ const userController = {
           { lastName: { $ilike: `%${req.query.q}%` } },
           { email: { $ilike: `%${req.query.q}%` } }
         ]
-      }
+      },
+      include: {
+        model: Role,
+        attributes: ['title']
+      },
+      order: [['updatedAt', 'DESC']]
     })
     .then(result => res.status(200).send({ success: true,
       users: result.rows,

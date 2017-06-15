@@ -8,11 +8,12 @@ const UserCard = ({
   email,
   deleteUser,
   userId,
-  userRoleId
+  userRoleId,
+  roleTitle
 }) => (
   <li className="collection-item avatar">
     <i className="material-icons circle user-icon">perm_identity</i>
-    <span className="title">Title</span>
+    <span className="title">Title: {roleTitle}</span>
     { userRoleId !== 1 &&
       <a
         role="button"

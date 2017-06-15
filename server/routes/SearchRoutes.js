@@ -9,6 +9,7 @@ searchRouter.route('/users/')
 .get(authentication.verifyUser, userController.search);
 searchRouter.route('/documents/')
 .get(authentication.verifyUser, DocumentController.search);
-
+searchRouter.route('/userdocuments/')
+.get(authentication.verifyUser, DocumentController.searchUserDocument);
 export default searchRouter;
 

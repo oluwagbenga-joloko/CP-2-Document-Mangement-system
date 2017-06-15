@@ -91,7 +91,6 @@ class CreateDocument extends Component {
     event.preventDefault();
     const name = event.target.name;
     const value = event.target.value;
-    console.log(name, value);
     this.setState({ [name]: value });
   }
   /**
@@ -134,7 +133,6 @@ class CreateDocument extends Component {
    * @memberof Login
    */
   render() {
-    console.log('this.state.content', this.state.content);
     return (
       <div >
         { this.state.showTinyMce &&
@@ -153,7 +151,6 @@ class CreateDocument extends Component {
                 value={this.state.title}
                 onChange={this.handleChange}
               />
-
             </div>
             <div className="col s3 m1 title-div">
               <h4 className="access-title">Access</h4>

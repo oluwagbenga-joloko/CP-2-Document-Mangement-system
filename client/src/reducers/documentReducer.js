@@ -1,18 +1,15 @@
 import actionTypes from '../actions/actionTypes';
 
-const doumentReducer = (state = { Documents: [], document: {} }, action) => {
+const doumentReducer = (state = { generalDocuments: [], userDocuments: [], document: {} }, action) => {
   switch (action.type) {
-    case actionTypes.GET_MY_DOCUMENTS_FAILURE:
-      return { ...state, allDocs: false, Documents: null };
-    case actionTypes.GET_MY_DOCUMENTS_SUCCESS:
-      return { ...state, allDocs: true, Documents: action.payload.documents };
+    case actionTypes.GET_USER_DOCUMENTS_SUCCESS:
+      return { ...state, userDocuments: action.payload.documents, userDocumentsCount: action.payload.count };
     case actionTypes.SEARCH_DOCUMENT_SUCCESS:
       return { ...state,
-        allDocs: true,
-        Documents: action.payload.documents,
-        count: action.payload.count };
+        generalDocuments: action.payload.documents,
+        generalDocumentsCount: action.payload.count };
     case actionTypes.GET_DOCUMENT_SUCCESS:
-      return { ...state, getdoc: true, document: action.payload.document };
+      return { ...state, document: action.payload.document };
     case actionTypes.UPDATE_DOCUMENT_SUCCESS:
       return { ...state, document: action.payload.document };
     default:

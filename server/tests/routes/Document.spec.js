@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import log from 'npmlog';
-import app from '../../../server';
+import app from '../../../serverProd';
 import fakeData from '../testUtils/FakeData';
 import db from '../../models';
 import Seeddb from '../testUtils/SeedDb';

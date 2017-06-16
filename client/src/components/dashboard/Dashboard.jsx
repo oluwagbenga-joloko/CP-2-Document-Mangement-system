@@ -63,10 +63,7 @@ class Dashboard extends Component {
           />
           <Route
             path={`${this.props.match.url}/mydocuments`}
-            render={props => (<UserDocuments
-              {...props}
-              user={this.props.loggedIn.user}
-            />)}
+            component={UserDocuments}
           />
           <Route
             path={`${this.props.match.url}/editdocuments/:id`}

@@ -35,7 +35,10 @@ const SideNav = ({ user, url, logout }) => (
         </Link>
       </li>
       <li>
-        <Link className="waves-effect side-nav-link" to={`${url}/generalDocuments?query=&offset=0&limit=10`}>
+        <Link
+          className="waves-effect side-nav-link"
+          to={`${url}/generalDocuments?query=&offset=0&limit=10`}
+        >
           <i className="material-icons side-nav-link-av">public</i>
           General Documents
         </Link>

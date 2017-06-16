@@ -24,7 +24,6 @@ class AllUsers extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: [{}],
       query: '',
       limit: 10,
       pageCount: null,
@@ -133,18 +132,23 @@ class AllUsers extends Component {
    * @memberof DocumentView
    */
   render() {
-    console.log(this.state, this.props.count);
-    const users = this.state.users.map((user) => {
-      const props = {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        userId: user.id,
-        deleteUser: this.deleteUser,
-        userRoleId: user.roleId
-      };
-      return <UserCard {...props} />;
-    });
+    let users;
+    if (this.state.users) {
+      users = this.state.users.map((user) => {
+        const props = {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          userId: user.id,
+          deleteUser: this.deleteUser,
+          userRoleId: user.roleId,
+          roleTitle: user.Role.title
+        };
+        return <UserCard {...props} />;
+      });
+    } else {
+      users = null;
+    }
     return (
       <div>
         <h3 className=" header-dash">Users</h3>
@@ -152,26 +156,44 @@ class AllUsers extends Component {
           url={this.props.location.pathname}
           query={this.state.query}
         />
-        <div className="row">
-          <ul className="collection">
-            {users}
-          </ul>
-        </div>
-        {this.state.showPaginate &&
-        <ReactPaginate
-          initialPage={this.state.initialPage}
-          previousLabel={'previous'}
-          nextLabel={'next'}
-          breakLabel={<a href="">...</a>}
-          breakClassName={'break-me'}
-          pageCount={this.state.pageCount}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={this.handlePageClick}
-          containerClassName={'pagination'}
-          subContainerClassName={'pages pagination'}
-          activeClassName={'active'}
-        />
+        {
+          this.state.users &&
+          <div>
+            {
+            this.props.loading &&
+            <div className="progress">
+              <div className="indeterminate" />
+            </div>
+
+        }
+            {
+          this.state.users.length < 1 && !this.props.loading &&
+          <h3> no user found</h3>
+        }
+            { this.state.users.length >= 1 &&
+            <div className="row">
+              <ul className="collection">
+                {users}
+              </ul>
+            </div>
+        }
+            {this.state.showPaginate &&
+            <ReactPaginate
+              initialPage={this.state.initialPage}
+              previousLabel={'previous'}
+              nextLabel={'next'}
+              breakLabel={<a href="">...</a>}
+              breakClassName={'break-me'}
+              pageCount={this.state.pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={this.handlePageClick}
+              containerClassName={'pagination'}
+              subContainerClassName={'pages pagination'}
+              activeClassName={'active'}
+            />
+        }
+          </div>
         }
       </div>
     );
@@ -186,7 +208,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 const mapStateToProps = state => ({
   users: state.userReducer.users,
   count: state.userReducer.count,
-  userId: state.authReducer.user.id
+  userId: state.authReducer.user.id,
+  loading: state.ajaxCallReducer.loading,
 });
 AllUsers.propTypes = {
   location: PropTypes.shape({
@@ -196,5 +219,7 @@ AllUsers.propTypes = {
   deleteUser: PropTypes.func.isRequired,
   users: PropTypes.arrayOf(PropTypes.shape).isRequired,
   count: PropTypes.number.isRequired,
+  loading: PropTypes.number.isRequired,
+  history: PropTypes.shape({ replace: PropTypes.func.isRequired }).isRequired
 };
 export default connect(mapStateToProps, mapDispatchToProps)(AllUsers);

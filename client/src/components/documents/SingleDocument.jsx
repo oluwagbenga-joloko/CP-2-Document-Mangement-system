@@ -89,9 +89,16 @@ class SingleDocument extends Component {
 
         </div>
         <h5 className="margin-5px">Content</h5>
-        <div className="innerhtml margin-5px" dangerouslySetInnerHTML={{ __html: this.state.content }} />
+        <div
+          className="innerhtml margin-5px"
+          dangerouslySetInnerHTML={{ __html: this.state.content }}
+        />
         { this.state.owner &&
-        <Link className="btn waves-effect waves-light col s6 offset-s3 z-depth-4 save-btn" to={`/dashboard/editdocuments/${this.props.match.params.id}`}>
+        <Link
+          className={`btn waves-effect
+          waves-light col s6 offset-s3 z-depth-4 save-btn`}
+          to={`/dashboard/editdocuments/${this.props.match.params.id}`}
+        >
           <i className="material-icons side-nav-link-av">edit</i>
         Edit
         </Link>
@@ -116,4 +123,5 @@ SingleDocument.propTypes = {
   match: PropTypes.shape.isRequired
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SingleDocument));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(SingleDocument));

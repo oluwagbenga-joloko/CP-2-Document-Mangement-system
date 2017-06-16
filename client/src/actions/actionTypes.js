@@ -11,9 +11,9 @@ const actionTypes = keyMirror({
   CREATE_DOCUMENT: null,
   CREATE_DOCUMENT_SUCCESS: null,
   CREATE_DOCUMENT_FALUIRE: null,
-  GET_MY_DOCUMENTS_SUCCESS: null,
+  GET_USER_DOCUMENTS_SUCCESS: null,
   GET_MY_DOCUMENTS_FAILURE: null,
-  GET_MY_DOCUMENTS: null,
+  GET_USER_DOCUMENTS: null,
   GET_DOCUMENT: null,
   GET_DOCUMENT_SUCCESS: null,
   GET_DOCUMENT_FALUIRE: null,
@@ -30,5 +30,7 @@ const actionTypes = keyMirror({
   SEARCH_DOCUMENT_SUCCESS: null,
   UPDATE_USER_SUCCESS: null,
   UPDATE_USER: null,
+  BEGIN_AJAX_CALL: null,
+  AJAX_CALL_ERROR: null,
 });
 export default actionTypes;

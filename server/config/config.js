@@ -3,8 +3,7 @@ require('dotenv').config();
 module.exports = {
   development: {
     url: process.env.DATABASE_URL_DEV,
-    dialect: 'postgres',
-    logging: false
+    dialect: 'true'
 
   },
   test: {
@@ -13,10 +12,14 @@ module.exports = {
     logging: false
   },
   production: {
-    username: 'root',
-    password: null,
-    database: 'database_production',
-    host: '127.0.0.1',
-    dialect: 'mysql'
+    url: process.env.DATABASE_URL,
+    dialect: 'postgres',
+    logging: false,
+    ssl: true,
+    dialectOptions: {
+      ssl: {
+        require: true
+      }
+    }
   }
 };

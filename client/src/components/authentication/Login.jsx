@@ -191,7 +191,6 @@ Login.defaultProps = {
 };
 Login.propTypes = {
   status: PropTypes.bool,
-  login: PropTypes.func,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

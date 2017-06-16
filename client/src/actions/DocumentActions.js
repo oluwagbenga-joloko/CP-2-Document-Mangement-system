@@ -1,6 +1,7 @@
 import axios from 'axios';
 import toastr from 'toastr';
 import actionTypes from './actionTypes';
+import { ajaxCallError, beginAjaxCall } from './ajaxStatusActions';
 
 
 const createDocumentSuccess = payload => ({
@@ -17,19 +18,22 @@ const createDocument = payload => dispatch => axios
     throw (err);
   });
 
-const getMydocumentsSuccess = payload => ({
-  type: actionTypes.GET_MY_DOCUMENTS_SUCCESS,
+const getUserDocumentsSuccess = payload => ({
+  type: actionTypes.GET_USER_DOCUMENTS_SUCCESS,
   payload
 });
-const getMydocuments = payload => dispatch => axios
-  .get(`api/users/${payload}/documents`)
+const getUserDocuments = ({ query, offset, limit }) => (dispatch) => {
+  dispatch(beginAjaxCall());
+  return axios
+  .get(`api/search/userdocuments/?q=${query}&offset=${offset}&limit=${limit}`)
   .then((res) => {
-    dispatch(getMydocumentsSuccess(res.data));
+    dispatch(getUserDocumentsSuccess(res.data));
   })
   .catch((err) => {
+    dispatch(ajaxCallError());
     toastr.error(err.response.data.msg);
-    throw (err);
   });
+};
 
 const getDocumentSuccess = payload => ({
   type: actionTypes.GET_DOCUMENT_SUCCESS, payload
@@ -75,14 +79,17 @@ const searchDocumentsSuccess = payload => ({
   type: actionTypes.SEARCH_DOCUMENT_SUCCESS, payload
 });
 
-const searchDocuments = payload => dispatch => axios
-  .get(`api/search/documents/?q=${payload.query}&offset=${payload.offset}&limit=${payload.limit}`)
+const searchDocuments = ({ query, offset, limit }) => (dispatch) => {
+  dispatch(beginAjaxCall());
+  return axios
+  .get(`api/search/documents/?q=${query}&offset=${offset}&limit=${limit}`)
   .then((res) => {
     dispatch(searchDocumentsSuccess(res.data));
   });
+};
 export {
   createDocument,
-  getMydocuments,
+  getUserDocuments,
   getDocument,
   updateDocument,
   deleteDocument,

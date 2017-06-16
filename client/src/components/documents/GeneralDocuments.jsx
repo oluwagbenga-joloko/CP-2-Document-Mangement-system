@@ -25,11 +25,11 @@ class GeneralDocuments extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      documents: [{}],
       query: '',
       limit: 10,
       pageCount: null,
       initialPage: 0,
+      loading: false,
       showPaginate: false,
     };
     this.handleDelete = this.handleDelete.bind(this);
@@ -69,8 +69,8 @@ class GeneralDocuments extends Component {
       this.setState({ query: parsed.query ? parsed.query : '' });
       const payload = {
         query: parsed.query ? parsed.query : '',
-        limit: parsed.limit,
-        offset: parsed.offset,
+        limit: parsed.limit ? parsed.limit : 12,
+        offset: parsed.offset ? parsed.offset : 0,
       };
       this.props.searchDocuments(payload);
     } else {
@@ -133,20 +133,25 @@ class GeneralDocuments extends Component {
    * @memberof GeneralDocument
    */
   render() {
-    const documents = this.state.documents.map((document) => {
-      const props = {
-        title: document.title,
-        content: document.content,
-        access: document.access,
-        id: document.id,
-        deleteDocument: this.handleDelete,
-        userId: this.props.userId,
-        ownerId: document.userId,
-        roleId: this.props.roleId,
-
-      };
-      return <DocumentCard {...props} />;
-    });
+    let documents;
+    if (this.state.documents) {
+      documents = this.state.documents.map((document) => {
+        const props = {
+          title: document.title,
+          content: document.content,
+          access: document.access,
+          id: document.id,
+          deleteDocument: this.handleDelete,
+          creator: `${document.User.firstName} ${document.User.lastName}`,
+          userId: this.props.userId,
+          ownerId: document.userId,
+          roleId: this.props.roleId,
+        };
+        return <DocumentCard {...props} />;
+      });
+    } else {
+      documents = null;
+    }
     return (
       <div>
         <h3 className=" header-dash">General Documents</h3>
@@ -154,24 +159,44 @@ class GeneralDocuments extends Component {
           url={this.props.location.pathname}
           query={this.state.query}
         />
-        <div className="row">
-          {documents}
+        { this.state.documents &&
+        <div>
+          {
+          this.props.loading &&
+          <div className="progress">
+            <div className="indeterminate" />
+          </div>
+
+        }
+          {
+          this.state.documents.length === 0 && !this.props.loading &&
+          <h3>No documents found</h3>
+        }
+          { this.state.documents.length >= 1 &&
+          <div>
+            <div className="row">
+              {documents}
+            </div>
+          </div>
+        }
+
+          {this.state.showPaginate &&
+          <ReactPaginate
+            initialPage={this.state.initialPage}
+            previousLabel={'previous'}
+            nextLabel={'next'}
+            breakLabel={<a href="">...</a>}
+            breakClassName={'break-me'}
+            pageCount={this.state.pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={this.handlePageClick}
+            containerClassName={'pagination'}
+            subContainerClassName={'pages pagination'}
+            activeClassName={'active'}
+          />
+         }
         </div>
-        {this.state.showPaginate &&
-        <ReactPaginate
-          initialPage={this.state.initialPage}
-          previousLabel={'previous'}
-          nextLabel={'next'}
-          breakLabel={<a href="">...</a>}
-          breakClassName={'break-me'}
-          pageCount={this.state.pageCount}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={this.handlePageClick}
-          containerClassName={'pagination'}
-          subContainerClassName={'pages pagination'}
-          activeClassName={'active'}
-        />
         }
       </div>
     );
@@ -183,10 +208,11 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch);
 
 const mapStateToProps = state => ({
-  documents: state.documentReducer.Documents,
-  count: state.documentReducer.count,
+  documents: state.documentReducer.generalDocuments,
+  count: state.documentReducer.generalDocumentsCount,
   userId: state.authReducer.user.id,
   roleId: state.authReducer.user.roleId,
+  loading: state.ajaxCallReducer.loading,
 });
 GeneralDocuments.propTypes = {
   documents: PropTypes.arrayOf(PropTypes.shape).isRequired,
@@ -198,6 +224,7 @@ GeneralDocuments.propTypes = {
   deleteDocument: PropTypes.func.isRequired,
   count: PropTypes.number.isRequired,
   userId: PropTypes.number.isRequired,
-  roleId: PropTypes.number.isRequired
+  roleId: PropTypes.number.isRequired,
+  loading: PropTypes.number.isRequired
 };
 export default connect(mapStateToProps, mapDispatchToProps)(GeneralDocuments);

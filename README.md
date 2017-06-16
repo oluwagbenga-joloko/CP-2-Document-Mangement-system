@@ -34,7 +34,7 @@ The application was developed with [NodeJs](http://nodejs.org/), [Express](http:
 ## Installation
 Follow the steps below to setup a local development environment. First ensure you have [Postgresql](https://www.postgresql.org/) installed, and a version of [Node.js](http://nodejs.org/) equal or greater than v6.10.0.
 
-1. Clone the repository from a terminal `git clone https://github.com/`.
+1. Clone the repository from a terminal   ` git clone https://github.com/andela-ojoloko/CP-2-Document-Mangement-system.git`.
 2. Navigate to the project directory ``
 3. Create a `.env` file in your root directory as described in `.env.sample` file
 4. Install project dependencies `npm install`
@@ -85,13 +85,23 @@ POST /roles/               |   Create a Role.
 PUT /roles/:id               |   Edit a Role.
 DELETE /roles/:id               |   Delete a Role.
 
-### Limitations
-
-One major limitation is that the application cannot handle creation of new roles from the frontend.
 
 ### Contributing
 
-Contributions are most welcome. Simply fork the repository, work on the feature and raise a Pull Request.
+If you are interested in contributing to development of DocuemntIt, that's really great!
+
+Follow the instructions below to contribute.
+
+- Fork the repository
+
+- Make your change
+
+- Commit your change to your forked repository 
+
+- Provide a detailed commit description 
+
+- Create a pull request
+
 
 ### Licence
 MIT

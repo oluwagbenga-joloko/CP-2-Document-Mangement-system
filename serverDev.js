@@ -2,7 +2,6 @@ import express from 'express';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
 import log from 'npmlog';
-import open from 'open';
 import path from 'path';
 import webpack from 'webpack';
 import config from './webpack.config.dev';
@@ -38,7 +37,6 @@ app.get('*', (req, res) => {
 });
 app.listen(port, () => {
   log.info('express app started on port', `${port}`);
-  //open(`http://localhost:${port}`);
 });
 
 export default app;

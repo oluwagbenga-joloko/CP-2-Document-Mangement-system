@@ -5,6 +5,7 @@ import app from '../../../serverProd';
 import fakeData from '../testUtils/FakeData';
 import db from '../../models';
 import Seeddb from '../testUtils/SeedDb';
+
 chai.use(chaiHttp);
 
 const request = chai.request(app),

@@ -36,6 +36,7 @@ UserCard.propTypes = {
   email: PropTypes.string.isRequired,
   userId: PropTypes.number.isRequired,
   userRoleId: PropTypes.number.isRequired,
-  deleteUser: PropTypes.func.isRequired
+  deleteUser: PropTypes.func.isRequired,
+  roleTitle: PropTypes.string.isRequired
 };
 export default UserCard;

@@ -78,9 +78,11 @@ describe('Routes : Documents', () => {
         .set({ 'x-access-token': regular2Token })
         .send(publicDocument1)
         .end((err, res) => {
+          console.log(publicDocument1);
           expect(res).to.have.status(201);
           expect(res.body.success).to.equal(true);
           expect(res.body.document.title).to.equal(publicDocument1.title);
+          console.log(res.body);
           publicDocId2 = res.body.document.id;
           done();
         });

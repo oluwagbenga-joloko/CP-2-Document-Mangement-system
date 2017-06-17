@@ -77,7 +77,8 @@ searchRouter.route('/users/')
  *         schema:
  *           $ref: '#/definitions/Documents'
  */
-.get(authentication.verifyUser, userController.search);
+.get(authentication.verifyUser,
+authentication.checkAdmin, userController.search);
 searchRouter.route('/documents/')
 /**
  * @swagger
@@ -101,6 +102,7 @@ searchRouter.route('/documents/')
  *           $ref: '#/definitions/Documents'
  */
 .get(authentication.verifyUser, DocumentController.search);
+
 searchRouter.route('/userdocuments/')
 .get(authentication.verifyUser, DocumentController.searchUserDocument);
 export default searchRouter;

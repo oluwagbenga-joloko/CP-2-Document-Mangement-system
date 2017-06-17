@@ -70,16 +70,16 @@ class SeedDb {
    */
   static populateDocumentTable() {
     const documents = [
-      fakeData.document1,
-      fakeData.document2,
-      fakeData.document3,
-      fakeData.document4,
-      fakeData.document5,
-      fakeData.document6,
-      fakeData.document7,
-      fakeData.document8,
-      fakeData.document9,
-      fakeData.document10,
+      fakeData.privateDocument1,
+      fakeData.privateDocument2,
+      fakeData.privateDocument3,
+      fakeData.publicDocument1,
+      fakeData.publicDocument2,
+      fakeData.publicDocument3,
+      fakeData.publicDocument4,
+      fakeData.roleDocument1,
+      fakeData.roleDocument2,
+      fakeData.roleDocument3,
     ];
     return db.Document.bulkCreate(documents);
   }

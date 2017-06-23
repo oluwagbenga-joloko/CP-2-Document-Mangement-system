@@ -91,70 +91,70 @@ const fakeData = {
   },
   publicDocument1: {
     userId: 2,
-    title: faker.lorem.word(),
+    title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'public',
     ownerRoleId: 2
   },
   publicDocument2: {
     userId: 2,
-    title: faker.lorem.word(),
+    title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'public',
     ownerRoleId: 2
   },
   publicDocument3: {
     userId: 2,
-    title: faker.lorem.word(),
+    title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'public',
     ownerRoleId: 2,
   },
   publicDocument4: {
     userId: 1,
-    title: faker.lorem.word(),
+    title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'public',
     ownerRoleId: 1
   },
   roleDocument1: {
     userId: 3,
-    title: faker.lorem.word(),
+    title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'role',
     ownerRoleId: 2
   },
   roleDocument2: {
     userId: 3,
-    title: faker.lorem.word(),
+    title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'role',
     ownerRoleId: 2,
   },
   roleDocument3: {
     userId: 1,
-    title: faker.lorem.word(),
+    title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'role',
     ownerRoleId: 1
   },
   privateDocument1: {
     userId: 4,
-    title: faker.lorem.word(),
+    title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'private',
     ownerRoleId: 2
   },
   privateDocument2: {
     userId: 4,
-    title: faker.lorem.word(),
+    title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'private',
     ownerRoleId: 2
   },
   privateDocument3: {
     userId: 1,
-    title: faker.lorem.word(),
+    title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'private',
     ownerRoleId: 1,

@@ -52,39 +52,7 @@ Follow the steps below to setup a local development environment. First ensure yo
 
 
 ## API Summary
-View full API documentation [here](http://document-it.herokuapp.com/swagger.json)
-
-### Users
-EndPoint                      |   Functionality
-------------------------------|------------------------
-POST /api/users/login         |   Logs in a user.
-POST /api/users/logout        |   Logs out a user.
-POST /api/users/              |   Creates a new user.
-GET /api/users/               |   Gets all users (available only to the Admin).
-GET /api/users/:id           |   Find a user by id.
-PUT /api/users/:id           |   Updates a user's profile based on the id specified (available to the profile owner or admin)
-DELETE /api/users/:id        |   Delete a user's profile (available only to the admin)
-GET /api/users/:id/documents   | Gets all documents for a particular user
-GET /api/search/users/?q=${query} | Get all users with username containing the search query
-GET /api/search/userdocuments/?q=${query} | Get all documents created by user whose title or content matching the search query.
-### Documents
-EndPoint                      |   Functionality
-------------------------------|------------------------
-POST /api/documents/          |   Creates a new document instance.
-GET /api/documents/           |   Gets all documents.
-GET /api/documents/:id       |   Find document by id.
-PUT /api/documents/:id       |   Updates a document's attributes. (available only to the author)
-DELETE /api/documents/:id    |   Delete a document. (available only to the author)
-GET /api/search/documents/?q=${query} | Get all documents with title containing the search query
-
-### Roles (can only be tested using postman)
-EndPoint                      |   Functionality
-------------------------------|------------------------
-GET /roles/               |   Get all Roles.
-POST /roles/               |   Create a Role.
-PUT /roles/:id               |   Edit a Role.
-DELETE /roles/:id               |   Delete a Role.
-
+View full API documentation [here](https://document-it.herokuapp.com/api-docs/)
 
 ### Contributing
 

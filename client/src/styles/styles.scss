@@ -3,18 +3,84 @@ $primarylight: #559be5;
 $primaryDark:#004383;
 $secondary: #e00049;
 $background: #FFFFFF;
-$font1:  'Pacifico', cursive;
-$font2: 'Oswald', sans-serif;
-$font3: 'Open Sans', sans-serif;
-$font4: 'Josefin Slab', serif;
+$font4:  'Pacifico', cursive;
+// $font2: 'Oswald', sans-serif;
+$font3: 'Roboto Slab', serif;
+$font1: 'Open Sans', sans-serif;
+$font2: 'Roboto', sans-serif;
  @import './toastr';
+ p {
+   font-family: $font1;
+   font-size: 15px;
+ }
  html {
-    font-family: $font3;
+   font-size: 15px;
+    font-family: $font1;
     background: $background;
+      height: 100%;
+  box-sizing: border-box;
   }
  header, main, footer {
       padding-left: 300px;
     }
+/**
+ * Demo Styles
+ */
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  padding-bottom: 6rem;
+  min-height: 100%;
+  font-family: $font1
+}
+/**
+ * Footer Styles
+ */
+
+footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  padding: 0 0 0 300px !important;
+  background-color:  $primary !important;
+}
+.footer-copyright {
+    color: white;
+    padding: 4px 0px !important;
+}
+// main:after {
+//   content: "";
+//   display: block;
+// }
+// footer , main:after {
+//   /* .push must be the same height as footer */
+//     height: 142px; 
+// }
+// body {
+//   display: flex;
+//   flex-direction: column;
+// }
+// main {
+//   flex: 1 0 auto;
+// }
+
+// body {
+//     display: flex;
+//     min-height: 100vh;
+//     flex-direction: column;
+//   }
+
+//   main {
+//     flex: 1 0 auto;
+//   }
 
     @media only screen and (max-width : 992px) {
       header, main, footer {
@@ -48,7 +114,7 @@ $font4: 'Josefin Slab', serif;
 .logo1 {
   color: white;
   font-size: 100px;
-  font-family: $font1;
+  font-family: $font4;
 }
 .logo2 {
   color:white;
@@ -124,7 +190,7 @@ input[type=search] {
 }
 #logo1 {
 margin-left: 40px;
-font-family: $font1;
+font-family: $font4;
 }
 #logo2{
 font-family: $font2;
@@ -139,10 +205,10 @@ nav {
 .side_nav_avatar {
   margin-top: 17px;
   color: white;
-  font-size: 45px;
+  font-size: 40px;
 }
 .side_nav_name {
-  font-size: 17px;
+  font-size: 15px;
   color:white;
   font-family: $font2;
 }
@@ -150,10 +216,11 @@ nav {
   padding-bottom: 200px;
 }
 .nav_divider {
+  background: white;
   margin-top: 50px !important;
 }
 .side-nav-link{
-  font-size: 17px !important;
+  font-size: 15px !important;
   color: $secondary !important;
 }
 .side-nav-link-av{
@@ -169,8 +236,8 @@ nav {
   font-family: $font3;
 }
 main {
-  margin-left: 40px;
-  margin-right: 40px;
+  margin-left: 50px;
+  margin-right: 50px;
 }
 .search-btn,.search-btn:hover, .search-btn:visited, .search-btn:focus  {
   padding: 0;
@@ -183,19 +250,32 @@ main {
 }
 .doc-card {
 color: $primaryDark;
-overflow: hidden;
+overflow: hidden; 
 height: 250px;
 }
 .doc-card-content {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  height: 140px;
   color: $primaryDark;
-  font-family: $font4;
-    font-size: 16px;
+  font-family: $font3;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
 }
 .doc-card-title {
-  color:$secondary;
+   overflow: hidden;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+   color:$secondary;
     font-size: 30px;
     font-family: $font1;
+}
+.card-divider {
+  margin: 4px 0;
 }
 .card-delete {
   color: $secondary;
@@ -205,7 +285,7 @@ height: 250px;
   color: $primaryDark;
 }
 .access {
-  font-size: 14px;
+  font-size: 15px;
   color: $primaryDark;
 }
 .doc-divider {
@@ -217,16 +297,20 @@ height: 250px;
   font-size: 20px;
   color: white;
 }
-.create-title {
-  font-size: 22px !important;
-}
 .access-option {
   margin-left: 15px !important;
   margin-top: 10px !important;
 
 }
-.access-title {
-  font-size: 22px !important;
+.access-title, .create-title {
+  font-weight: bold;
+  color: $primaryDark;
+  font-size: 30px !important;
+}
+.create-select {
+  margin-left: 20px;
+  border-bottom-width: 0px;
+  margin-top: 10px;
 }
 .title-div{
   margin-top: 10px;
@@ -236,11 +320,50 @@ height: 250px;
   margin-left: 23px;
 }
 .margin-5px {
-  margin-left: 8px;
+  margin-left: 0px;
 }
 .progress {
   background: $primarylight !important;
 }
 .indeterminate {
   background: $secondary !important;
+}
+.gen-access {
+  font-size: 15px;
+}
+.doc-title {
+color: $primaryDark;
+font-weight: bold;
+}
+.single-doc-access{
+  margin-top: 5px;
+  margin-bottom: 0px
+}
+.single-doc-published {
+   margin-top: 0px;
+   margin-bottom: 5px
+}
+.doc-sub-header {
+  color: $secondary;
+}
+.single-doc-row {
+  margin-bottom: 0px;
+}
+.single-doc-title{
+  padding-left: 0px !important;
+  padding-right: 0px;
+  padding-left: 0px;
+
+}
+.single-doc-edit  {
+  border-top-width: 20px;
+  margin-top: 20px;
+
+}
+#react-tinymce-0_ifr {
+min-height: 250px !important;
+}
+.create-title-input {
+  font-weight: bold;
+  margin-top: 5px !important;
 }

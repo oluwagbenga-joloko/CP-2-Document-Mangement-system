@@ -11,8 +11,7 @@ const DocumentCard = ({
         <div className="card-content doc-card">
           <span className="card-title doc-card-title">{title}</span>
           <p className="access">Access: {access}</p>
-          <p className="access">creator: {creator}</p>
-
+          <p className="access">Creator: {creator}</p>
           <div className="divider card-divider" />
           <p className="doc-card-content">{striptags(content)}</p>
         </div>
@@ -27,10 +26,10 @@ const DocumentCard = ({
             <i className="material-icons card-delete">delete</i>
           </a>
        }
-          <Link
-            to={`viewdocuments/${id}`}
+          <a
+            href={`/#/dashboard/viewdocuments/${id}`}
             className=" waves-effect waves-light"
-          ><i className="material-icons card-view">visibilityt</i></Link>
+          ><i className="material-icons card-view">visibilityt</i></a>
         </div>
       </div>
     </div>

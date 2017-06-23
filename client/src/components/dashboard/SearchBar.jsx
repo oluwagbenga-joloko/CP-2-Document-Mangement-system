@@ -28,7 +28,7 @@ class SearchBar extends Component {
    */
   handleSubmit(event) {
     event.preventDefault();
-    this.props.history.replace(`${this.props.url}?query=${this.state.query}`);
+    this.props.history.replace(`${this.props.url}?query=${this.state.query}&access=${this.props.access}`);
   }
   /**
    * @desc handles change of form input
@@ -49,15 +49,11 @@ class SearchBar extends Component {
    */
   render() {
     return (
-      <div >
-
-        <div className="row">
-          <div className="col s12 m8">
-            <form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleSubmit}>
               <div className="row z-depth-2">
                 <div className="col s10">
                   <input
-                    placeHolder="Search"
+                    placeholder="Search"
                     id="search"
                     type="search"
                     name="query"
@@ -76,11 +72,6 @@ class SearchBar extends Component {
                 </div>
               </div>
             </form>
-          </div>
-
-          <div className="card-content" />
-        </div>
-      </div>
     );
   }
 }

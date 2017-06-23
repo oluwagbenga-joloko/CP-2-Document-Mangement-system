@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
 import TinyMCE from 'react-tinymce';
 import {
   getDocument,
@@ -11,7 +12,7 @@ import {
 
 const STYLES = {
   container: {
-    fontFamily: 'Helvetica Neue, sans-serif',
+    fontFamily: 'Open Sans, sans-serif',
     padding: '0 25px'
   },
   output: {
@@ -44,6 +45,7 @@ class CreateDocument extends Component {
       edit: false,
       owner: false,
       showTinyMce: false,
+      content: '',
 
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -103,9 +105,13 @@ class CreateDocument extends Component {
     event.preventDefault();
     if (this.props.match.params.id) {
       const id = this.props.match.params.id;
-      this.props.updateDocument({ ...this.state, id });
+      this.props.updateDocument({ ...this.state, id }).then(() => {
+        this.props.history.push('/dashboard');
+      });
     } else {
-      this.props.createDocument(this.state);
+      this.props.createDocument(this.state).then(() => {
+        this.props.history.push('/dashboard');
+      });
     }
   }
   /**
@@ -143,10 +149,11 @@ class CreateDocument extends Component {
             </div>
             <div className="input-field col s9 m4">
               <input
+                
                 disabled={!this.state.owner}
                 id="title"
                 type="text"
-                className="validate"
+                className="validate create-title-input"
                 name="title"
                 value={this.state.title}
                 onChange={this.handleChange}
@@ -159,7 +166,7 @@ class CreateDocument extends Component {
             <div className="input-field col s8 m4 access-option">
 
               <select
-                className="browser-default"
+                className="browser-default create-select"
                 disabled={!this.state.owner}
                 id="Select"
                 name="access"
@@ -196,7 +203,7 @@ class CreateDocument extends Component {
 }
 const mapStateToProps = state => ({
   document: state.documentReducer.document,
-  user: state.authReducer.user
+  user: state.userReducer.currentUser
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

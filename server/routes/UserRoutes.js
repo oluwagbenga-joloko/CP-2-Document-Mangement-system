@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import userController from '../controllers/UserController';
+import documentController from '../controllers/DocumentController';
 import authentication from '../middlewares/Authentication';
 
 const userRouter = Router();
@@ -191,6 +192,6 @@ userRouter.route('/logout')
 //  */
 
 userRouter.route('/:id/documents')
-.get(authentication.verifyUser, userController.listUserDocuments);
+.get(authentication.verifyUser, documentController.searchUserDocument);
 
 export default userRouter;

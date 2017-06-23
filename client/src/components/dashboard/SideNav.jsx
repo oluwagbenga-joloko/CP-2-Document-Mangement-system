@@ -9,35 +9,34 @@ const SideNav = ({ user, url, logout }) => (
         <div className="userView">
           <div className="background side_nav_head" />
           <div className="row">
-            <div className="col s4 ">
+            <div className="col s3 ">
               <i className="material-icons side_nav_avatar">person_outline</i>
             </div>
-            <div className="col s8">
+            <div className="col s9">
               <p className="side_nav_name">{user.firstName} {user.lastName}</p>
             </div>
           </div>
         </div></li>
-
       <li><div className="divider nav_divider" /></li>
       <li>
         <Link
-          to={`${url}`}
+          to={`${url}/createdocument`}
           className="waves-effect side-nav-link"
         >
           <i className="material-icons side-nav-link-av">add_circle</i>
-          create document
+          Create document
         </Link>
       </li>
       <li>
-        <Link to={`${url}/mydocuments`} className="waves-effect side-nav-link">
+        <Link to={`${url}`} className="waves-effect side-nav-link">
           <i className="material-icons side-nav-link-av">folder</i>
-        my documents
+        My documents
         </Link>
       </li>
       <li>
         <Link
           className="waves-effect side-nav-link"
-          to={`${url}/generalDocuments?query=&offset=0&limit=10`}
+          to={`${url}/generalDocuments`}
         >
           <i className="material-icons side-nav-link-av">public</i>
           General Documents

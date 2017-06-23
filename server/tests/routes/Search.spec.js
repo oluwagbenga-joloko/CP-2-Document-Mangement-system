@@ -136,7 +136,7 @@ describe('Routes : Search', () => {
           done();
         });
     });
-    it('it should allow Admin search for private document', (done) => {
+    it('it should not allow Admin search for private document', (done) => {
       request
         .get(`/api/search/documents/?q=${privateDocument1.title}`)
         .set({ 'x-access-token': adminToken })
@@ -151,8 +151,8 @@ describe('Routes : Search', () => {
             }
             return undefined;
           });
-          expect(searchDocument[0].title).to.equal(privateDocument1.title);
-          expect(searchDocument[0].content).to.equal(privateDocument1.content);
+          expect(searchDocument).to.eql([]);
+          expect(searchDocument[0]).to.equal(undefined);
           done();
         });
     });
@@ -186,9 +186,44 @@ describe('Routes : Search', () => {
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.message).to.equal('unauthorized');
           done();
           expect(res.body.users).to.equal(undefined);
+        });
+    });
+  });
+  describe('GET /api/search//userdocuments/?q={}', () => {
+    it('it should allow users search for documents', (done) => {
+      request
+        .get('/api/search/userdocuments/?q=')
+        .set({ 'x-access-token': regular1Token })
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.success).to.equal(true);
+          expect(res.body.documents).to.not.equal(undefined);
+          expect(res.body.documents).to.be.an('array');
+          done();
+        });
+    });
+    it('it should allow users search their own documents documents public documents', (done) => {
+      request
+        .get(`/api/search/userdocuments/?q=${publicDocument1.title}`)
+        .set({ 'x-access-token': regular1Token })
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.success).to.equal(true);
+          expect(res.body.documents).to.not.equal(undefined);
+          expect(res.body.documents).to.be.an('array');
+          const searchDocument = res.body.documents.filter((document) => {
+            if (document.title === publicDocument1.title) {
+              return document;
+            }
+            return undefined;
+          });
+          expect(searchDocument[0].User.firstName).to.equal(regulerUser1.firstName);
+          expect(searchDocument[0].title).to.equal(publicDocument1.title);
+          expect(searchDocument[0].content).to.equal(publicDocument1.content);
+          done();
         });
     });
   });

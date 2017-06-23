@@ -16,30 +16,26 @@ const userController = {
       .spread((user, created) => {
         if (created) {
           jwt.sign({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
             roleId: 2,
             id: user.id
           }, process.env.SECRET, { expiresIn: '6h' }, (err, token) => {
             res.status(201).send({
               success: true,
-              user,
               token,
-              msg: 'user created succesfully',
+              message: 'user created succesfully',
             });
           });
         } else {
           res.status(409).send({
             success: false,
-            msg: 'user email already used'
+            message: 'user email already used'
           });
         }
       })
       .catch(error => res.status(400).send({
         success: false,
         error,
-        msg: error.errors[0].message
+        message: error.errors[0].message
       }));
   },
   list(req, res) {
@@ -56,29 +52,35 @@ const userController = {
       users: result.rows,
       count: result.count
     }))
-    .catch(error => res.status(401).send({ sucess: false, error }));
+    .catch(error => res.status(401).send({ success: false, error }));
   },
   retrieve(req, res) {
     if (req.decoded.id === 1 || req.decoded.id === Number(req.params.id)) {
       return User
-      .findById(req.params.id)
+      .findById(req.params.id, {
+        attributes: { exclude: ['password'] },
+        include: {
+          model: Role,
+          attributes: ['title']
+        }
+      })
       .then((user) => {
         if (!user) {
-          res.status(404).send({ success: false, msg: 'user not found' });
+          res.status(404).send({ success: false, message: 'user not found' });
         } else {
           res.status(200).send({ success: true, user });
         }
       })
-      .catch(error => res.status(401).send({ sucess: false, error }));
+      .catch(error => res.status(401).send({ success: false, error }));
     }
-    res.status(401).send({ success: false, msg: 'unauthorized' });
+    res.status(401).send({ success: false, message: 'unauthorized' });
   },
   delete(req, res) {
     if (req.decoded.id === 1 || req.decoded.id === Number(req.params.id)) {
       if (Number(req.params.id) === 1) {
         res.status(403).send({
           success: false,
-          msg: 'cannot delete admin profile'
+          message: 'cannot delete admin profile'
         });
       } else {
         return User
@@ -89,13 +91,14 @@ const userController = {
              .then(() => res.status(200).send({ success: true }))
              .catch(error => res.status(400).send({ success: false, error }));
           } else {
-            res.status(404).send({ success: false, msg: 'user not found' });
+            res.status(404).send({ success: false, message: 'user not found' });
           }
         })
    .catch(error => res.status(400).send({ success: false, error }));
       }
     } else {
-      res.status(401).send({ success: false, msg: 'unauthorized' });
+      console.log('in user');
+      res.status(401).send({ success: false, message: 'unauthorized' });
     }
   },
   update(req, res) {
@@ -121,24 +124,25 @@ const userController = {
       return User
         .findById(req.params.id)
         .then(user => user
-          .update(userDetails, { hooks })
+          .update(userDetails, {
+            hooks,
+          })
           .then(() => res.status(200).send({
             success: true,
-            user,
-            msg: 'profile update success' }))
+            message: 'profile update success' }))
           .catch(error => res.status(400).send({ success: false,
             error,
-            msg: error.errors[0].message
+            message: error.errors[0].message
           })))
         .catch(error => res.status(400).send({ success: false,
           error,
-          msg: error.errors[0].message }));
+          message: error.errors[0].message }));
     } else if (req.decoded.id === 1) {
       return User
         .findById(req.params.id)
         .then((user) => {
           if (!user) {
-            res.status(404).send({ success: false, msg: 'user not found' });
+            res.status(404).send({ success: false, message: 'user not found' });
           } else {
             return Role
             .findById(req.body.roleId)
@@ -153,13 +157,13 @@ const userController = {
                 } else {
                   res.status(409).send({
                     success: false,
-                    msg: 'cannot make user admin'
+                    message: 'cannot make user admin'
                   });
                 }
               } else {
                 res.status(404).send({
                   success: false,
-                  msg: 'role not does not exist'
+                  message: 'role not does not exist'
                 });
               }
             })
@@ -168,20 +172,7 @@ const userController = {
         })
         .catch(error => res.status(400).send({ success: false, error }));
     }
-    res.status(401).send({ success: false, msg: 'unauthorized' });
-  },
-  listUserDocuments(req, res) {
-    return User
-      .findById(req.params.id,
-      { include: [{
-        model: Document,
-        as: 'Documents',
-      }] })
-      .then(user => res.status(200).send({
-        success: true,
-        documents: user.Documents
-      }))
-      .catch(error => res.status(401).send({ sucess: false, error }));
+    res.status(401).send({ success: false, message: 'unauthorized' });
   },
   login(req, res) {
     if (req.body.password && req.body.email) {
@@ -189,27 +180,24 @@ const userController = {
         .findOne({ where: { email: req.body.email } })
         .then((user) => {
           if (!user) {
-            res.status(404).send({ success: false, msg: 'email not found' });
+            res.status(404).send({ success: false, message: 'email not found' });
           } else {
             user.verifyPassword(req.body.password)
               .then((validPassword) => {
                 if (!validPassword) {
                   res.status(404).send({
                     success: false,
-                    msg: 'invalid password' });
+                    message: 'invalid password' });
                 } else {
                   jwt.sign({
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    email: user.email,
                     roleId: user.roleId,
                     id: user.id
                   }, process.env.SECRET, { expiresIn: '6h' }, (err, token) => {
                     res.send({
                       success: true,
-                      msg: 'login succesful',
-                      token,
-                      user });
+                      message: 'login succesful',
+                      token
+                    });
                   });
                 }
               });
@@ -217,13 +205,16 @@ const userController = {
         })
       .catch(error => res.status(400).send(error));
     }
-    res.send({ succes: false, msg: 'email and password required' });
+    res.status(400).send({
+      success: false, message: 'email and password required' });
   },
   search(req, res) {
+    const limit = Number(req.query.limit) || null,
+      offset = Number(req.query.offset) || null;
     return User
     .findAndCountAll({
-      limit: Number(req.query.limit) || null,
-      offset: Number(req.query.offset) || null,
+      limit,
+      offset,
       where: {
         $or: [
           { firstName: { $ilike: `%${req.query.q}%` } },
@@ -237,16 +228,24 @@ const userController = {
       },
       order: [['updatedAt', 'DESC']]
     })
-    .then(result => res.status(200).send({ success: true,
-      users: result.rows,
-      count: result.count,
-      result
-    }))
+    .then((result) => {
+      const metaData = {
+        totalCount: result.count,
+        pageCount: Math.ceil(result.count / limit),
+        page: Math.floor(offset / limit) + 1,
+        pageSize: result.rows.length
+      };
+      res.status(200).send({ success: true,
+        users: result.rows,
+        metaData
+      })
+;
+    })
     .catch(error => res.status(401).send({ sucess: false, error }));
   },
 
   logout(req, res) {
-    res.send({ success: false });
+    res.status(200).send({ success: true, message: 'log out successful' });
   }
 };
 export default userController;

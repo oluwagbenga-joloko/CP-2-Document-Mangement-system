@@ -16,6 +16,8 @@ const request = chai.request(app),
   emtptyContentDocument = fakeData.emtptyContentDocument,
   privateDocument1 = fakeData.generateRandomDocument('private'),
   publicDocument1 = fakeData.generateRandomDocument('public'),
+  publicDocument2 = fakeData.generateRandomDocument('public'),
+
   roleDocument1 = fakeData.generateRandomDocument('role'),
   updateDocument1 = fakeData.generateRandomDocument('role'),
   invalidAccessDocument = fakeData.generateRandomDocument('radnom');
@@ -72,6 +74,27 @@ describe('Routes : Documents', () => {
           done();
         });
     });
+    it('it not allow users with invalid token create documents', (done) => {
+      request
+        .post('/api/documents')
+        .set({ 'x-access-token': 'invalid token' })
+        .send(publicDocument2)
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body.success).to.equal(false);
+          done();
+        });
+    });
+    it('it not allow users without token create documents', (done) => {
+      request
+        .post('/api/documents')
+        .send(publicDocument2)
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body.success).to.equal(false);
+          done();
+        });
+    });
     it('it should allow users to create public access documents', (done) => {
       request
         .post('/api/documents')
@@ -110,7 +133,7 @@ describe('Routes : Documents', () => {
         .end((err, res) => {
           expect(res).to.have.status(400);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal(
+          expect(res.body.message).to.equal(
             'access can either be public ,private or role'
           );
           done();
@@ -124,7 +147,7 @@ describe('Routes : Documents', () => {
         .end((err, res) => {
           expect(res).to.have.status(400);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('Title cannot be empty');
+          expect(res.body.message).to.equal('Title cannot be empty');
           done();
         });
     });
@@ -136,7 +159,7 @@ describe('Routes : Documents', () => {
         .end((err, res) => {
           expect(res).to.have.status(400);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('Content cannot be empty');
+          expect(res.body.message).to.equal('Content cannot be empty');
           done();
         });
     });
@@ -161,7 +184,7 @@ describe('Routes : Documents', () => {
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.be.equal('unauthorized');
+          expect(res.body.message).to.be.equal('unauthorized');
           done();
         });
     });
@@ -186,7 +209,7 @@ describe('Routes : Documents', () => {
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.message).to.equal('unauthorized');
           done();
         });
     });
@@ -233,7 +256,7 @@ describe('Routes : Documents', () => {
         .end((err, res) => {
           expect(res).to.have.status(404);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('document not found');
+          expect(res.body.message).to.equal('document not found');
           done();
         });
     });
@@ -247,7 +270,7 @@ describe('Routes : Documents', () => {
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.message).to.equal('unauthorized');
           done();
         });
     });
@@ -259,7 +282,7 @@ describe('Routes : Documents', () => {
         .end((err, res) => {
           expect(res).to.have.status(404);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('document not found');
+          expect(res.body.message).to.equal('document not found');
           done();
         });
     });
@@ -285,7 +308,7 @@ describe('Routes : Documents', () => {
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.message).to.equal('unauthorized');
           done();
         });
     });
@@ -296,7 +319,7 @@ describe('Routes : Documents', () => {
         .end((err, res) => {
           expect(res).to.have.status(404);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('document not found');
+          expect(res.body.message).to.equal('document not found');
           done();
         });
     });

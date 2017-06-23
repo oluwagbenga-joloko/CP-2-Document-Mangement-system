@@ -6,7 +6,7 @@ const roleController = {
       .create({ title: req.body.title, })
       .then(role => res.status(201).send({ success: true, role }))
       .catch(error => res.status(409).send({
-        success: false, error, msg: error.errors[0].message
+        success: false, error, message: error.errors[0].message
       }));
   },
   list(req, res) {
@@ -23,7 +23,7 @@ const roleController = {
       .findById(req.params.id)
       .then((role) => {
         if (!role) {
-          res.status(404).send({ success: false, msg: 'Role not found' });
+          res.status(404).send({ success: false, message: 'Role not found' });
         } else {
           res.status(200).send({ success: true, role });
         }
@@ -32,17 +32,17 @@ const roleController = {
   },
   delete(req, res) {
     if (Number(req.params.id) === 1) {
-      res.status(409).send({ success: false, msg: 'Cannot delete Admin role' });
+      res.status(409).send({ success: false, message: 'Cannot delete Admin role' });
     } else if (Number(req.params.id) === 2) {
       res.status(409).send({
         success: false,
-        msg: 'Cannot delete Regular user role' });
+        message: 'Cannot delete Regular user role' });
     } else {
       return Role
     .findById(req.params.id)
     .then((role) => {
       if (!role) {
-        res.status(404).send({ success: false, msg: 'Role not found' });
+        res.status(404).send({ success: false, message: 'Role not found' });
       } else {
         return role
           .destroy()
@@ -55,17 +55,17 @@ const roleController = {
   },
   update(req, res) {
     if (Number(req.params.id) === 1) {
-      res.status(409).send({ success: false, msg: 'Cannot update Admin role' });
+      res.status(409).send({ success: false, message: 'Cannot update Admin role' });
     } else if (Number(req.params.id) === 2) {
       res.status(409).send({
         success: false,
-        msg: 'Cannot update Regular user role' });
+        message: 'Cannot update Regular user role' });
     } else {
       return Role
         .findById(req.params.id)
         .then((role) => {
           if (!role) {
-            res.status(404).send({ success: false, msg: 'Role not found' });
+            res.status(404).send({ success: false, message: 'Role not found' });
           } else {
             return role
               .update({ title: req.body.title })
@@ -73,13 +73,13 @@ const roleController = {
               .catch(error => res.status(409).send({
                 success: false,
                 error,
-                msg: error.errors[0].message }));
+                message: error.errors[0].message }));
           }
         })
         .catch(error => res.status(400).send({
           success: false,
           error,
-          msg: error.errors[0].message }));
+          message: error.errors[0].message }));
     }
   }
 

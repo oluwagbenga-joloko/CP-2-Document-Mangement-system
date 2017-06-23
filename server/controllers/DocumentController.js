@@ -161,7 +161,8 @@ const DocumentController = {
           include: {
             model: User,
             attributes: ['firstName', 'lastName']
-          }
+          },
+          order: [['updatedAt', 'DESC']]
         })
     .then((result) => {
       const metaData = {

@@ -16,5 +16,10 @@ Object.keys(document.defaultView).forEach( function(property){
 global.navigator = {
   userAgent: 'node.js'
 };
-
+if (!global.window.localStorage) {
+  global.window.localStorage = {
+    getItem(token) { return undefined; },
+    setItem() {}
+  };
+}
 documentRef = document;

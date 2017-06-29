@@ -63,7 +63,7 @@ describe('Routes : Roles', () => {
           expect(res).to.have.status(409);
           expect(res.body.success).to.equal(false);
           expect(res.body.role).to.equal(undefined);
-          expect(res.body.msg).to.equal('Role already exists');
+          expect(res.body.message).to.equal('Role already exists');
           done();
         });
     });
@@ -77,7 +77,7 @@ describe('Routes : Roles', () => {
           expect(res).to.have.status(409);
           expect(res.body.success).to.equal(false);
           expect(res.body.role).to.equal(undefined);
-          expect(res.body.msg).to.equal('Only letter and numbers are allowed');
+          expect(res.body.message).to.equal('Only letter and numbers are allowed');
           done();
         });
     });
@@ -90,7 +90,7 @@ describe('Routes : Roles', () => {
           expect(res).to.have.status(409);
           expect(res.body.success).to.equal(false);
           expect(res.body.role).to.equal(undefined);
-          expect(res.body.msg).to.equal('title cannot be empty');
+          expect(res.body.message).to.equal('title cannot be empty');
           done();
         });
     });
@@ -102,7 +102,7 @@ describe('Routes : Roles', () => {
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.message).to.equal('unauthorized');
           expect(res.body.role).to.equal(undefined);
           done();
         });
@@ -123,6 +123,16 @@ describe('Routes : Roles', () => {
           done();
         });
     });
+    it('should allow admin to get all roles with invalid token', (done) => {
+      request
+        .get('/api/roles')
+        .set({ 'x-access-token': 'adminToken' })
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body.success).to.equal(false);
+          done();
+        });
+    });
     it('should not allow regular user to get all roles', (done) => {
       request
         .get('/api/roles')
@@ -131,7 +141,7 @@ describe('Routes : Roles', () => {
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.message).to.equal('unauthorized');
           expect(res.body.roles).to.equal(undefined);
           done();
         });
@@ -158,7 +168,7 @@ describe('Routes : Roles', () => {
           expect(res).to.have.status(404);
           expect(res.body.success).to.equal(false);
           expect(res.body.role).to.equal(undefined);
-          expect(res.body.msg).to.equal('Role not found');
+          expect(res.body.message).to.equal('Role not found');
           done();
         });
     });
@@ -170,7 +180,7 @@ describe('Routes : Roles', () => {
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.message).to.equal('unauthorized');
           expect(res.body.roles).to.equal(undefined);
           done();
         });
@@ -185,7 +195,7 @@ describe('Routes : Roles', () => {
         .end((err, res) => {
           expect(res).to.have.status(409);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.be.equal('Cannot update Admin role');
+          expect(res.body.message).to.be.equal('Cannot update Admin role');
           done();
         });
     });
@@ -198,7 +208,7 @@ describe('Routes : Roles', () => {
         .end((err, res) => {
           expect(res).to.have.status(409);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.be.equal('Cannot update Regular user role');
+          expect(res.body.message).to.be.equal('Cannot update Regular user role');
           done();
         });
     });
@@ -211,7 +221,7 @@ describe('Routes : Roles', () => {
         .end((err, res) => {
           expect(res).to.have.status(404);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.be.equal('Role not found');
+          expect(res.body.message).to.be.equal('Role not found');
           done();
         });
     });
@@ -225,7 +235,7 @@ describe('Routes : Roles', () => {
           expect(res).to.have.status(409);
           expect(res.body.success).to.equal(false);
           expect(res.body.role).to.equal(undefined);
-          expect(res.body.msg).to.equal('Role already exists');
+          expect(res.body.message).to.equal('Role already exists');
           done();
         });
     });
@@ -239,7 +249,7 @@ describe('Routes : Roles', () => {
           expect(res).to.have.status(409);
           expect(res.body.success).to.equal(false);
           expect(res.body.role).to.equal(undefined);
-          expect(res.body.msg).to.equal('Only letter and numbers are allowed');
+          expect(res.body.message).to.equal('Only letter and numbers are allowed');
           done();
         });
     });
@@ -252,7 +262,7 @@ describe('Routes : Roles', () => {
           expect(res).to.have.status(409);
           expect(res.body.success).to.equal(false);
           expect(res.body.role).to.equal(undefined);
-          expect(res.body.msg).to.equal('title cannot be empty');
+          expect(res.body.message).to.equal('title cannot be empty');
           done();
         });
     });
@@ -277,7 +287,7 @@ describe('Routes : Roles', () => {
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.message).to.equal('unauthorized');
           done();
         });
     });
@@ -290,7 +300,7 @@ describe('Routes : Roles', () => {
         .end((err, res) => {
           expect(res).to.have.status(409);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.be.equal('Cannot delete Admin role');
+          expect(res.body.message).to.be.equal('Cannot delete Admin role');
           done();
         });
     });
@@ -302,7 +312,7 @@ describe('Routes : Roles', () => {
         .end((err, res) => {
           expect(res).to.have.status(409);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.be.equal('Cannot delete Regular user role');
+          expect(res.body.message).to.be.equal('Cannot delete Regular user role');
           done();
         });
     });
@@ -314,7 +324,7 @@ describe('Routes : Roles', () => {
         .end((err, res) => {
           expect(res).to.have.status(404);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.be.equal('Role not found');
+          expect(res.body.message).to.be.equal('Role not found');
           done();
         });
     });
@@ -337,7 +347,7 @@ describe('Routes : Roles', () => {
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.message).to.equal('unauthorized');
           done();
         });
     });

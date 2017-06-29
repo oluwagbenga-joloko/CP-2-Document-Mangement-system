@@ -24,25 +24,11 @@ class Login extends Component {
     this.state = {
       password: '',
       email: '',
-      errorMsg: 'ddfdfdfdfdfdfdfdfdfdfdf',
+      errorMessage: '',
       showError: false
 
     };
     this.handleChange = this.handleChange.bind(this);
-  }
-   /**
-   * @desc runs before component recieves props;
-   * @param {any} nextProps property of element;
-   * @return {null} no return value;
-   * @memberof SignUp
-   */
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.status.success) {
-      this.setState({
-        errorMsg: nextProps.status.msg,
-        showError: true
-      });
-    }
   }
   /**
    * @desc handles change of form input
@@ -84,6 +70,11 @@ class Login extends Component {
       submitHandler() {
         that.props.login(that.state).then(() => {
           toastr.success('Login successfully');
+        }).catch(() => {
+          that.setState({
+            errorMessage: that.props.message,
+            showError: true
+          });
         });
       }
     });
@@ -94,7 +85,7 @@ class Login extends Component {
    * @memberof Login
    */
   render() {
-    if (this.props.status.success) {
+    if (this.props.userId) {
       return (<Redirect
         push
         to={{
@@ -154,7 +145,7 @@ class Login extends Component {
                     <div
                       className="custom-error-login center-align header-dash"
                     >
-                      {this.state.errorMsg}
+                      {this.state.errorMessage}
                       </div>
                     }
                     <div className="row">
@@ -183,7 +174,8 @@ class Login extends Component {
 }
 const mapDispatchToProps = dispatch => bindActionCreators({ login }, dispatch);
 const mapStateToProps = state => ({
-  status: state.authReducer
+  userId: state.authReducer.userId,
+  message: state.authReducer.message,
 });
 Login.defaultProps = {
   status: false,

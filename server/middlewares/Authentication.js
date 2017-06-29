@@ -9,12 +9,12 @@ const authentication = {
     if (!token) {
       res.status(401).send({
         success: false,
-        msg: 'No token provided'
+        message: 'No token provided'
       });
     } else {
       jwt.verify(token, process.env.SECRET, (err, decoded) => {
         if (err) {
-          res.status(401).send({ success: false, msg: 'invalid token' });
+          res.status(401).send({ success: false, message: 'invalid token' });
         }
         if (decoded) {
           req.decoded = decoded;
@@ -27,7 +27,7 @@ const authentication = {
     if (req.decoded.roleId === 1) {
       next();
     } else {
-      res.status(401).send({ success: false, msg: 'unauthorized' });
+      res.status(401).send({ success: false, message: 'unauthorized' });
     }
   }
 

@@ -17,15 +17,6 @@ export default (sequelize, DataTypes) => {
         }
       }
     },
-    content: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          msg: 'Content cannot be empty'
-        }
-      }
-    },
     access: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -36,6 +27,15 @@ export default (sequelize, DataTypes) => {
         isIn: {
           args: [['public', 'private', 'role']],
           msg: 'access can either be public ,private or role'
+        }
+      }
+    },
+    content: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Content cannot be empty'
         }
       }
     },

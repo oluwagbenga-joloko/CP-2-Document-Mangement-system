@@ -32,5 +32,7 @@ const actionTypes = keyMirror({
   UPDATE_USER: null,
   BEGIN_AJAX_CALL: null,
   AJAX_CALL_ERROR: null,
+  GET_CURRENT_USER_SUCCESS: null,
+  GET_CURRENT_USER_FALUIRE: null,
 });
 export default actionTypes;

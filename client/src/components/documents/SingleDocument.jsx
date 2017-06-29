@@ -67,49 +67,48 @@ class SingleDocument extends Component {
    */
   render() {
     return (
-      <div >
-        <div className="row">
-          <div className="col s12">
-            <h5>Title: {this.state.title}</h5>
+      <div>
+        <div className="row single-doc-row">
+          <div className="col s8 m8 single-doc-title">
+            <h4 className="doc-title">{this.state.title}</h4>
           </div>
-        </div>
-        <div className="row">
-          <div className="col s12 m6">
-            <h5>
-              <span>Access: </span>
-              <span>{this.state.access}</span>
-            </h5>
-          </div>
-          <div className="col s12 m6">
-            <h5>
-              <span>Date published: </span>
-              <span>{this.state.createdAt.slice(0, 10)}</span>
-            </h5>
-          </div>
+          <div className="col s8 m4 single-doc-edit">
+            { this.state.owner &&
+            <Link
+              className={`btn waves-effect
+              waves-light col s6 offset-s3 z-depth-4 save-btn`}
+              to={`/dashboard/editdocuments/${this.props.match.params.id}`}
+            >
+              <i className="material-icons left">mode_edit</i>
+        Edit
+        </Link>
+        }
 
+          </div>
         </div>
-        <h5 className="margin-5px">Content</h5>
+
+        <div className="divider" />
+        <p className="single-doc-access">
+          <span className="doc-sub-header">Access: </span>
+          <span>{this.state.access}</span>
+        </p>
+
+        <p className="single-doc-published">
+          <span className="doc-sub-header" >Published: </span>
+          <span>{this.state.createdAt.slice(0, 10)}</span>
+        </p>
+        <div className="divider" />
         <div
           className="innerhtml margin-5px"
           dangerouslySetInnerHTML={{ __html: this.state.content }}
         />
-        { this.state.owner &&
-        <Link
-          className={`btn waves-effect
-          waves-light col s6 offset-s3 z-depth-4 save-btn`}
-          to={`/dashboard/editdocuments/${this.props.match.params.id}`}
-        >
-          <i className="material-icons side-nav-link-av">edit</i>
-        Edit
-        </Link>
-        }
       </div>
     );
   }
 }
 const mapStateToProps = state => ({
   document: state.documentReducer.document,
-  user: state.authReducer.user
+  user: state.userReducer.currentUser,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

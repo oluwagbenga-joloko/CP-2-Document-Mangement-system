@@ -33,6 +33,7 @@ class UserDocuments extends Component {
     };
     this.handleDelete = this.handleDelete.bind(this);
     this.handlePageClick = this.handlePageClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
   /**
    * @desc runs before component mounts
@@ -44,14 +45,14 @@ class UserDocuments extends Component {
     this.setState({ query: parsed.query ? parsed.query : '' });
     const payload = {
       query: parsed.query ? parsed.query : '',
-      limit: parsed.limit ? parsed.limit : 10,
-      offset: parsed.offset ? parsed.offset : 0,
+      limit: 12,
+      offset: parsed.page ? (parsed.page - 1) * 12 : 0,
+      access: parsed.access ? parsed.access : ''
     };
     this.props.getUserDocuments(payload).then(() => {
       this.setState({
+        access: parsed.access ? parsed.access : '',
         documents: this.props.documents,
-        pageCount: Math.ceil(this.props.count / 12),
-        initialPage: Math.ceil(payload.offset / 12),
         showPaginate: true,
       });
     });
@@ -63,20 +64,33 @@ class UserDocuments extends Component {
    *  @returns {*} has no return value;
    */
   componentWillReceiveProps(nextProps) {
+    const parsed = queryString.parse(nextProps.location.search);
     if (this.props.location.search !== nextProps.location.search) {
-      const parsed = queryString.parse(nextProps.location.search);
       this.setState({ query: parsed.query ? parsed.query : '' });
       const payload = {
         query: parsed.query ? parsed.query : '',
-        limit: parsed.limit ? parsed.limit : 12,
-        offset: parsed.offset ? parsed.offset : 0,
+        limit: 12,
+        offset: parsed.page ? (parsed.page - 1) * 12 : 0,
+        access: parsed.access ? parsed.access : ''
       };
       this.props.getUserDocuments(payload);
     } else {
       this.setState({
-        documents: nextProps.documents,
-        pageCount: Math.ceil(nextProps.count / 12) });
+        access: parsed.access ? parsed.access : '',
+        documents: nextProps.documents
+      });
     }
+  }
+  /**
+   * @param {any} event  html event
+   * @desc handles onChange of filter
+   * @returns {*} no return value
+   * @memberof GeneralDocuments
+   */
+  handleChange(event) {
+    event.preventDefault();
+    this.setState({ access: event.target.value });
+    this.props.history.replace(`${this.props.location.pathname}?query=&page=${1}&access=${event.target.value}`);
   }
   /**
    * @desc handles paginate click
@@ -86,8 +100,8 @@ class UserDocuments extends Component {
    */
   handlePageClick(data) {
     const selected = data.selected;
-    const offset = Math.ceil(selected * this.state.limit);
-    this.props.history.replace(`${this.props.location.pathname}?query=${this.state.query}&limit=${12}&offset=${offset}`);
+    const page = selected + 1;
+    this.props.history.replace(`${this.props.location.pathname}?query=${this.state.query}&page=${page}&access=${this.state.access}`);
   }
   /**
    * @desc hanldes delete of document
@@ -98,8 +112,8 @@ class UserDocuments extends Component {
    */
   handleDelete(title, id) {
     swal({
-      title: `Are you sure you want to delete this document with ${title}?`,
-      text: 'You will not be able to recover this document file!',
+      title: `Are you sure you want to delete this document with title ${title}?`,
+      text: 'You will not be able to recover this document again!',
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#DD6B55',
@@ -110,19 +124,20 @@ class UserDocuments extends Component {
     },
 (isConfirm) => {
   if (isConfirm) {
-    swal('Deleted!', 'Your imaginary file has been deleted.', 'success');
+    swal('Deleted!', 'Your document has been deleted.', 'success');
     this.props.deleteDocument(id).then(() => {
       const parsed = queryString.parse(this.props.location.search);
       this.setState({ query: parsed.query ? parsed.query : '' });
       const payload = {
         query: parsed.query ? parsed.query : '',
-        limit: parsed.limit ? parsed.limit : 12,
-        offset: parsed.offset ? parsed.offset : 12,
+        limit: 12,
+        offset: parsed.page ? (parsed.page - 1) * 12 : 0,
+        access: this.state.access
       };
       this.props.getUserDocuments(payload);
     });
   } else {
-    swal('Cancelled', 'Your imaginary file is safe :)', 'error');
+    swal('Cancelled', 'Your document is safe :)', 'error');
   }
 });
   }
@@ -152,10 +167,34 @@ class UserDocuments extends Component {
     return (
       <div>
         <h3 className=" header-dash">My Documents</h3>
-        <SearchBar
-          url={this.props.location.pathname}
-          query={this.state.query}
-        />
+        <div className="row">
+          <div className="col s12 m4">
+            <div className="row">
+              <div className="col s12">
+                <select
+                  className="browser-default"
+                  id="Select"
+                  name="access"
+                  value={`${this.state.access}`}
+                  onChange={this.handleChange}
+                >
+                  <option value="">All Documents</option>
+                  <option value="public">Public Documents</option>
+                  <option value="private">private Documents</option>
+                  <option value="role">Role Documents</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div className="col s12 m8">
+            <SearchBar
+              url={this.props.location.pathname}
+              query={this.state.query}
+              access={this.state.access}
+            />
+          </div>
+        </div>
+
         { this.state.documents &&
         <div>
           { this.props.loading &&
@@ -165,7 +204,9 @@ class UserDocuments extends Component {
         }
           {
           this.state.documents.length === 0 && !this.props.loading &&
-          <h3>No documents found</h3>
+          <div className="center-align">
+            <h4>No documents found</h4>
+          </div>
         }
           { this.state.documents.length >= 1 &&
           <div>
@@ -175,20 +216,22 @@ class UserDocuments extends Component {
           </div>
         }
           { this.state.showPaginate &&
-          <ReactPaginate
-            initialPage={this.state.initialPage}
-            previousLabel={'previous'}
-            nextLabel={'next'}
-            breakLabel={<a href="">...</a>}
-            breakClassName={'break-me'}
-            pageCount={this.state.pageCount}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            onPageChange={this.handlePageClick}
-            containerClassName={'pagination'}
-            subContainerClassName={'pages pagination'}
-            activeClassName={'active'}
-          />
+          <div className="center-align">
+            <ReactPaginate
+              previousLabel={'previous'}
+              nextLabel={'next'}
+              forcePage={this.props.metaData.page - 1}
+              breakLabel={<a href="">...</a>}
+              breakClassName={'break-me'}
+              pageCount={this.props.metaData.pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={this.handlePageClick}
+              containerClassName={'pagination'}
+              subContainerClassName={'pages pagination'}
+              activeClassName={'active'}
+            />
+          </div>
         }
         </div>
         }
@@ -203,8 +246,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 
 const mapStateToProps = state => ({
   documents: state.documentReducer.userDocuments,
-  count: state.documentReducer.userDocumentsCount,
-  userId: state.authReducer.user.id,
+  metaData: state.documentReducer.userDocumentsMetaData,
+  userId: state.authReducer.userId,
   loading: state.ajaxCallReducer.loading,
 });
 UserDocuments.propTypes = {

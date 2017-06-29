@@ -5,11 +5,13 @@ import app from '../../../serverProd';
 import fakeData from '../testUtils/FakeData';
 import db from '../../models';
 import Seeddb from '../testUtils/SeedDb';
+
 chai.use(chaiHttp);
 
 const request = chai.request(app),
   adminUser = fakeData.validAdmin,
   validUser = fakeData.generateRandomUser(),
+  noPasswordUser = fakeData.noPasswordUser,
   invalidEmailUser = fakeData.invalidEmailUser,
   invalidPasswordUser = fakeData.invalidPasswordUser,
   regulerUser1 = fakeData.regulerUser1,
@@ -43,12 +45,8 @@ describe('Routes : Users', () => {
         .send(validUser)
         .end((err, res) => {
           expect(res).to.have.status(201);
-          expect(res.body.success).to.equal(true);
-          expect(res.body.user.firstName).to.equal(validUser.firstName);
-          expect(res.body.user.lastName).to.equal(validUser.lastName);
-          expect(res.body.user.email).to.equal(validUser.email);
-              expect(res.body.token).to.not.equal(undefined);
-          expect(res.body.msg).to.equal('user created succesfully');
+          expect(res.body.token).to.not.equal(undefined);
+          expect(res.body.message).to.equal('user created succesfully');
           done();
         });
     });
@@ -61,7 +59,7 @@ describe('Routes : Users', () => {
           expect(res.body.success).to.equal(false);
           expect(res.body.user).to.equal(undefined);
           expect(res.body.token).to.equal(undefined);
-          expect(res.body.msg).to.equal('user email already used');
+          expect(res.body.message).to.equal('user email already used');
           done();
         });
     });
@@ -74,7 +72,7 @@ describe('Routes : Users', () => {
           expect(res.body.success).to.equal(false);
           expect(res.body.user).to.equal(undefined);
           expect(res.body.token).to.equal(undefined);
-          expect(res.body.msg).to.equal('invalid email');
+          expect(res.body.message).to.equal('invalid email');
           done();
         });
     });
@@ -87,7 +85,7 @@ describe('Routes : Users', () => {
           expect(res.body.success).to.equal(false);
           expect(res.body.user).to.equal(undefined);
           expect(res.body.token).to.equal(undefined);
-          expect(res.body.msg).to.equal('password cannot be empty');
+          expect(res.body.message).to.equal('password cannot be empty');
           done();
         });
     });
@@ -100,12 +98,8 @@ describe('Routes : Users', () => {
         .end((err, res) => {
           regularToken = res.body.token;
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
-          expect(res.body.user.firstName).to.equal(regulerUser1.firstName);
-          expect(res.body.user.lastName).to.equal(regulerUser1.lastName);
-          expect(res.body.user.email).to.equal(regulerUser1.email);
           expect(res.body.token).to.not.equal(undefined);
-          expect(res.body.msg).to.equal('login succesful');
+          expect(res.body.message).to.equal('login succesful');
           done();
         });
     });
@@ -118,7 +112,7 @@ describe('Routes : Users', () => {
           expect(res).to.have.status(404);
           expect(res.body.success).to.equal(false);
           expect(res.body.token).to.equal(undefined);
-          expect(res.body.msg).to.equal('invalid password');
+          expect(res.body.message).to.equal('invalid password');
           done();
         });
     });
@@ -130,7 +124,19 @@ describe('Routes : Users', () => {
           expect(res).to.have.status(404);
           expect(res.body.success).to.equal(false);
           expect(res.body.token).to.equal(undefined);
-          expect(res.body.msg).to.equal('email not found');
+          expect(res.body.message).to.equal('email not found');
+          done();
+        });
+    });
+    it('should not allow user without pasword or email login.', (done) => {
+      request
+        .post('/api/users/login')
+        .send({})
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.token).to.equal(undefined);
+          expect(res.body.message).to.equal('email and password required');
           done();
         });
     });
@@ -155,7 +161,7 @@ describe('Routes : Users', () => {
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.message).to.equal('unauthorized');
           expect(res.body.users).to.equal(undefined);
           done();
         });
@@ -175,7 +181,17 @@ describe('Routes : Users', () => {
           done();
         });
     });
-    it('should admin to view invalid users profile', (done) => {
+    it('should not allow admin to view any invalid user profile', (done) => {
+      request
+        .get('/api/users/abc')
+        .set({ 'x-access-token': adminToken })
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body.success).to.equal(false);
+          done();
+        });
+    });
+    it('should admin to view non existent user profile', (done) => {
       request
         .get('/api/users/788787')
         .set({ 'x-access-token': adminToken })
@@ -183,7 +199,7 @@ describe('Routes : Users', () => {
           expect(res).to.have.status(404);
           expect(res.body.success).to.equal(false);
           expect(res.body.user).to.equal(undefined);
-          expect(res.body.msg).to.equal('user not found');
+          expect(res.body.message).to.equal('user not found');
           done();
         });
     });
@@ -207,13 +223,37 @@ describe('Routes : Users', () => {
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.message).to.equal('unauthorized');
           expect(res.body.users).to.equal(undefined);
           done();
         });
     });
   });
   describe('PUT /api/users/', () => {
+    it('should  not allow all users to edit their profile with invalid details', (done) => {
+      request
+        .put('/api/users/2')
+        .set({ 'x-access-token': regularToken })
+        .send(invalidEmailUser)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.success).to.equal(false);
+          done();
+        });
+    });
+    it('should allow all users to edit their profile without changing their password', (done) => {
+      request
+        .put('/api/users/2')
+        .set({ 'x-access-token': regularToken })
+        .send(noPasswordUser)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.success).to.equal(true);
+           expect(res.body.message).to.equal('profile update success');
+        
+          done();
+        });
+    });
     it('should allow all users to edit their profile', (done) => {
       request
         .put('/api/users/2')
@@ -222,8 +262,20 @@ describe('Routes : Users', () => {
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.success).to.equal(true);
-          expect(res.body.user.firstName).to.equal(regulerUser4.firstName);
-          expect(res.body.user.lastName).to.equal(regulerUser4.lastName);
+          expect(res.body.message).to.equal('profile update success');
+          done();
+        });
+    });
+
+    it('should allow all users to edit their profile', (done) => {
+      request
+        .put('/api/users/2')
+        .set({ 'x-access-token': regularToken })
+        .send(regulerUser4)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.success).to.equal(true);
+          expect(res.body.message).to.equal('profile update success');
           done();
         });
     });
@@ -235,7 +287,30 @@ describe('Routes : Users', () => {
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.message).to.equal('unauthorized');
+          done();
+        });
+    });
+    it('should  allow admin update user role only for invalid user', (done) => {
+      request
+        .put('/api/users/abc')
+        .set({ 'x-access-token': adminToken })
+        .send({ firstName: 'bola', lastName: 'mark', roleId: 3 })
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.success).to.equal(false);
+          done();
+        });
+    });
+    it('should  allow admin update user role only for non existent user', (done) => {
+      request
+        .put('/api/users/56656')
+        .set({ 'x-access-token': adminToken })
+        .send({ firstName: 'bola', lastName: 'mark', roleId: 3 })
+        .end((err, res) => {
+          console.log(res.body);
+          expect(res).to.have.status(404);
+          expect(res.body.success).to.equal(false);
           done();
         });
     });
@@ -255,14 +330,14 @@ describe('Routes : Users', () => {
           done();
         });
     });
-    it('should  allow admin update user make any user Admin', (done) => {
+    it('should  allow admin update user  user  to Admin', (done) => {
       request
         .put('/api/users/2')
         .set({ 'x-access-token': adminToken })
         .send({ firstName: 'bola', lastName: 'mark', roleId: 1 })
         .end((err, res) => {
           expect(res).to.have.status(409);
-          expect(res.body.msg).to.equal('cannot make user admin');
+          expect(res.body.message).to.equal('cannot make user admin');
           done();
         });
     });
@@ -278,6 +353,17 @@ describe('Routes : Users', () => {
           done();
         });
     });
+    it('should not allow admin to delete non existent user profile', (done) => {
+      request
+        .delete('/api/users/9000')
+        .set({ 'x-access-token': adminToken })
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.message).to.equal('user not found');
+          done();
+        });
+    });
     it('should not allow admin to delete his own profile', (done) => {
       request
         .delete('/api/users/1')
@@ -285,23 +371,23 @@ describe('Routes : Users', () => {
         .end((err, res) => {
           expect(res).to.have.status(403);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('cannot delete admin profile');
+          expect(res.body.message).to.equal('cannot delete admin profile');
           done();
         });
     });
     it(`should not allow not allow regular user delete 
        other users profile`, (done) => {
       request
-        .get('/api/users/4')
+        .delete('/api/users/4')
         .set({ 'x-access-token': regularToken })
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('unauthorized');
+          expect(res.body.message).to.equal('unauthorized');
           done();
         });
     });
-    it('it should not allow not allow regular user his  profile', (done) => {
+    it('it should allow regular user to get his  profile', (done) => {
       request
         .get('/api/users/2')
         .set({ 'x-access-token': regularToken })
@@ -319,7 +405,19 @@ describe('Routes : Users', () => {
         .end((err, res) => {
           expect(res).to.have.status(404);
           expect(res.body.success).to.equal(false);
-          expect(res.body.msg).to.equal('user not found');
+          expect(res.body.message).to.equal('user not found');
+          done();
+        });
+    });
+  });
+  describe('POST /api/users/logout', () => {
+    it('should send a response on logout', (done) => {
+      request
+        .post('/api/users/logout')
+        .set({ 'x-access-token': adminToken })
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.success).to.equal(true);
           done();
         });
     });

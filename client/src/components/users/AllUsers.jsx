@@ -44,8 +44,8 @@ class AllUsers extends Component {
     this.setState({ query: parsed.query ? parsed.query : '' });
     const payload = {
       query: parsed.query ? parsed.query : '',
-      limit: parsed.limit ? parsed.limit : 10,
-      offset: parsed.offset ? parsed.offset : 0,
+      limit: 10,
+      offset: parsed.page ? (parsed.page - 1) * 10 : 0,
     };
     this.props.searchUser(payload).then(() => {
       this.setState({
@@ -67,14 +67,14 @@ class AllUsers extends Component {
       this.setState({ query: parsed.query ? parsed.query : '' });
       const payload = {
         query: parsed.query ? parsed.query : '',
-        limit: parsed.limit ? parsed.limit : 10,
-        offset: parsed.offset ? parsed.offset : 0,
+        limit: 10,
+        offset: parsed.page ? (parsed.page - 1) * 10 : 0,
       };
       this.props.searchUser(payload);
     } else {
       this.setState({
         users: nextProps.users,
-        pageCount: Math.ceil(nextProps.count / 10) });
+      });
     }
   }
   /**
@@ -105,8 +105,8 @@ class AllUsers extends Component {
       this.setState({ query: parsed.query ? parsed.query : '' });
       const payload = {
         query: parsed.query ? parsed.query : '',
-        limit: parsed.limit,
-        offset: parsed.offset,
+        limit: 10,
+        offset: parsed.page ? (parsed.page - 1) * 10 : 0,
       };
       this.props.searchUser(payload);
     });
@@ -123,8 +123,8 @@ class AllUsers extends Component {
    */
   handlePageClick(data) {
     const selected = data.selected;
-    const offset = Math.ceil(selected * this.state.limit);
-    this.props.history.replace(`${this.props.location.pathname}?query=${this.state.query}&limit=${10}&offset=${offset}`);
+    const page = selected + 1;
+    this.props.history.replace(`${this.props.location.pathname}?query=${this.state.query}&page=${page}`);
   }
   /**
    * @desc renders html
@@ -178,20 +178,22 @@ class AllUsers extends Component {
             </div>
         }
             {this.state.showPaginate &&
-            <ReactPaginate
-              initialPage={this.state.initialPage}
-              previousLabel={'previous'}
-              nextLabel={'next'}
-              breakLabel={<a href="">...</a>}
-              breakClassName={'break-me'}
-              pageCount={this.state.pageCount}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={5}
-              onPageChange={this.handlePageClick}
-              containerClassName={'pagination'}
-              subContainerClassName={'pages pagination'}
-              activeClassName={'active'}
-            />
+            <div className="center-align">
+              <ReactPaginate
+                previousLabel={'previous'}
+                nextLabel={'next'}
+                breakLabel={<a href="">...</a>}
+                breakClassName={'break-me'}
+                pageCount={this.props.metaData.pageCount}
+                forcePage={this.props.metaData.page - 1}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                onPageChange={this.handlePageClick}
+                containerClassName={'pagination'}
+                subContainerClassName={'pages pagination'}
+                activeClassName={'active'}
+              />
+            </div>
         }
           </div>
         }
@@ -207,8 +209,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 
 const mapStateToProps = state => ({
   users: state.userReducer.users,
-  count: state.userReducer.count,
-  userId: state.authReducer.user.id,
+  metaData: state.userReducer.metaData,
   loading: state.ajaxCallReducer.loading,
 });
 AllUsers.propTypes = {

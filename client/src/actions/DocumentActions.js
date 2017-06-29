@@ -14,7 +14,7 @@ const createDocument = payload => dispatch => axios
     dispatch(createDocumentSuccess(res.data));
   })
   .catch((err) => {
-    toastr.error(err.response.data.msg);
+    toastr.error(err.response.data.message);
     throw (err);
   });
 
@@ -22,16 +22,17 @@ const getUserDocumentsSuccess = payload => ({
   type: actionTypes.GET_USER_DOCUMENTS_SUCCESS,
   payload
 });
-const getUserDocuments = ({ query, offset, limit }) => (dispatch) => {
+const getUserDocuments = ({ query, offset, limit, access }) => (dispatch) => {
   dispatch(beginAjaxCall());
   return axios
-  .get(`api/search/userdocuments/?q=${query}&offset=${offset}&limit=${limit}`)
+  .get(`api/search/userdocuments/?q=${query}&offset=${offset}&limit=${limit}&access=${access}`)
   .then((res) => {
     dispatch(getUserDocumentsSuccess(res.data));
   })
   .catch((err) => {
     dispatch(ajaxCallError());
-    toastr.error(err.response.data.msg);
+    toastr.error(err.response.data.message);
+    throw (err);
   });
 };
 
@@ -45,7 +46,7 @@ const getDocument = payload => dispatch => axios
     dispatch(getDocumentSuccess(res.data));
   })
   .catch((err) => {
-    toastr.error(err.response.data.msg);
+    toastr.error(err.response.data.message);
     throw (err);
   });
 const updateDocumentSuccess = payload => ({
@@ -55,10 +56,10 @@ const updateDocumentSuccess = payload => ({
 const updateDocument = payload => dispatch => axios
   .put(`api/documents/${payload.id}`, payload)
   .then((res) => {
-    toastr.success(res.data.msg);
+    toastr.success(res.data.message);
     dispatch(updateDocumentSuccess(res.data));
   }).catch((err) => {
-    toastr.error(err.response.data.msg);
+    toastr.error(err.response.data.message);
     throw (err);
   });
 
@@ -69,20 +70,20 @@ const deleteDocumentSuccess = payload => ({
 const deleteDocument = payload => dispatch => axios
  .delete(`api/documents/${payload}`)
  .then((res) => {
-   toastr.success(res.data.msg);
+   toastr.success(res.data.message);
    dispatch(deleteDocumentSuccess(res.data));
  }).catch((err) => {
-   toastr.error(err.response.data.msg);
+   toastr.error(err.response.data.message);
    throw (err);
  });
 const searchDocumentsSuccess = payload => ({
   type: actionTypes.SEARCH_DOCUMENT_SUCCESS, payload
 });
 
-const searchDocuments = ({ query, offset, limit }) => (dispatch) => {
+const searchDocuments = ({ query, offset, limit, access }) => (dispatch) => {
   dispatch(beginAjaxCall());
   return axios
-  .get(`api/search/documents/?q=${query}&offset=${offset}&limit=${limit}`)
+  .get(`api/search/documents/?q=${query}&offset=${offset}&limit=${limit}&access=${access}`)
   .then((res) => {
     dispatch(searchDocumentsSuccess(res.data));
   });

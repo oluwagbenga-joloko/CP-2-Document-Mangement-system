@@ -8,13 +8,46 @@ import userRouter from './server/routes/UserRoutes';
 import documentRouter from './server/routes/DocumentRoutes';
 import searchRouter from './server/routes/SearchRoutes';
 
+const pathurl = path.join(__dirname + '/server/routes/*.js');
+console.log(pathurl);
+
 const app = express();
-const port = process.env.PORT || 7900;
+var swaggerJSDoc = require('swagger-jsdoc');
+
+const swaggerDefinition = {
+  info: {
+    title: 'DocumentIT API Endpoints',
+    version: '1.0.0',
+    description: 'Describing the API Endpoints with Swagger',
+  },
+  host: 'localhost:7000',
+  basePath: '/',
+};
+
+// options for the swagger docs
+const options = {
+  // import swaggerDefinitions
+  swaggerDefinition: swaggerDefinition,
+  // path to the API docs
+  apis: [pathurl],
+};
+
+// initialize swagger-jsdoc
+const swaggerSpec = swaggerJSDoc(options);
+app.get('/swagger.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
+
+
+const port = process.env.PORT || 7000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, 'client/dist')));
+
 app.use('/api/roles', roleRouter);
 app.use('/api/users', userRouter);
 app.use('/api/documents', documentRouter);
@@ -25,7 +58,7 @@ app.get('*', (req, res) => {
 });
 app.listen(port, () => {
   log.info('express app started on port', `${port}`);
-  //open(`http://localhost:${port}`);
+  // open(`http://localhost:${port}`);
 });
 
 export default app;

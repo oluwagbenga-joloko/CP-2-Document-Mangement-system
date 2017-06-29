@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { updateUser } from '../../actions/userActions';
+import { updateUser, getCurrentUser } from '../../actions/userActions';
 
 /**
  * @desc EditProfile Component
@@ -106,9 +106,6 @@ class EditProfile extends Component {
       },
       submitHandler() {
         that.props.updateUser(that.state);
-        // that.props.signUp(that.state).then(() => {
-        //   toastr.success('Account created successfully');
-        // });
       }
     });
   }
@@ -185,7 +182,7 @@ class EditProfile extends Component {
                           id="password"
                           type="password"
                           name="password"
-                          placeholder="Leave Blank if you dont to edit"
+                          placeholder="Leave Blank if you don't want to edit"
                           value={this.state.password}
                           onChange={this.handleChange}
                         />
@@ -220,7 +217,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   updateUser
 }, dispatch);
 const mapStateToProps = state => ({
-  user: state.authReducer.user
+  user: state.userReducer.currentUser,
 });
 EditProfile.defaultProps = {
   status: false,

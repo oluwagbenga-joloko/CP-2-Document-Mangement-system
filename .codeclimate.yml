@@ -9,8 +9,8 @@ ratings:
   paths:
   - client/**
   - server/**
-  
+
 exclude_paths: 
   - server/tests/
   - client/tests/
-  - client/public/
+  - client/dist/

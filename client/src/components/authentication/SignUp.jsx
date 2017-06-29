@@ -23,8 +23,9 @@ class SignUp extends Component {
       firstName: '',
       lastName: '',
       password: '',
+      rePassword: '',
       email: '',
-      errorMsg: '',
+      errorMessage: '',
       showError: false
 
     };
@@ -36,14 +37,6 @@ class SignUp extends Component {
    * @return {null} no return value;
    * @memberof SignUp
    */
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.status.success) {
-      this.setState({
-        errorMsg: nextProps.status.msg,
-        showError: true
-      });
-    }
-  }
 /**
  * @desc handles change of form input
  * @param {any} event html event
@@ -81,6 +74,10 @@ class SignUp extends Component {
           required: true,
           email: true
         },
+        rePassword: {
+          required: true,
+          equalTo: '#password'
+        }
       },
       messages: {
         firstName: {
@@ -107,6 +104,12 @@ class SignUp extends Component {
       submitHandler() {
         that.props.signUp(that.state).then(() => {
           toastr.success('Account created successfully');
+        }).catch(() => {
+          console.log(that.props.message);
+          that.setState({
+            errorMessage: that.props.message,
+            showError: true
+          });
         });
       }
     });
@@ -117,11 +120,11 @@ class SignUp extends Component {
    * @memberof SignUp
    */
   render() {
-    if (this.props.status.success) {
+    if (this.props.userId) {
       return (<Redirect
         push
         to={{
-          pathname: '/dashboard',
+          pathname: '/dashboard/generaldocuments',
         }}
       />);
     }
@@ -187,14 +190,14 @@ class SignUp extends Component {
                         />
                         { this.state.showError &&
                         <div className="custom-error">
-                          {this.state.errorMsg}
+                          {this.state.errorMessage}
                         </div>
                         }
                         <label htmlFor="email" className="active">Email</label>
                       </div>
                     </div>
                     <div className="row">
-                      <div className="input-field col s12">
+                      <div className="input-field col s6">
                         <i className="material-icons prefix">lock_outline</i>
                         <input
                           id="password"
@@ -207,6 +210,20 @@ class SignUp extends Component {
                           htmlFor="password"
                           className="active"
                         >Password</label>
+                      </div>
+                      <div className="input-field col s6">
+                        <i className="material-icons prefix">lock_outline</i>
+                        <input
+                          id="rePassword"
+                          type="password"
+                          name="rePassword"
+                          value={this.state.rePassword}
+                          onChange={this.handleChange}
+                        />
+                        <label
+                          htmlFor="rePassword"
+                          className="active"
+                        >Confirm Password</label>
                       </div>
                     </div>
                     <div className="row">
@@ -235,7 +252,9 @@ class SignUp extends Component {
 }
 const mapDispatchToProps = dispatch => bindActionCreators({ signUp }, dispatch);
 const mapStateToProps = state => ({
-  status: state.authReducer
+  userId: state.authReducer.userId,
+  message: state.authReducer.message
+
 });
 SignUp.defaultProps = {
   status: false,

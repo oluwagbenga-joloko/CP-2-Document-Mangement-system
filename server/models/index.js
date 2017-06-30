@@ -1,15 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
+import config from '../config/config';
 
 require('dotenv').config();
 
 const basename = path.basename(module.filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(`${__dirname}/../config/config.js`)[env];
+const env = process.env.NODE_ENV;
+const settings = config[env];
 const db = {};
 
-const sequelize = new Sequelize(config.url, config);
+const sequelize = new Sequelize(settings.url, settings);
 
 fs
   .readdirSync(__dirname)
@@ -23,9 +24,7 @@ fs
   });
 
 Object.keys(db).forEach((modelName) => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
+  db[modelName].associate(db);
 });
 
 db.sequelize = sequelize;

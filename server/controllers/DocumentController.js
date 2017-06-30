@@ -11,20 +11,57 @@ const DocumentController = {
     };
     return Document
       .create(DocumentDetails)
-      .then(document => res.status(201).send({ success: true, document }))
+      .then(document => res.status(201).send({ document }))
       .catch(error => res.status(400).send({
-        success: false,
         message: error.errors[0].message
       }));
   },
   list(req, res) {
+    const offset = Number(req.query.offset),
+      limit = Number(req.query.limit);
+    let accessQuery;
+    if (req.decoded.roleId === 1) {
+      accessQuery =
+      [
+        { access: ['public', 'role'] },
+      ];
+    } else {
+      accessQuery =
+      [
+        { access: 'public', },
+        { $and: [
+        { access: 'role' },
+        { ownerRoleId: req.decoded.roleId }
+        ] }
+      ];
+    }
     return Document
-    .findAll({
-      include: {
-        model: User
-      }
+        .findAndCountAll({
+          limit: Number(req.query.limit) || null,
+          offset: Number(req.query.offset) || null,
+          where: {
+            $and: [{
+              $or: accessQuery,
+            },
+            ]
+          },
+          include: {
+            model: User,
+            attributes: ['firstName', 'lastName']
+          },
+          order: [['updatedAt', 'DESC']]
+        })
+    .then((result) => {
+      const pagination = {
+        totalCount: result.count,
+        pageCount: Math.ceil(result.count / limit),
+        page: Math.floor(offset / limit) + 1,
+        pageSize: result.rows.length
+      };
+      res.status(200).send({
+        documents: result.rows,
+        pagination });
     })
-    .then(documents => res.status(200).send({ success: true, documents }))
     .catch(error => res.status(401).send({ sucess: false, error }));
   },
   retrieve(req, res) {
@@ -32,9 +69,12 @@ const DocumentController = {
       .findById(req.params.id)
       .then((document) => {
         if (!document) {
-          res.status(404).send({ success: false, message: 'document not found' });
+          res.status(404).send({
+            message: 'document not found'
+          });
         } else if (
-          req.decoded.id === 1 ||
+          (req.decoded.id === 1 &&
+           document.access === 'role') ||
           req.decoded.id === document.userId ||
           document.access === 'public' ||
           (
@@ -42,9 +82,9 @@ const DocumentController = {
           req.decoded.roleId === document.ownerRoleId
           )
         ) {
-          res.status(200).send({ success: true, document });
+          res.status(200).send({ document });
         } else {
-          res.status(401).send({ success: false,
+          res.status(401).send({
             message: 'unauthorized',
             document });
         }
@@ -56,7 +96,7 @@ const DocumentController = {
     .findById(req.params.id)
     .then((document) => {
       if (!document) {
-        res.status(404).send({ success: false, message: 'document not found' });
+        res.status(404).send({ message: 'document not found' });
       } else if (
         req.decoded.id === 1 ||
         req.decoded.id === document.userId
@@ -64,14 +104,13 @@ const DocumentController = {
         return document
          .destroy()
          .then(() => res.status(200).send({
-           success: true,
            message: 'document deleted' }))
-         .catch(error => res.status(400).send({ success: false, error }));
+         .catch(error => res.status(400).send({ error }));
       } else {
-        res.status(401).send({ success: false, message: 'unauthorized' });
+        res.status(401).send({ message: 'unauthorized' });
       }
     })
-  .catch(error => res.status(400).send({ success: false, error }));
+  .catch(error => res.status(400).send({ error }));
   },
   update(req, res) {
     const DocumentDetails = {
@@ -83,35 +122,27 @@ const DocumentController = {
     .findById(req.params.id)
     .then((document) => {
       if (!document) {
-        res.status(404).send({ success: false, message: 'document not found' });
+        res.status(404).send({ message: 'document not found' });
       } else if (req.decoded.id === document.userId) {
         return document
           .update(DocumentDetails)
           .then(() => res.status(200).send({
-            success: true,
             document,
             message: 'document update success'
           }))
           .catch(error => res.status(400).send({
-            success: false,
             message: error.errors[0].message
           }));
       } else {
-        res.status(401).send({ success: false, message: 'unauthorized' });
+        res.status(401).send({ message: 'unauthorized' });
       }
     })
-   .catch(error => res.status(400).send({ success: false, error }));
+   .catch(error => res.status(400).send({ error }));
   },
   search(req, res) {
     const offset = Number(req.query.offset),
       limit = Number(req.query.limit),
       search = req.query.q || '';
-       // console.log(search);
-    // let searchArray = search.match(/[^ ]+/g);
-    // searchArray.push(search);
-    // console.log(searchArray);
-    // searchArray = searchArray.map(item => `%${item}%`);
-    // console.log(searchArray);
     let accessQuery;
     if (req.query.access === 'public') {
       accessQuery = { access: 'public', };
@@ -141,7 +172,6 @@ const DocumentController = {
         ] }
       ];
     }
-
     return Document
         .findAndCountAll({
           limit: Number(req.query.limit) || null,
@@ -165,16 +195,19 @@ const DocumentController = {
           order: [['updatedAt', 'DESC']]
         })
     .then((result) => {
-      const metaData = {
-        totalCount: result.count,
-        pageCount: Math.ceil(result.count / limit),
-        page: Math.floor(offset / limit) + 1,
-        pageSize: result.rows.length
-      };
-      res.status(200).send({
-        success: true,
-        documents: result.rows,
-        metaData });
+      if (result.rows.length === 0) {
+        res.status(404).send({ message: 'no documents found ' });
+      } else {
+        const pagination = {
+          totalCount: result.count,
+          pageCount: Math.ceil(result.count / limit),
+          page: Math.floor(offset / limit) + 1,
+          pageSize: result.rows.length
+        };
+        res.status(200).send({
+          documents: result.rows,
+          pagination });
+      }
     })
     .catch(error => res.status(401).send({ sucess: false, error }));
   },
@@ -203,19 +236,60 @@ const DocumentController = {
         order: [['updatedAt', 'DESC']]
       })
     .then((result) => {
-      const metaData = {
+      if (result.rows.length === 0) {
+        res.status(404).send({ message: 'no documents found ' });
+      } else {
+        const pagination = {
+          totalCount: result.count,
+          pageCount: Math.ceil(result.count / limit),
+          page: Math.floor(offset / limit) + 1,
+          pageSize: result.rows.length
+        };
+        res.status(200).send({
+
+          documents: result.rows,
+          pagination,
+        });
+      }
+    })
+    .catch(error => res.status(401).send({ sucess: false, error }));
+  },
+  listUserDocument(req, res) {
+    if (req.decoded.id !== Number(req.params.id)) {
+      res.status(401).send({ message: 'unauthorized' });
+    } else {
+      const id = req.params.id;
+      const limit = Number(req.query.limit);
+      const offset = Number(req.query.offset);
+      return Document
+      .findAndCountAll({
+        limit: limit || null,
+        offset: offset || null,
+        where: {
+          userId: id,
+        },
+        include: {
+          model: User,
+          attributes: ['firstName', 'lastName']
+        },
+        order: [['updatedAt', 'DESC']]
+      })
+    .then((result) => {
+      const pagination = {
         totalCount: result.count,
         pageCount: Math.ceil(result.count / limit),
         page: Math.floor(offset / limit) + 1,
         pageSize: result.rows.length
       };
       res.status(200).send({
-        success: true,
+
         documents: result.rows,
-        metaData,
+        pagination,
       });
     })
     .catch(error => res.status(401).send({ sucess: false, error }));
+    }
   }
 };
+
 export default DocumentController;

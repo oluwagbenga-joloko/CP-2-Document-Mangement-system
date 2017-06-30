@@ -1,3 +1,4 @@
+/* eslint-disable  import/no-extraneous-dependencies*/
 import express from 'express';
 import logger from 'morgan';
 import bodyParser from 'body-parser';

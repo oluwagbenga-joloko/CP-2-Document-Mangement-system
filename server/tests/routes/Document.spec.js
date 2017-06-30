@@ -61,63 +61,56 @@ describe('Routes : Documents', () => {
     });
   });
   describe('POST /api/roles/', () => {
-    it('it should allow users to create private access documents', (done) => {
+    it('should allow users to create private access documents', (done) => {
       request
         .post('/api/documents')
         .set({ 'x-access-token': regular1Token })
         .send(privateDocument1)
         .end((err, res) => {
           expect(res).to.have.status(201);
-          expect(res.body.success).to.equal(true);
           expect(res.body.document.title).to.equal(privateDocument1.title);
           privateDocId1 = res.body.document.id;
           done();
         });
     });
-    it('it not allow users with invalid token create documents', (done) => {
+    it('should not allow users with invalid token create documents', (done) => {
       request
         .post('/api/documents')
         .set({ 'x-access-token': 'invalid token' })
         .send(publicDocument2)
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.success).to.equal(false);
           done();
         });
     });
-    it('it not allow users without token create documents', (done) => {
+    it('should not allow users without token create documents', (done) => {
       request
         .post('/api/documents')
         .send(publicDocument2)
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.success).to.equal(false);
           done();
         });
     });
-    it('it should allow users to create public access documents', (done) => {
+    it('should allow users to create public access documents', (done) => {
       request
         .post('/api/documents')
         .set({ 'x-access-token': regular2Token })
         .send(publicDocument1)
         .end((err, res) => {
-          console.log(publicDocument1);
           expect(res).to.have.status(201);
-          expect(res.body.success).to.equal(true);
           expect(res.body.document.title).to.equal(publicDocument1.title);
-          console.log(res.body);
           publicDocId2 = res.body.document.id;
           done();
         });
     });
-    it('it should allow users to create role access documents', (done) => {
+    it('should allow users to create role access documents', (done) => {
       request
         .post('/api/documents')
         .set({ 'x-access-token': regular1Token })
         .send(roleDocument1)
         .end((err, res) => {
           expect(res).to.have.status(201);
-          expect(res.body.success).to.equal(true);
           expect(res.body.document.title).to.equal(roleDocument1.title);
           roleDocId1 = res.body.document.id;
           done();
@@ -132,7 +125,6 @@ describe('Routes : Documents', () => {
         .send(invalidAccessDocument)
         .end((err, res) => {
           expect(res).to.have.status(400);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.equal(
             'access can either be public ,private or role'
           );
@@ -146,8 +138,7 @@ describe('Routes : Documents', () => {
         .send(emtptyTitleDocument)
         .end((err, res) => {
           expect(res).to.have.status(400);
-          expect(res.body.success).to.equal(false);
-          expect(res.body.message).to.equal('Title cannot be empty');
+          expect(res.body.message).to.equal('please enter a title');
           done();
         });
     });
@@ -158,46 +149,42 @@ describe('Routes : Documents', () => {
         .send(emtptyContentDocument)
         .end((err, res) => {
           expect(res).to.have.status(400);
-          expect(res.body.success).to.equal(false);
-          expect(res.body.message).to.equal('Content cannot be empty');
+          expect(res.body.message).to.equal('please enter content');
           done();
         });
     });
   });
-  describe('POST /api/roles/', () => {
-    it('it should allow Admin to get all documents', (done) => {
+  describe('GET /api/roles/', () => {
+    it('should allow Admin to get all documents', (done) => {
       request
         .get('/api/documents')
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.documents).to.be.an('array');
           done();
         });
     });
-    it(`should allow not allow regular
+    it(`should allow allow regular
         user to get all documents`, (done) => {
       request
         .get('/api/documents')
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
-          expect(res).to.have.status(401);
-          expect(res.body.success).to.equal(false);
-          expect(res.body.message).to.be.equal('unauthorized');
+          expect(res).to.have.status(200);
+          expect(res.body.documents).to.be.an('array');
           done();
         });
     });
   });
   describe('GET /api/documents/:id', () => {
-    it('should allow admin retrieve private documents', (done) => {
+    it('should not allow admin retrieve private documents', (done) => {
       request
         .get(`/api/documents/${privateDocId1}`)
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
-          expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
-          expect(res.body.document.title).to.equal(privateDocument1.title);
+          expect(res).to.have.status(401);
+          expect(res.body.message).to.equal('unauthorized');
           done();
         });
     });
@@ -208,7 +195,6 @@ describe('Routes : Documents', () => {
         .set({ 'x-access-token': regular2Token })
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.equal('unauthorized');
           done();
         });
@@ -220,7 +206,6 @@ describe('Routes : Documents', () => {
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.document.title).to.equal(privateDocument1.title);
           done();
         });
@@ -231,7 +216,6 @@ describe('Routes : Documents', () => {
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.document.title).to.equal(publicDocument1.title);
           done();
         });
@@ -243,7 +227,6 @@ describe('Routes : Documents', () => {
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.document.title).to.equal(roleDocument1.title);
           done();
         });
@@ -255,7 +238,6 @@ describe('Routes : Documents', () => {
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(404);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.equal('document not found');
           done();
         });
@@ -269,7 +251,6 @@ describe('Routes : Documents', () => {
         .send(updateDocument1)
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.equal('unauthorized');
           done();
         });
@@ -281,7 +262,6 @@ describe('Routes : Documents', () => {
         .send(updateDocument1)
         .end((err, res) => {
           expect(res).to.have.status(404);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.equal('document not found');
           done();
         });
@@ -293,7 +273,6 @@ describe('Routes : Documents', () => {
         .send(updateDocument1)
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.document.title).to.equal(updateDocument1.title);
           done();
         });
@@ -307,7 +286,6 @@ describe('Routes : Documents', () => {
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.equal('unauthorized');
           done();
         });
@@ -318,7 +296,6 @@ describe('Routes : Documents', () => {
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(404);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.equal('document not found');
           done();
         });
@@ -329,7 +306,6 @@ describe('Routes : Documents', () => {
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           done();
         });
     });
@@ -339,7 +315,6 @@ describe('Routes : Documents', () => {
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           done();
         });
     });

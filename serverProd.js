@@ -1,18 +1,16 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import log from 'npmlog';
-// import open from 'open';
 import path from 'path';
 import roleRouter from './server/routes/RoleRoutes';
 import userRouter from './server/routes/UserRoutes';
 import documentRouter from './server/routes/DocumentRoutes';
 import searchRouter from './server/routes/SearchRoutes';
 
-const pathurl = path.join(__dirname + '/server/routes/*.js');
-console.log(pathurl);
+const pathurl = path.join(__dirname, '/server/routes/*.js');
 
 const app = express();
-var swaggerJSDoc = require('swagger-jsdoc');
+const swaggerJSDoc = require('swagger-jsdoc');
 
 const swaggerDefinition = {
   info: {
@@ -23,12 +21,9 @@ const swaggerDefinition = {
   host: 'localhost:7000',
   basePath: '/',
 };
-
 // options for the swagger docs
 const options = {
-  // import swaggerDefinitions
-  swaggerDefinition: swaggerDefinition,
-  // path to the API docs
+  swaggerDefinition,
   apis: [pathurl],
 };
 
@@ -39,9 +34,7 @@ app.get('/swagger.json', (req, res) => {
   res.send(swaggerSpec);
 });
 
-
-
-const port = process.env.PORT || 7000;
+const port = process.env.PORT;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -58,7 +51,6 @@ app.get('*', (req, res) => {
 });
 app.listen(port, () => {
   log.info('express app started on port', `${port}`);
-  // open(`http://localhost:${port}`);
 });
 
 export default app;

@@ -61,7 +61,6 @@ describe('Routes : Roles', () => {
         .send(randomRole1)
         .end((err, res) => {
           expect(res).to.have.status(409);
-          expect(res.body.success).to.equal(false);
           expect(res.body.role).to.equal(undefined);
           expect(res.body.message).to.equal('Role already exists');
           done();
@@ -75,9 +74,9 @@ describe('Routes : Roles', () => {
         .send(invalidRole)
         .end((err, res) => {
           expect(res).to.have.status(409);
-          expect(res.body.success).to.equal(false);
           expect(res.body.role).to.equal(undefined);
-          expect(res.body.message).to.equal('Only letter and numbers are allowed');
+          expect(res.body.message).to.equal(
+            'Only letter and numbers are allowed');
           done();
         });
     });
@@ -88,7 +87,6 @@ describe('Routes : Roles', () => {
         .send(emptyRole)
         .end((err, res) => {
           expect(res).to.have.status(409);
-          expect(res.body.success).to.equal(false);
           expect(res.body.role).to.equal(undefined);
           expect(res.body.message).to.equal('title cannot be empty');
           done();
@@ -101,7 +99,6 @@ describe('Routes : Roles', () => {
         .send(randomRole2)
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.equal('unauthorized');
           expect(res.body.role).to.equal(undefined);
           done();
@@ -115,7 +112,6 @@ describe('Routes : Roles', () => {
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.roles).to.be.an('array');
           expect(res.body.roles[0].title).to.be.equal('Admin');
           expect(res.body.roles[1].title).to.be.equal('Regular user');
@@ -129,7 +125,6 @@ describe('Routes : Roles', () => {
         .set({ 'x-access-token': 'adminToken' })
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.success).to.equal(false);
           done();
         });
     });
@@ -140,7 +135,6 @@ describe('Routes : Roles', () => {
         .send(randomRole2)
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.equal('unauthorized');
           expect(res.body.roles).to.equal(undefined);
           done();
@@ -154,9 +148,17 @@ describe('Routes : Roles', () => {
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.role).to.be.an('object');
           expect(res.body.role.id).to.equal(1);
+          done();
+        });
+    });
+    it('should not allow admin to get invalid role', (done) => {
+      request
+        .get('/api/roles/dfdfd')
+        .set({ 'x-access-token': adminToken })
+        .end((err, res) => {
+          expect(res).to.have.status(401);
           done();
         });
     });
@@ -166,7 +168,6 @@ describe('Routes : Roles', () => {
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(404);
-          expect(res.body.success).to.equal(false);
           expect(res.body.role).to.equal(undefined);
           expect(res.body.message).to.equal('Role not found');
           done();
@@ -179,7 +180,6 @@ describe('Routes : Roles', () => {
         .send(randomRole2)
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.equal('unauthorized');
           expect(res.body.roles).to.equal(undefined);
           done();
@@ -187,6 +187,16 @@ describe('Routes : Roles', () => {
     });
   });
   describe('PUT /api/roles/:id', () => {
+    it('should not allow admin to update invalid role', (done) => {
+      request
+        .put('/api/roles/dfdfd')
+        .set({ 'x-access-token': adminToken })
+        .send(updateRole)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          done();
+        });
+    });
     it('should not allow admin to update admin roles', (done) => {
       request
         .put('/api/roles/1')
@@ -194,7 +204,6 @@ describe('Routes : Roles', () => {
         .send(updateRole)
         .end((err, res) => {
           expect(res).to.have.status(409);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.be.equal('Cannot update Admin role');
           done();
         });
@@ -207,8 +216,8 @@ describe('Routes : Roles', () => {
         .send(updateRole)
         .end((err, res) => {
           expect(res).to.have.status(409);
-          expect(res.body.success).to.equal(false);
-          expect(res.body.message).to.be.equal('Cannot update Regular user role');
+          expect(res.body.message).to.be.equal(
+            'Cannot update Regular user role');
           done();
         });
     });
@@ -220,7 +229,6 @@ describe('Routes : Roles', () => {
         .send(updateRole)
         .end((err, res) => {
           expect(res).to.have.status(404);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.be.equal('Role not found');
           done();
         });
@@ -233,7 +241,6 @@ describe('Routes : Roles', () => {
         .send(randomRole1)
         .end((err, res) => {
           expect(res).to.have.status(409);
-          expect(res.body.success).to.equal(false);
           expect(res.body.role).to.equal(undefined);
           expect(res.body.message).to.equal('Role already exists');
           done();
@@ -247,9 +254,9 @@ describe('Routes : Roles', () => {
         .send(invalidRole)
         .end((err, res) => {
           expect(res).to.have.status(409);
-          expect(res.body.success).to.equal(false);
           expect(res.body.role).to.equal(undefined);
-          expect(res.body.message).to.equal('Only letter and numbers are allowed');
+          expect(res.body.message).to.equal(
+            'Only letter and numbers are allowed');
           done();
         });
     });
@@ -260,7 +267,6 @@ describe('Routes : Roles', () => {
         .send(emptyRole)
         .end((err, res) => {
           expect(res).to.have.status(409);
-          expect(res.body.success).to.equal(false);
           expect(res.body.role).to.equal(undefined);
           expect(res.body.message).to.equal('title cannot be empty');
           done();
@@ -274,7 +280,6 @@ describe('Routes : Roles', () => {
         .send(updateRole)
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.role.title).to.equal(updateRole.title);
           done();
         });
@@ -286,20 +291,27 @@ describe('Routes : Roles', () => {
         .send(randomRole2)
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.equal('unauthorized');
           done();
         });
     });
   });
   describe('DELETE /api/roles/:id', () => {
+    it('should not allow admin to delete invalid role', (done) => {
+      request
+        .delete('/api/roles/dfdfd')
+        .set({ 'x-access-token': adminToken })
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          done();
+        });
+    });
     it('it should allow not allow admin to delete admin roles', (done) => {
       request
         .delete('/api/roles/1')
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(409);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.be.equal('Cannot delete Admin role');
           done();
         });
@@ -311,8 +323,8 @@ describe('Routes : Roles', () => {
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(409);
-          expect(res.body.success).to.equal(false);
-          expect(res.body.message).to.be.equal('Cannot delete Regular user role');
+          expect(res.body.message).to.be.equal(
+            'Cannot delete Regular user role');
           done();
         });
     });
@@ -323,7 +335,6 @@ describe('Routes : Roles', () => {
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(404);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.be.equal('Role not found');
           done();
         });
@@ -335,7 +346,6 @@ describe('Routes : Roles', () => {
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           done();
         });
     });
@@ -346,7 +356,6 @@ describe('Routes : Roles', () => {
         .send(randomRole2)
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.equal('unauthorized');
           done();
         });

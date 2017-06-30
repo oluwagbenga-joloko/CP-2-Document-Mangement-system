@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { User, Document, Role } from '../models';
+import { User, Role } from '../models';
 
 require('dotenv').config();
 
@@ -27,32 +27,39 @@ const userController = {
           });
         } else {
           res.status(409).send({
-            success: false,
             message: 'user email already used'
           });
         }
       })
       .catch(error => res.status(400).send({
-        success: false,
         error,
         message: error.errors[0].message
       }));
   },
   list(req, res) {
+    const limit = req.query.limit;
+    const offset = req.query.offset;
     return User
     .findAndCountAll({
-      limit: Number(req.query.limit) || null,
-      offset: Number(req.query.offset) || null,
+      limit: limit || null,
+      offset: offset || null,
       include: [{
         model: Role
       }]
     })
-    .then(result => res.status(200).send({
-      success: true,
-      users: result.rows,
-      count: result.count
-    }))
-    .catch(error => res.status(401).send({ success: false, error }));
+     .then((result) => {
+       const pagination = {
+         totalCount: result.count,
+         pageCount: Math.ceil(result.count / limit),
+         page: Math.floor(offset / limit) + 1,
+         pageSize: result.rows.length
+       };
+       res.status(200).send({
+         users: result.rows,
+         pagination,
+       });
+     })
+    .catch(error => res.status(401).send({ sucess: false, error }));
   },
   retrieve(req, res) {
     if (req.decoded.id === 1 || req.decoded.id === Number(req.params.id)) {
@@ -66,20 +73,20 @@ const userController = {
       })
       .then((user) => {
         if (!user) {
-          res.status(404).send({ success: false, message: 'user not found' });
+          res.status(404).send({ message: 'user not found' });
         } else {
-          res.status(200).send({ success: true, user });
+          res.status(200).send({ user });
         }
       })
-      .catch(error => res.status(401).send({ success: false, error }));
+      .catch(error => res.status(401).send({ error }));
     }
-    res.status(401).send({ success: false, message: 'unauthorized' });
+    res.status(401).send({ message: 'unauthorized' });
   },
   delete(req, res) {
     if (req.decoded.id === 1 || req.decoded.id === Number(req.params.id)) {
       if (Number(req.params.id) === 1) {
         res.status(403).send({
-          success: false,
+
           message: 'cannot delete admin profile'
         });
       } else {
@@ -89,16 +96,15 @@ const userController = {
           if (user) {
             user.destroy()
              .then(() => res.status(200).send({ success: true }))
-             .catch(error => res.status(400).send({ success: false, error }));
+             .catch(error => res.status(400).send({ error }));
           } else {
-            res.status(404).send({ success: false, message: 'user not found' });
+            res.status(404).send({ message: 'user not found' });
           }
         })
-   .catch(error => res.status(400).send({ success: false, error }));
+   .catch(error => res.status(400).send({ error }));
       }
     } else {
-      console.log('in user');
-      res.status(401).send({ success: false, message: 'unauthorized' });
+      res.status(401).send({ message: 'unauthorized' });
     }
   },
   update(req, res) {
@@ -128,13 +134,13 @@ const userController = {
             hooks,
           })
           .then(() => res.status(200).send({
-            success: true,
+
             message: 'profile update success' }))
-          .catch(error => res.status(400).send({ success: false,
+          .catch(error => res.status(400).send({
             error,
             message: error.errors[0].message
           })))
-        .catch(error => res.status(400).send({ success: false,
+        .catch(error => res.status(400).send({
           error,
           message: error.errors[0].message }));
     } else if (req.decoded.id === 1) {
@@ -142,7 +148,7 @@ const userController = {
         .findById(req.params.id)
         .then((user) => {
           if (!user) {
-            res.status(404).send({ success: false, message: 'user not found' });
+            res.status(404).send({ message: 'user not found' });
           } else {
             return Role
             .findById(req.body.roleId)
@@ -150,29 +156,29 @@ const userController = {
               if (role) {
                 if (role.id !== 1) {
                   user.update({ roleId: role.id })
-                   .then(() => res.status(200).send({ success: true, user }))
-                   .catch(error => res.status(400).send({ success: false,
+                   .then(() => res.status(200).send({ user }))
+                   .catch(error => res.status(400).send({
                      error
                    }));
                 } else {
                   res.status(409).send({
-                    success: false,
+
                     message: 'cannot make user admin'
                   });
                 }
               } else {
                 res.status(404).send({
-                  success: false,
+
                   message: 'role not does not exist'
                 });
               }
             })
-            .catch(error => res.status(400).send({ success: false, error }));
+            .catch(error => res.status(400).send({ error }));
           }
         })
-        .catch(error => res.status(400).send({ success: false, error }));
+        .catch(error => res.status(400).send({ error }));
     }
-    res.status(401).send({ success: false, message: 'unauthorized' });
+    res.status(401).send({ message: 'unauthorized' });
   },
   login(req, res) {
     if (req.body.password && req.body.email) {
@@ -180,13 +186,12 @@ const userController = {
         .findOne({ where: { email: req.body.email } })
         .then((user) => {
           if (!user) {
-            res.status(404).send({ success: false, message: 'email not found' });
+            res.status(404).send({ message: 'email not found' });
           } else {
             user.verifyPassword(req.body.password)
               .then((validPassword) => {
                 if (!validPassword) {
                   res.status(404).send({
-                    success: false,
                     message: 'invalid password' });
                 } else {
                   jwt.sign({
@@ -194,7 +199,7 @@ const userController = {
                     id: user.id
                   }, process.env.SECRET, { expiresIn: '6h' }, (err, token) => {
                     res.send({
-                      success: true,
+
                       message: 'login succesful',
                       token
                     });
@@ -206,7 +211,7 @@ const userController = {
       .catch(error => res.status(400).send(error));
     }
     res.status(400).send({
-      success: false, message: 'email and password required' });
+      message: 'email and password required' });
   },
   search(req, res) {
     const limit = Number(req.query.limit) || null,
@@ -229,23 +234,26 @@ const userController = {
       order: [['updatedAt', 'DESC']]
     })
     .then((result) => {
-      const metaData = {
-        totalCount: result.count,
-        pageCount: Math.ceil(result.count / limit),
-        page: Math.floor(offset / limit) + 1,
-        pageSize: result.rows.length
-      };
-      res.status(200).send({ success: true,
-        users: result.rows,
-        metaData
-      })
-;
+      if (result.legth === 0) {
+        res.status(404).send({ message: 'no users found ' });
+      } else {
+        const pagination = {
+          totalCount: result.count,
+          pageCount: Math.ceil(result.count / limit),
+          page: Math.floor(offset / limit) + 1,
+          pageSize: result.rows.length
+        };
+        res.status(200).send({
+          users: result.rows,
+          pagination
+        });
+      }
     })
     .catch(error => res.status(401).send({ sucess: false, error }));
   },
 
   logout(req, res) {
-    res.status(200).send({ success: true, message: 'log out successful' });
+    res.status(200).send({ message: 'log out successful' });
   }
 };
 export default userController;

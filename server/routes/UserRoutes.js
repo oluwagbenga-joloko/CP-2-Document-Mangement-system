@@ -192,6 +192,6 @@ userRouter.route('/logout')
 //  */
 
 userRouter.route('/:id/documents')
-.get(authentication.verifyUser, documentController.searchUserDocument);
+.get(authentication.verifyUser, documentController.listUserDocument);
 
 export default userRouter;

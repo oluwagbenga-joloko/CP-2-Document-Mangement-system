@@ -4,9 +4,9 @@ const roleController = {
   create(req, res) {
     return Role
       .create({ title: req.body.title, })
-      .then(role => res.status(201).send({ success: true, role }))
+      .then(role => res.status(201).send({ role }))
       .catch(error => res.status(409).send({
-        success: false, error, message: error.errors[0].message
+        error, message: error.errors[0].message
       }));
   },
   list(req, res) {
@@ -15,71 +15,74 @@ const roleController = {
       model: User,
       as: 'users',
     }] })
-    .then(roles => res.status(200).send({ success: true, roles }))
-    .catch(error => res.status(401).send({ sucess: false, error }));
+    .then(roles => res.status(200).send({ roles }))
+    .catch(error => res.status(401).send({ error }));
   },
   retrieve(req, res) {
     return Role
       .findById(req.params.id)
       .then((role) => {
         if (!role) {
-          res.status(404).send({ success: false, message: 'Role not found' });
+          res.status(404).send({ message: 'Role not found' });
         } else {
-          res.status(200).send({ success: true, role });
+          res.status(200).send({ role });
         }
       })
-      .catch(error => res.status(401).send({ sucess: false, error }));
+      .catch(error => res.status(401).send({ error }));
   },
   delete(req, res) {
     if (Number(req.params.id) === 1) {
-      res.status(409).send({ success: false, message: 'Cannot delete Admin role' });
+      res.status(409).send({
+        message: 'Cannot delete Admin role'
+      });
     } else if (Number(req.params.id) === 2) {
       res.status(409).send({
-        success: false,
+
         message: 'Cannot delete Regular user role' });
     } else {
       return Role
     .findById(req.params.id)
     .then((role) => {
       if (!role) {
-        res.status(404).send({ success: false, message: 'Role not found' });
+        res.status(404).send({ message: 'Role not found' });
       } else {
         return role
           .destroy()
-          .then(() => res.status(200).send({ success: true }))
-          .catch(error => res.status(400).send({ success: false, error }));
+          .then(() => res.status(200).send({
+            message: 'document deleted successful'
+          }));
       }
     })
-   .catch(error => res.status(400).send({ success: false, error }));
+   .catch(error => res.status(400).send({ error }));
     }
   },
   update(req, res) {
     if (Number(req.params.id) === 1) {
-      res.status(409).send({ success: false, message: 'Cannot update Admin role' });
+      res.status(409).send({
+        message: 'Cannot update Admin role' });
     } else if (Number(req.params.id) === 2) {
       res.status(409).send({
-        success: false,
+
         message: 'Cannot update Regular user role' });
     } else {
       return Role
         .findById(req.params.id)
         .then((role) => {
           if (!role) {
-            res.status(404).send({ success: false, message: 'Role not found' });
+            res.status(404).send({ message: 'Role not found' });
           } else {
             return role
               .update({ title: req.body.title })
-              .then(() => res.status(200).send({ success: true, role }))
+              .then(() => res.status(200).send({ role }))
               .catch(error => res.status(409).send({
-                success: false,
+
                 error,
                 message: error.errors[0].message }));
           }
         })
         .catch(error => res.status(400).send({
-          success: false,
-          error,
-          message: error.errors[0].message }));
+
+          error }));
     }
   }
 

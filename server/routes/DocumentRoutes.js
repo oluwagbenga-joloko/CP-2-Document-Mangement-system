@@ -59,8 +59,7 @@ DocumentRouter.route('/')
  *         schema:
  *           $ref: '#/definitions/Documents'
  */
-.get(authentication.checkAdmin, DocumentController.list);
-
+.get(authentication.verifyUser, DocumentController.list);
 DocumentRouter.route('/:id')
 /**
  * @swagger

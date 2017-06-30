@@ -82,6 +82,30 @@ authentication.checkAdmin, userController.search);
 searchRouter.route('/documents/')
 /**
  * @swagger
+ * /api/search/documents/?q={query}:
+ *   get:
+ *     tags:
+ *       - Search
+ *     description: Returns all documents excluding private
+ *     summary: search for documents created all documents
+ *     parameters:
+ *       - name: query
+ *         description: search qeury
+ *         in: path
+ *         required: true
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: An array of documents
+ *         schema:
+ *           $ref: '#/definitions/Documents'
+ */
+.get(authentication.verifyUser, DocumentController.search);
+
+searchRouter.route('/userdocuments/')
+/**
+ * @swagger
  * /api/search/mydocuments/?q={query}:
  *   get:
  *     tags:
@@ -101,9 +125,6 @@ searchRouter.route('/documents/')
  *         schema:
  *           $ref: '#/definitions/Documents'
  */
-.get(authentication.verifyUser, DocumentController.search);
-
-searchRouter.route('/userdocuments/')
 .get(authentication.verifyUser, DocumentController.searchUserDocument);
 export default searchRouter;
 

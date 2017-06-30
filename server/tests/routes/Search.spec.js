@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars*/
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import log from 'npmlog';
@@ -18,11 +19,7 @@ const request = chai.request(app),
 
 let adminToken,
   regular1Token,
-  regular2Token,
-  privateDocId1,
-  roleDocId1,
-  publicDocId2;
-
+  regular2Token;
 describe('Routes : Search', () => {
   before((done) => {
     Seeddb.init().then(() => {
@@ -61,21 +58,18 @@ describe('Routes : Search', () => {
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.documents).to.not.equal(undefined);
           expect(res.body.documents).to.be.an('array');
           done();
         });
     });
-    it('it should allow users search for documents public documents', (done) => {
+    it(`it should allow users search 
+      for documents public documents`, (done) => {
       request
         .get(`/api/search/documents/?q=${publicDocument1.title}`)
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
-          console.log(`boal${publicDocument1.title}boal`);
-          console.log(res.body);
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.documents).to.not.equal(undefined);
           expect(res.body.documents).to.be.an('array');
           const searchDocument = res.body.documents.filter((document) => {
@@ -84,19 +78,18 @@ describe('Routes : Search', () => {
             }
             return undefined;
           });
-          console.log(searchDocument);
           expect(searchDocument[0].title).to.equal(publicDocument1.title);
           expect(searchDocument[0].content).to.equal(publicDocument1.content);
           done();
         });
     });
-    it('it should allow not allow users search for private document', (done) => {
+    it(`it should allow not allow users
+       search for private document`, (done) => {
       request
         .get(`/api/search/documents/?q=${privateDocument1.title}`)
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.documents).to.not.equal(undefined);
           expect(res.body.documents).to.be.an('array');
           const searchDocument = res.body.documents.filter((document) => {
@@ -122,7 +115,6 @@ describe('Routes : Search', () => {
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.documents).to.not.equal(undefined);
           expect(res.body.documents).to.be.an('array');
           const searchDocument = res.body.documents.filter((document) => {
@@ -142,7 +134,6 @@ describe('Routes : Search', () => {
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.documents).to.not.equal(undefined);
           expect(res.body.documents).to.be.an('array');
           const searchDocument = res.body.documents.filter((document) => {
@@ -164,7 +155,6 @@ describe('Routes : Search', () => {
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.users).to.not.equal(undefined);
           expect(res.body.users).to.be.an('array');
           const searchUser = res.body.users.filter((user) => {
@@ -185,7 +175,6 @@ describe('Routes : Search', () => {
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(401);
-          expect(res.body.success).to.equal(false);
           expect(res.body.message).to.equal('unauthorized');
           done();
           expect(res.body.users).to.equal(undefined);
@@ -199,19 +188,18 @@ describe('Routes : Search', () => {
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.documents).to.not.equal(undefined);
           expect(res.body.documents).to.be.an('array');
           done();
         });
     });
-    it('it should allow users search their own documents documents public documents', (done) => {
+    it(`it should allow users search their 
+    own documents documents public documents`, (done) => {
       request
         .get(`/api/search/userdocuments/?q=${publicDocument1.title}`)
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.success).to.equal(true);
           expect(res.body.documents).to.not.equal(undefined);
           expect(res.body.documents).to.be.an('array');
           const searchDocument = res.body.documents.filter((document) => {
@@ -220,7 +208,8 @@ describe('Routes : Search', () => {
             }
             return undefined;
           });
-          expect(searchDocument[0].User.firstName).to.equal(regulerUser1.firstName);
+          expect(searchDocument[0].User.firstName)
+          .to.equal(regulerUser1.firstName);
           expect(searchDocument[0].title).to.equal(publicDocument1.title);
           expect(searchDocument[0].content).to.equal(publicDocument1.content);
           done();

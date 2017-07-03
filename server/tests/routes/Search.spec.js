@@ -86,14 +86,14 @@ describe('Routes : Search', () => {
     it(`it should allow not allow users
        search for private document`, (done) => {
       request
-        .get(`/api/search/documents/?q=${privateDocument1.title}`)
+        .get('/api/search/documents/?q=a')
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.documents).to.not.equal(undefined);
           expect(res.body.documents).to.be.an('array');
           const searchDocument = res.body.documents.filter((document) => {
-            if (document.title === privateDocument1.title) {
+            if (document.title === 'private') {
               return document;
             }
             return undefined;
@@ -128,16 +128,26 @@ describe('Routes : Search', () => {
           done();
         });
     });
-    it('it should not allow Admin search for private document', (done) => {
+    it('should return no docuements found for invalid search query', (done) => {
       request
-        .get(`/api/search/documents/?q=${privateDocument1.title}`)
+        .get('/api/search/documents/?q=98fdfdfbfdkfjafkajkfdhf')
+        .set({ 'x-access-token': adminToken })
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.equal('no documents found ');
+          done();
+        });
+    });
+    it('should not allow Admin search for private document', (done) => {
+      request
+        .get('/api/search/documents/?q=a')
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.documents).to.not.equal(undefined);
           expect(res.body.documents).to.be.an('array');
           const searchDocument = res.body.documents.filter((document) => {
-            if (document.title === privateDocument1.title) {
+            if (document.title === 'private') {
               return document;
             }
             return undefined;

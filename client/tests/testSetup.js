@@ -1,12 +1,13 @@
 require('babel-register')();
+const spy = require('sinon').spy;
 
 const jsdom = require('jsdom').jsdom;
 
-const exposedProperties = ['window', 'navigator', 'document'];
+const exposedProperties = ['window', 'navigator', 'document', 'node'];
 
 global.document = jsdom('');
 global.window = document.defaultView;
-Object.keys(document.defaultView).forEach( function(property){
+Object.keys(document.defaultView).forEach((property) => {
   if (typeof global[property] === 'undefined') {
     exposedProperties.push(property);
     global[property] = document.defaultView[property];
@@ -18,8 +19,23 @@ global.navigator = {
 };
 if (!global.window.localStorage) {
   global.window.localStorage = {
-    getItem(token) { return undefined; },
-    setItem() {}
+    getItem() { return undefined; },
+    setItem() {},
+    removeItem() { return undefined; },
   };
 }
+global.window.$ = spy(() => ({
+  validate: (context) => {
+    Object.keys(context.rules).forEach((key) => {
+      if (context.rules[key].required) {
+        return new Promise((resolve) => { resolve(context.submitHandler()); });
+      }
+    });
+  },
+  data: () => true,
+  validator: {
+    addMethod: () => {}
+  },
+  on: spy(),
+}));
 documentRef = document;

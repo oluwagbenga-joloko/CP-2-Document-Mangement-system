@@ -16,14 +16,23 @@
 <body>
 <div id="app"></div>
 <script src="dist/sweetalert.min.js"></script>
-<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src=https://code.jquery.com/jquery-3.2.1.min.js></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=dvvarz6qdaazakymp0s5h52tor8e9eqyw70cc77df3adfoxi"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-<div id="app"></div>
+
+ <div id="app"></div>
  <script src="/bundle.js"></script>
- <script> $( document ).ready(function(){
-$(".button-collapse").sideNav();})  </script>
+ <script>  $(document).ready(function() {
+    $('select').material_select();
+      $(".button-collapse").sideNav();
+});
+
+     $(".button-collapse").sideNav();
+      $(document).ready(function(){
+    $('.collapsible').collapsible();
+  });
+</script>
 </body>
 </html>

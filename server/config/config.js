@@ -4,7 +4,6 @@ module.exports = {
   development: {
     url: process.env.DATABASE_URL_DEV,
     dialect: 'true',
-    logging: true,
 
   },
   test: {

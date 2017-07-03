@@ -22,13 +22,8 @@ $font2: 'Roboto', sans-serif;
  header, main, footer {
       padding-left: 300px;
     }
-/**
- * Demo Styles
- */
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
+main {
+  margin-top: 30px;
 }
 
 body {
@@ -346,4 +341,8 @@ min-height: 250px !important;
 .create-title-input {
   font-weight: bold;
   margin-top: 5px !important;
+}
+a[role=button]
+{
+  cursor: pointer;
 }

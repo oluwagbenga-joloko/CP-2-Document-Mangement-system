@@ -84,5 +84,4 @@ class SeedDb {
     return db.Document.bulkCreate(documents);
   }
 }
-SeedDb.populateDocumentTable();
 export default SeedDb;

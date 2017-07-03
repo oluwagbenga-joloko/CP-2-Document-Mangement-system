@@ -55,8 +55,8 @@ export class SingleDocument extends Component {
       <div>
         { !this.state.showDocument &&
         <div className="preloader-wrapper active center-align">
-          <div className="spinner-layer spinner-red-only">
-            <div className="circle-clipper left">
+          <div className="spinner-layer spinner-red-only center-align">
+            <div className="circle-clipper left center-align">
               <div className="circle" />
             </div><div className="gap-patch">
               <div className="circle" />

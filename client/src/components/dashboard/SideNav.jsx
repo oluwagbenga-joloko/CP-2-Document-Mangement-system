@@ -80,12 +80,6 @@ const SideNav = ({ user, url, logout }) => (
         </a>
       </li>
     </ul>
-    <a
-      data-activates="slide-out"
-      className="button-collapse waves-effect waves-light"
-    >
-      <i className="material-icons">dashboard</i>
-    </a>
   </div>
 );
 

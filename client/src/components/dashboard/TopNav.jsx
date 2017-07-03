@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 const TopNav = () => (
   <header>
@@ -21,7 +20,4 @@ const TopNav = () => (
   </header>
     );
 
-TopNav.propTypes = {
-  logout: PropTypes.func.isRequired
-};
 export default TopNav;

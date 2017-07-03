@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
 import TinyMCE from 'react-tinymce';
 import {
   getDocument,
   createDocument,
   updateDocument
-  } from '../../actions/DocumentActions';
+  } from '../../actions/documentActions';
 
 const STYLES = {
   container: {
@@ -30,7 +29,7 @@ const STYLES = {
  * @class CreateDocument
  * @extends {Component}
  */
-class CreateDocument extends Component {
+export class CreateDocument extends Component {
   /**
    * Creates an instance of CreateDocument.
    * @param {any} props property of component
@@ -50,7 +49,6 @@ class CreateDocument extends Component {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleEditClick = this.handleEditClick.bind(this);
     this.handleEditorChange = this.handleEditorChange.bind(this);
   }
   /**
@@ -80,6 +78,8 @@ class CreateDocument extends Component {
       this.setState({ showTinyMce: true, ...newdocument });
       if (newdocument.userId === user.id) {
         this.setState({ owner: true });
+      } else {
+        this.setState({ owner: false });
       }
     }
   }
@@ -114,16 +114,6 @@ class CreateDocument extends Component {
       });
     }
   }
-  /**
-   * @desc handles edit click
-   * @param {any} event hmtl event
-   * @memberof CreateDocument
-   * @returns {null} no return value
-   */
-  handleEditClick(event) {
-    event.preventDefault();
-    this.setState({ edit: true });
-  }
  /**
   * @desc handles change of TinyMCE editor
   * @param {any} e html event
@@ -149,7 +139,6 @@ class CreateDocument extends Component {
             </div>
             <div className="input-field col s9 m4">
               <input
-                
                 disabled={!this.state.owner}
                 id="title"
                 type="text"
@@ -201,11 +190,20 @@ class CreateDocument extends Component {
     );
   }
 }
+/**
+ * @desc maps state to props;
+ * @param {*} state sore state
+ * @returns {*} store state
+ */
 const mapStateToProps = state => ({
   document: state.documentReducer.document,
   user: state.userReducer.currentUser
 });
-
+/**
+ * @desc maps dispatch to props;
+ * @param {*} dispatch dispatch
+ * @returns {*} action to be dispatched
+ */
 const mapDispatchToProps = dispatch => bindActionCreators({
   getDocument,
   createDocument,
@@ -213,12 +211,31 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch);
 
 CreateDocument.propTypes = {
-  user: PropTypes.shape.isRequired,
-  document: PropTypes.shape.isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+  })
+  .isRequired,
+  document: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    access: PropTypes.string.isRequired
+  })
+  .isRequired,
   getDocument: PropTypes.func.isRequired,
   createDocument: PropTypes.func.isRequired,
   updateDocument: PropTypes.func.isRequired,
-  match: PropTypes.shape.isRequired
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.number
+    })
+  })
+  .isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired
+  }).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateDocument);

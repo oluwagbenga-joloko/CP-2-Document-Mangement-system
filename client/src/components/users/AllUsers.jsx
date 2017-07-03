@@ -15,7 +15,7 @@ import UserCard from './UserCard.jsx';
  * @class DocumentView
  * @extends {Component}
  */
-class AllUsers extends Component {
+export class AllUsers extends Component {
   /**
    * Creates an instance of DocumentView.
    * @param {any} props property of element
@@ -50,9 +50,8 @@ class AllUsers extends Component {
     this.props.searchUser(payload).then(() => {
       this.setState({
         users: this.props.users,
-        pageCount: Math.ceil(this.props.count / 10),
         showPaginate: true,
-        initialPage: Math.ceil(parsed.offset / 10) });
+      });
     });
   }
   /**
@@ -124,7 +123,9 @@ class AllUsers extends Component {
   handlePageClick(data) {
     const selected = data.selected;
     const page = selected + 1;
-    this.props.history.replace(`${this.props.location.pathname}?query=${this.state.query}&page=${page}`);
+    const queryUrl =
+     `query=${this.state.query}&page=${page}`;
+    this.props.history.replace(`${this.props.location.pathname}?${queryUrl}`);
   }
   /**
    * @desc renders html
@@ -144,7 +145,7 @@ class AllUsers extends Component {
           userRoleId: user.roleId,
           roleTitle: user.Role.title
         };
-        return <UserCard {...props} />;
+        return <UserCard key={user.id} {...props} />;
       });
     } else {
       users = null;
@@ -168,24 +169,26 @@ class AllUsers extends Component {
         }
             {
           this.state.users.length < 1 && !this.props.loading &&
-          <h3> no user found</h3>
+          <div className="center-align">
+            <h4 className="no-users">No users found</h4>
+          </div>
         }
             { this.state.users.length >= 1 &&
-            <div className="row">
+            <div className="row user-list">
               <ul className="collection">
                 {users}
               </ul>
             </div>
         }
-            {this.state.showPaginate &&
+            {this.state.showPaginate && this.state.users.length > 0 &&
             <div className="center-align">
               <ReactPaginate
                 previousLabel={'previous'}
                 nextLabel={'next'}
                 breakLabel={<a href="">...</a>}
                 breakClassName={'break-me'}
-                pageCount={this.props.metaData.pageCount}
-                forcePage={this.props.metaData.page - 1}
+                pageCount={this.props.pagination.pageCount}
+                forcePage={this.props.pagination.page - 1}
                 marginPagesDisplayed={2}
                 pageRangeDisplayed={5}
                 onPageChange={this.handlePageClick}
@@ -201,15 +204,24 @@ class AllUsers extends Component {
     );
   }
 }
+/**
+ * @desc maps dispatch to props;
+ * @param {*} dispatch dispatch
+ * @returns {*} action to be dispatched
+ */
 const mapDispatchToProps = dispatch => bindActionCreators({
   getAllUsers,
   deleteUser,
   searchUser
 }, dispatch);
-
+/**
+ * @desc maps state to props;
+ * @param {*} state sore state
+ * @returns {*} store state
+ */
 const mapStateToProps = state => ({
   users: state.userReducer.users,
-  metaData: state.userReducer.metaData,
+  pagination: state.userReducer.pagination,
   loading: state.ajaxCallReducer.loading,
 });
 AllUsers.propTypes = {
@@ -219,8 +231,11 @@ AllUsers.propTypes = {
   searchUser: PropTypes.func.isRequired,
   deleteUser: PropTypes.func.isRequired,
   users: PropTypes.arrayOf(PropTypes.shape).isRequired,
-  count: PropTypes.number.isRequired,
-  loading: PropTypes.number.isRequired,
-  history: PropTypes.shape({ replace: PropTypes.func.isRequired }).isRequired
+  loading: PropTypes.bool.isRequired,
+  history: PropTypes.shape({ replace: PropTypes.func.isRequired }).isRequired,
+  pagination: PropTypes.shape({
+    page: PropTypes.number,
+    pageCount: PropTypes.number
+  }).isRequired
 };
 export default connect(mapStateToProps, mapDispatchToProps)(AllUsers);

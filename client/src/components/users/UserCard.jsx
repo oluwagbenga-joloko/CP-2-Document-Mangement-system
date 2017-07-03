@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-
 const UserCard = ({
   firstName,
   lastName,
@@ -16,6 +15,7 @@ const UserCard = ({
     <span className="title">Title: {roleTitle}</span>
     { userRoleId !== 1 &&
       <a
+        tabIndex={0}
         role="button"
         className="waves-effect waves-light btn deleteUser right-align"
         onClick={(e) => {

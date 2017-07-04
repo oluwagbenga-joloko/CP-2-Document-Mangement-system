@@ -16,7 +16,7 @@ const props = {
   ownerId: 20,
   deleteDocument: sinon.spy(() => new Promise(() => { Promise.resolve(); })),
 };
-let wrapper = mount(<DocumentCard {...props} />);
+const wrapper = mount(<DocumentCard {...props} />);
 
 chai.use(chaiEnzyme());
 describe('DocumentCard component', () => {

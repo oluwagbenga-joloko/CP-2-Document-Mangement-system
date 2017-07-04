@@ -1,11 +1,10 @@
+/* global $ */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import $ from 'jquery';
 import { updateUser, getCurrentUser } from '../../actions/userActions';
-import '../../../../node_modules/jquery-validation/dist/jquery.validate';
-import '../../../../node_modules/jquery-validation/dist/additional-methods';
+
 
 /**
  * @desc EditProfile Component

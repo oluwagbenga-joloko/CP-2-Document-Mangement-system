@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import $ from 'jquery';
 import PropTypes from 'prop-types';
 import TopNav from './TopNav.jsx';
 import Footer from './Footer.jsx';
@@ -29,9 +28,6 @@ export class Dashboard extends Component {
  * @memberof Dashboard
  */
   componentWillMount() {
-    $(document).ready(() => {
-      $('.button-collapse').sideNav();
-    });
     this.props.getCurrentUser(this.props.userId);
   }
   /**

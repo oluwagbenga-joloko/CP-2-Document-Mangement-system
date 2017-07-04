@@ -3,9 +3,9 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import log from 'npmlog';
 import app from '../../../serverProd';
-import fakeData from '../testUtils/FakeData';
+import fakeData from '../testUtils/fakeData';
 import db from '../../models';
-import Seeddb from '../testUtils/SeedDb';
+import seeder from '../testUtils/seeder';
 
 
 chai.use(chaiHttp);
@@ -22,7 +22,7 @@ let adminToken,
   regular2Token;
 describe('Routes : Search', () => {
   before((done) => {
-    Seeddb.init().then(() => {
+    seeder.init().then(() => {
       request
         .post('/api/users/login')
         .send({ email: adminUser.email, password: adminUser.password })

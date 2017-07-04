@@ -2,11 +2,12 @@ import chai, { expect } from 'chai';
 import chaiEnzyme from 'chai-enzyme';
 import React from 'react';
 import { spy } from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import ConnectedLogin, { Login }
 from '../../../src/components/authentication/Login';
+
 
 const mockStore = configureMockStore(),
   store = mockStore({
@@ -48,7 +49,7 @@ describe('Login component', () => {
     input.simulate('change', {
       preventDefault: () => {
       },
-      target: { value: 'testingtest', name: 'lastName' }
+      target: { value: 'testingtest', name: 'password' }
     });
     wrapper.find('form').simulate('submit', { preventDefault() {} });
     expect(handleChange.called).to.equal(true);

@@ -1,6 +1,6 @@
 import { Document, User } from '../models';
 
-const DocumentController = {
+const documentController = {
   create(req, res) {
     const DocumentDetails = {
       userId: req.decoded.id,
@@ -292,4 +292,4 @@ const DocumentController = {
   }
 };
 
-export default DocumentController;
+export default documentController;

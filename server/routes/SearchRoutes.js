@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import DocumentController from '../controllers/DocumentController';
-import userController from '../controllers/UserController';
-import authentication from '../middlewares/Authentication';
+import documentController from '../controllers/documentController';
+import userController from '../controllers/userController';
+import authentication from '../middlewares/authentication';
 /**
  * @swagger
  * definition:
@@ -101,7 +101,7 @@ searchRouter.route('/documents/')
  *         schema:
  *           $ref: '#/definitions/Documents'
  */
-.get(authentication.verifyUser, DocumentController.search);
+.get(authentication.verifyUser, documentController.search);
 
 searchRouter.route('/userdocuments/')
 /**
@@ -125,6 +125,6 @@ searchRouter.route('/userdocuments/')
  *         schema:
  *           $ref: '#/definitions/Documents'
  */
-.get(authentication.verifyUser, DocumentController.searchUserDocument);
+.get(authentication.verifyUser, documentController.searchUserDocument);
 export default searchRouter;
 

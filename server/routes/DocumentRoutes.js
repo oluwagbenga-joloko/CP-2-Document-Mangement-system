@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import DocumentController from '../controllers/DocumentController';
-import authentication from '../middlewares/Authentication';
+import documentController from '../controllers/documentController';
+import authentication from '../middlewares/authentication';
 
 const DocumentRouter = Router();
 /**
@@ -42,7 +42,7 @@ DocumentRouter.route('/')
  *       200:
  *         description: Successfully created
  */
-.post(DocumentController.create)
+.post(documentController.create)
 /**
  * @swagger
  * /api/documents:
@@ -59,7 +59,7 @@ DocumentRouter.route('/')
  *         schema:
  *           $ref: '#/definitions/Documents'
  */
-.get(authentication.verifyUser, DocumentController.list);
+.get(authentication.verifyUser, documentController.list);
 DocumentRouter.route('/:id')
 /**
  * @swagger
@@ -84,7 +84,7 @@ DocumentRouter.route('/:id')
  *           $ref: '#/definitions/Documents'
  */
 
-.get(authentication.verifyUser, DocumentController.retrieve)
+.get(authentication.verifyUser, documentController.retrieve)
 /**
  * @swagger
  * /api/documents/{id}:
@@ -107,7 +107,7 @@ DocumentRouter.route('/:id')
  *       schema:
  *           $ref: '#/definitions/Documents'
  */
-.delete(authentication.verifyUser, DocumentController.delete)
+.delete(authentication.verifyUser, documentController.delete)
 /**
  * @swagger
  * /api/documents/{id}:
@@ -129,7 +129,7 @@ DocumentRouter.route('/:id')
  *       200:
  *         description: Successfully updated
  */
-.put(authentication.verifyUser, DocumentController.update);
+.put(authentication.verifyUser, documentController.update);
 
 
 export default DocumentRouter;

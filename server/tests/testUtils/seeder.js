@@ -1,5 +1,5 @@
 import log from 'npmlog';
-import fakeData from './FakeData';
+import fakeData from './fakeData';
 import db from '../../models';
 
 const validAdmin = fakeData.validAdmin,
@@ -7,14 +7,14 @@ const validAdmin = fakeData.validAdmin,
   regulerUser2 = fakeData.regulerUser2,
   regulerUser3 = fakeData.regulerUser3;
 /**
- * @class SeedDb
+ * @class seeder
  */
-class SeedDb {
+class Seeder {
 /**
  * @desc initializes thes seeding of data into the db.
  * @static
  * @returns {promise} returns a promise
- * @memberof SeedDb
+ * @memberof seeder
  */
   static init() {
     log.info('message', 'seeding Datatbase');
@@ -42,7 +42,7 @@ class SeedDb {
    * @desc it populates the role table
    * @static
    * @returns {promise} returns a promise
-   * @memberof SeedDb
+   * @memberof seeder
    */
   static populateRoleTable() {
     const roles = [
@@ -54,7 +54,7 @@ class SeedDb {
    * @desc it populates the user table
    * @static
    * @returns {promise} returns a promise
-   * @memberof SeedDb
+   * @memberof seeder
    */
   static populateUserTable() {
     return db.User.create(validAdmin)
@@ -66,7 +66,7 @@ class SeedDb {
    * @desc it popultes the document table
    * @static
    * @returns {promise} returns a promise
-   * @memberof SeedDb
+   * @memberof seeder
    */
   static populateDocumentTable() {
     const documents = [
@@ -84,4 +84,4 @@ class SeedDb {
     return db.Document.bulkCreate(documents);
   }
 }
-export default SeedDb;
+export default Seeder;

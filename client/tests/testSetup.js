@@ -1,6 +1,7 @@
 require('babel-register')();
 const spy = require('sinon').spy;
 
+
 const jsdom = require('jsdom').jsdom;
 
 const exposedProperties = ['window', 'navigator', 'document', 'node'];
@@ -24,13 +25,14 @@ if (!global.window.localStorage) {
     removeItem() { return undefined; },
   };
 }
-global.window.$ = spy(() => ({
+global.window = window;
+global.$ = spy(() => ({
   validate: (context) => {
-    Object.keys(context.rules).forEach((key) => {
+    Object.keys(context.rules).forEach(key => new Promise((resolve) => {
       if (context.rules[key].required) {
-        return new Promise((resolve) => { resolve(context.submitHandler()); });
+        return resolve(context.submitHandler());
       }
-    });
+    }));
   },
   data: () => true,
   validator: {

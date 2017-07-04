@@ -1,13 +1,11 @@
+/* global $ */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import toastr from 'toastr';
-import $ from 'jquery';
 import { login } from '../../actions/authActions';
-import '../../../../node_modules/jquery-validation/dist/jquery.validate';
-import '../../../../node_modules/jquery-validation/dist/additional-methods';
 
 /**
  * @desc the login Component

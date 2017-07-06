@@ -351,4 +351,14 @@ a[role=button], .pagination li
       header, main, footer {
         padding-left: 0 !important;
       }
-    }   
+    }  
+@media only screen and (max-width : 600px) {
+  #edit-document {
+    margin-left: 0px;
+    bottom: 15px;
+    border-bottom-width: 20px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+
+  }  
+}   

@@ -1,5 +1,5 @@
 Document management system
-[![Coverage Status](https://coveralls.io/repos/github/andela-ojoloko/CP-2-Document-Mangement-system/badge.svg?branch=ft-client-environment-setup-146442779)](https://coveralls.io/github/andela-ojoloko/CP-2-Document-Mangement-system?branch=ft-client-environment-setup-146442779)
+[![Coverage Status](https://coveralls.io/repos/github/andela-ojoloko/CP-2-Document-Mangement-system/badge.svg?branch=develop)](https://coveralls.io/github/andela-ojoloko/CP-2-Document-Mangement-system?branch=develop)
 [![Build Status](https://travis-ci.org/andela-ojoloko/CP-2-Document-Mangement-system.svg?branch=develop)](https://travis-ci.org/andela-ojoloko/CP-2-Document-Mangement-system)
 [![Code Climate](https://codeclimate.com/github/andela-ojoloko/CP-2-Document-Mangement-system//badges/gpa.svg)](https://codeclimate.com/github/andela-ojoloko/CP-2-Document-Mangement-system/)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()

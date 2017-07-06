@@ -98,7 +98,7 @@ export class Login extends Component {
             <span className="logo1">Document</span>
             <span className="logo2">It</span>
           </h1>
-          <h1 className="logintext center-align ">
+          <h1 className="logintext center-align hide-on-small-only">
             Manage all your Documents in one Place
           </h1>
         </div>

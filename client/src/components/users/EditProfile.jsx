@@ -106,7 +106,7 @@ export class EditProfile extends Component {
       <div className="row">
         <div className="col s12 editProfile-body">
           <div className="row">
-            <div className="col s10  offset-s1 ">
+            <div className="col m10  offset-m1 s12  ">
               <div className="card form z-depth-0">
                 <div className="card-content login-content">
                   <form
@@ -114,7 +114,7 @@ export class EditProfile extends Component {
                     onSubmit={(e) => { e.preventDefault(); }}
                   >
                     <div className="row">
-                      <div className="input-field col s6">
+                      <div className="input-field col s12 m6">
                         <i className="material-icons prefix">account_box</i>
                         <input
                           id="first_name"
@@ -128,7 +128,7 @@ export class EditProfile extends Component {
                           className="active"
                         >First Name</label>
                       </div>
-                      <div className="input-field col s6">
+                      <div className="input-field col s12 m6">
                         <i className="material-icons prefix">account_box</i>
                         <input
                           id="last_name"

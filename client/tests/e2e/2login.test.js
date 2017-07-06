@@ -34,6 +34,8 @@ module.exports = { // adapted from: https://git.io/vodU0
       .pause(1000)
       .assert.urlEquals('http://localhost:7000/#/dashboard')
       .pause(1000)
+      .click('.logout')
+      .pause(1000)
       .end();
   }
 };

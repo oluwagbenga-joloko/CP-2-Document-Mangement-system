@@ -1,3 +1,4 @@
+/* global $ */
 import React, { Component } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
@@ -22,13 +23,14 @@ import { getCurrentUser } from '../../actions/userActions';
  */
 export class Dashboard extends Component {
 /**
- * @param {object} props property of component
- * @desc renders html
- * @returns {*} html
+ * @desc runs before component mounts
+ * @returns {null} no return value
  * @memberof Dashboard
  */
   componentWillMount() {
-    this.props.getCurrentUser(this.props.userId);
+    this.props.getCurrentUser(this.props.userId).then(() => {
+      $('.button-collapse').sideNav();
+    });
   }
   /**
    * @desc renders html

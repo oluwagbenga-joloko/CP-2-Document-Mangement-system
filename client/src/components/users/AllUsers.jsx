@@ -98,7 +98,7 @@ export class AllUsers extends Component {
     },
 (isConfirm) => {
   if (isConfirm) {
-    swal('Deleted!', 'Your imaginary file has been deleted.', 'success');
+    swal('Deleted!', 'User account has been deleted.', 'success');
     this.props.deleteUser(userId).then(() => {
       const parsed = queryString.parse(this.props.location.search);
       this.setState({ query: parsed.query ? parsed.query : '' });
@@ -110,7 +110,7 @@ export class AllUsers extends Component {
       this.props.searchUser(payload);
     });
   } else {
-    swal('Cancelled', 'Your imaginary file is safe :)', 'error');
+    swal('Cancelled', 'User account is safe :)', 'error');
   }
 });
   }

@@ -81,13 +81,14 @@ module.exports = {
        .card-action .delete-document`)
        .pause(1000)
        .click('button.cancel')
+       .pause(1000)
        .click('button.confirm')
        .pause(1000)
        .click(`.document-list:nth-child(1) div div 
        .card-action .delete-document`)
+       .pause(1000)
        .click('button.confirm')
-       .waitForElementVisible('.toast-success', '.toast-message')
-       .assert.containsText('.toast-message', 'document deleted')
+       .pause(1000)
        .click('#general-documents')
        .pause(1000)
        .click('select[name=access] option[value=public]')
@@ -128,6 +129,7 @@ module.exports = {
        .pause(1000)
        .click('.logout')
        .assert.urlEquals('http://localhost:7000/#/login')
+        .pause(1000)
       .end();
   }
 };

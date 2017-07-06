@@ -33,6 +33,8 @@ module.exports = {
       .pause(1000)
       .assert.urlEquals('http://localhost:7000/#/dashboard/generaldocuments')
       .pause(1000)
+      .click('.logout')
+      .pause(1000)
       .end();
   }
 };

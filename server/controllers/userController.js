@@ -86,7 +86,6 @@ const userController = {
     if (req.decoded.id === 1 || req.decoded.id === Number(req.params.id)) {
       if (Number(req.params.id) === 1) {
         res.status(403).send({
-
           message: 'cannot delete admin profile'
         });
       } else {

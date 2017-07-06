@@ -12,7 +12,7 @@ const UserCard = ({
 }) => (
   <li className="collection-item avatar">
     <i className="material-icons circle user-icon">perm_identity</i>
-    <span className="title">Title: {roleTitle}</span>
+    <span className="title">Role: {roleTitle}</span>
     { userRoleId !== 1 &&
       <a
         tabIndex={0}

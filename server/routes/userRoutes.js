@@ -114,6 +114,7 @@ userRouter.route('/:id')
  *     tags:
  *       - Users
  *     description: Deletes a single User
+ *     summary: Deletes a single User
  *     produces:
  *       - application/json
  *     parameters:
@@ -166,6 +167,12 @@ userRouter.route('/login')
  *     summary: Logs out a user
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: User's id
+ *         in: path
+ *         required: true
+ *         type: integer
  *     responses:
  *       200:
  *         description: logout Successful
@@ -192,6 +199,22 @@ userRouter.route('/logout')
 //  */
 
 userRouter.route('/:id/documents')
+/**
+ * @swagger
+ * /api/users/:id/documents:
+ *   get:
+ *     tags:
+ *       - Users
+ *     description: Returns all documents
+ *     summary: Gets all documents from a single user documents
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: An array of documents
+ *         schema:
+ *           $ref: '#/definitions/Documents'
+ */
 .get(authentication.verifyUser, documentController.listUserDocument);
 
 export default userRouter;

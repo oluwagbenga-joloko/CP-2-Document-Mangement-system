@@ -52,7 +52,7 @@ class DocumentCard extends Component {
    */
   render() {
     const { title, content, access, id,
-  userId, ownerId, creator, roleId } = this.props;
+  userId, ownerId, creator } = this.props;
     return (
       <div className="col s12 m4">
         <div className="card white">
@@ -64,7 +64,7 @@ class DocumentCard extends Component {
             <p className="doc-card-content">{striptags(content)}</p>
           </div>
           <div className="card-action">
-            { ((userId === ownerId) || (roleId === 1)) &&
+            { userId === ownerId &&
             <a
               className="waves-effect waves-light delete-document"
               role="button"

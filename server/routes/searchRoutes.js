@@ -33,20 +33,28 @@ import authentication from '../middlewares/authentication';
  *         type: string
  */
 const searchRouter = Router();
-
+searchRouter.route('/users/')
 /**
  * @swagger
- * /api/search/users:
+ * /api/search/users/?q={searchTerm}$limit={limit}$offset={offset}:
  *   get:
  *     tags:
  *       - Search
  *     description: Returns all Users that match the search query
  *     summary: Returns all users that match the search query
  *     parameters:
- *       - name: query
+ *       - name: q
  *         description: search qeury
  *         in: path
  *         required: true
+ *       - name: limit
+ *         description: limit
+ *         in: path
+ *         required: false
+ *       - name: offset
+ *         description: offset
+ *         in: path
+ *         required: false
  *     produces:
  *       - application/json
  *     responses:
@@ -55,34 +63,12 @@ const searchRouter = Router();
  *         schema:
  *           $ref: '#/definitions/Users'
  */
-searchRouter.route('/users/')
-/**
- * @swagger
- * /api/search/documents/?q={query}:
- *   get:
- *     tags:
- *       - Search
- *     description: Returns all general documents that match the search
- *     summary: search for general documents
- *     parameters:
- *       - name: query
- *         description: search qeury
- *         in: path
- *         required: true
- *     produces:
- *       - application/json
- *     responses:
- *       200:
- *         description: An array of documents
- *         schema:
- *           $ref: '#/definitions/Documents'
- */
 .get(authentication.verifyUser,
 authentication.checkAdmin, userController.search);
 searchRouter.route('/documents/')
 /**
  * @swagger
- * /api/search/documents/?q={query}:
+ * /api/search/documents/?q={query}&limit={limit}&offset={offset}:
  *   get:
  *     tags:
  *       - Search
@@ -93,6 +79,14 @@ searchRouter.route('/documents/')
  *         description: search qeury
  *         in: path
  *         required: true
+ *       - name: limit
+ *         description: limit
+ *         in: path
+ *         required: false
+ *       - name: offset
+ *         description: offset
+ *         in: path
+ *         required: false
  *     produces:
  *       - application/json
  *     responses:
@@ -106,17 +100,25 @@ searchRouter.route('/documents/')
 searchRouter.route('/userdocuments/')
 /**
  * @swagger
- * /api/search/mydocuments/?q={query}:
+ * /api/search/mydocuments/?q={query}&limit={limit}&offset={offset}:
  *   get:
  *     tags:
  *       - Search
  *     description: Returns all documents created by a user
  *     summary: search for documents created by single user
  *     parameters:
- *       - name: query
+ *       - name: q
  *         description: search qeury
  *         in: path
  *         required: true
+ *       - name: limit
+ *         description: limit
+ *         in: path
+ *         required: false
+ *       - name: offset
+ *         description: offset
+ *         in: path
+ *         required: false
  *     produces:
  *       - application/json
  *     responses:

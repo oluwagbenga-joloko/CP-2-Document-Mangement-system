@@ -7,6 +7,7 @@ const documentTitle2 = faker.lorem.words();
 module.exports = {
   'Document tests': function (browser) {
     browser
+     .resizeWindow(1280, 800)
       .url('http://localhost:7000/#/login')
       .waitForElementVisible('body')
        .waitForElementVisible('#loginForm', 5000)

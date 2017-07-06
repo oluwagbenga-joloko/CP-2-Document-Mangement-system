@@ -2,7 +2,7 @@ const config = require('../../../nightwatch.conf.js');
 
 module.exports = { // adapted from: https://git.io/vodU0
   'Login tests': function (browser) {
-    browser
+    browser.resizeWindow(1280, 800)
       .url('http://localhost:7000/#/login')
       .waitForElementVisible('body')
       .assert.title('Document Management System')

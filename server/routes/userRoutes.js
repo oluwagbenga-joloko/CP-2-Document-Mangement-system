@@ -74,6 +74,7 @@ userRouter.route('/:id')
  *     parameters:
  *       - name: user
  *         description: user object
+ *         type: object
  *         in: path
  *         required: true
  *         schema:
@@ -181,22 +182,22 @@ userRouter.route('/login')
  */
 userRouter.route('/logout')
 .post(userController.logout);
-// /**
-//  * @swagger
-//  * /api/users:
-//  *   get:
-//  *     tags:
-//  *       - Users
-//  *     description: Returns all Users
-//  *     summary: Returns all users
-//  *     produces:
-//  *       - application/json
-//  *     responses:
-//  *       200:
-//  *         description: An array of Users
-//  *         schema:
-//  *           $ref: '#/definitions/Users'
-//  */
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     tags:
+ *       - Users
+ *     description: Returns all Users
+ *     summary: Returns all users
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: An array of Users
+ *         schema:
+ *           $ref: '#/definitions/Users'
+ */
 
 userRouter.route('/:id/documents')
 /**

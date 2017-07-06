@@ -77,7 +77,7 @@ userRouter.route('/:id')
  *         in: path
  *         required: true
  *         schema:
- *           type: array
+ *           type: object
  *           $ref: '#/definitions/Users'
  *     responses:
  *       200:

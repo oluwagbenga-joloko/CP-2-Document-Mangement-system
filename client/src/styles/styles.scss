@@ -342,7 +342,7 @@ min-height: 250px !important;
   font-weight: bold;
   margin-top: 5px !important;
 }
-a[role=button]
+a[role=button], .pagination li
 {
   cursor: pointer;
 }

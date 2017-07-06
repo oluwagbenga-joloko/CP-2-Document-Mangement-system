@@ -44,15 +44,18 @@ searchRouter.route('/users/')
  *     summary: Returns all users that match the search query
  *     parameters:
  *       - name: q
+ *         type: string
  *         description: search qeury
  *         in: path
  *         required: true
  *       - name: limit
  *         description: limit
+ *         type: integer
  *         in: path
  *         required: false
  *       - name: offset
  *         description: offset
+ *         type: integer
  *         in: path
  *         required: false
  *     produces:
@@ -78,12 +81,15 @@ searchRouter.route('/documents/')
  *       - name: query
  *         description: search qeury
  *         in: path
+ *         type: integer
  *         required: true
  *       - name: limit
  *         description: limit
+ *         type: string
  *         in: path
  *         required: false
  *       - name: offset
+ *         type: integer
  *         description: offset
  *         in: path
  *         required: false
@@ -109,14 +115,17 @@ searchRouter.route('/userdocuments/')
  *     parameters:
  *       - name: q
  *         description: search qeury
+ *         type: string
  *         in: path
  *         required: true
  *       - name: limit
  *         description: limit
+ *         type: integer
  *         in: path
  *         required: false
  *       - name: offset
  *         description: offset
+ *         type: integer
  *         in: path
  *         required: false
  *     produces:

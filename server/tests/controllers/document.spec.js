@@ -13,7 +13,7 @@ const request = chai.request(app),
   regulerUser1 = fakeData.regulerUser1,
   regulerUser2 = fakeData.regulerUser2,
   emtptyTitleDocument = fakeData.emtptyTitleDocument,
-  emtptyContentDocument = fakeData.emtptyContentDocument,
+  emptyContentDocument = fakeData.emptyContentDocument,
   privateDocument1 = fakeData.generateRandomDocument('private'),
   publicDocument1 = fakeData.generateRandomDocument('public'),
   publicDocument2 = fakeData.generateRandomDocument('public'),
@@ -29,7 +29,7 @@ let adminToken,
   roleDocId1,
   publicDocId2;
 
-describe('Routes : Documents', () => {
+describe('Document controller', () => {
   before((done) => {
     seeder.init().then(() => {
       request
@@ -60,7 +60,7 @@ describe('Routes : Documents', () => {
       done();
     });
   });
-  describe('POST /api/roles/', () => {
+  describe('POST /api/documents/', () => {
     it('should allow users to create private access documents', (done) => {
       request
         .post('/api/documents')
@@ -126,7 +126,7 @@ describe('Routes : Documents', () => {
         .end((err, res) => {
           expect(res).to.have.status(400);
           expect(res.body.message).to.equal(
-            'access can either be public ,private or role'
+            'access can either be public, private or role'
           );
           done();
         });
@@ -146,7 +146,7 @@ describe('Routes : Documents', () => {
       request
         .post('/api/documents')
         .set({ 'x-access-token': regular1Token })
-        .send(emtptyContentDocument)
+        .send(emptyContentDocument)
         .end((err, res) => {
           expect(res).to.have.status(400);
           expect(res.body.message).to.equal('please enter content');

@@ -157,7 +157,6 @@ userRouter.route('/:id')
  */
 userRouter.route('/login')
 .post(userController.login);
-
 /**
  * @swagger
  * /api/users/logout:

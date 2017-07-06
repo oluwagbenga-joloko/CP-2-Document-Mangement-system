@@ -17,7 +17,7 @@ const request = chai.request(app),
   updateRole = fakeData.generateRandomRole();
 let adminToken, regularToken;
 
-describe('Routes : Roles', () => {
+describe('Role controller', () => {
   before((done) => {
     seeder.init().then(() => {
       request

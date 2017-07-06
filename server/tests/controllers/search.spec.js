@@ -20,7 +20,7 @@ const request = chai.request(app),
 let adminToken,
   regular1Token,
   regular2Token;
-describe('Routes : Search', () => {
+describe('Search: document and user controller', () => {
   before((done) => {
     seeder.init().then(() => {
       request

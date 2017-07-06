@@ -19,7 +19,7 @@ const request = chai.request(app),
   regulerUser4 = fakeData.regulerUser4;
 let adminToken, regularToken;
 
-describe('Routes : Users', () => {
+describe('User controller', () => {
   before((done) => {
     seeder.init().then(() => {
       request

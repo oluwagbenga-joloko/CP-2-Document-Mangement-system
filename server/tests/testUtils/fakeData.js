@@ -84,10 +84,17 @@ const fakeData = {
     content: faker.lorem.paragraphs(),
     access: 'public',
   },
-  emtptyContentDocument: {
+  emptyContentDocument: {
     title: faker.lorem.word(),
     content: '',
     access: 'public',
+  },
+  invalidAccessDocument: {
+    ownerRoleId: 2,
+    userId: 2,
+    title: faker.lorem.word(),
+    content: faker.lorem.paragraphs(),
+    access: 'fakeAccess',
   },
   publicDocument1: {
     userId: 2,

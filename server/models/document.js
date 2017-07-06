@@ -26,7 +26,7 @@ export default (sequelize, DataTypes) => {
         },
         isIn: {
           args: [['public', 'private', 'role']],
-          msg: 'access can either be public ,private or role'
+          msg: 'access can either be public, private or role'
         }
       }
     },

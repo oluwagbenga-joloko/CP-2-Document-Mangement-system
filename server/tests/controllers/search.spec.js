@@ -66,7 +66,7 @@ describe('Search: document and user controller', () => {
     it(`it should allow users search 
       for documents public documents`, (done) => {
       request
-        .get(`/api/search/documents/?q=${publicDocument1.title}`)
+        .get(`/api/search/documents/?q=${publicDocument1.title}&access=public`)
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(200);
@@ -111,7 +111,7 @@ describe('Search: document and user controller', () => {
     });
     it('it should allow allow users search for role document', (done) => {
       request
-        .get(`/api/search/documents/?q=${roleDocument1.title}`)
+        .get(`/api/search/documents/?q=${roleDocument1.title}&access=role`)
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(200);
@@ -191,7 +191,7 @@ describe('Search: document and user controller', () => {
         });
     });
   });
-  describe('GET /api/search//userdocuments/?q={}', () => {
+  describe('GET /api/search/userdocuments/?q={}', () => {
     it('it should allow users search for documents', (done) => {
       request
         .get('/api/search/userdocuments/?q=')
@@ -203,10 +203,21 @@ describe('Search: document and user controller', () => {
           done();
         });
     });
-    it(`it should allow users search their 
-    own documents documents public documents`, (done) => {
+    it(`should allow  return no documents if no
+     documents match the search`, (done) => {
       request
-        .get(`/api/search/userdocuments/?q=${publicDocument1.title}`)
+        .get('/api/search/userdocuments/?q=dfdfdfdfafdfafadfaf&access=public')
+        .set({ 'x-access-token': regular1Token })
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.message).to.equal('no documents found ');
+          done();
+        });
+    });
+    it(`it should allow users search their 
+    own documents public documents`, (done) => {
+      request
+        .get(`/api/search/userdocuments/?q=${publicDocument1.title}&access=public`)
         .set({ 'x-access-token': regular1Token })
         .end((err, res) => {
           expect(res).to.have.status(200);

@@ -87,7 +87,7 @@ export class AllUsers extends Component {
   deleteUser(firstName, lastName, userId) {
     swal({
       title: `Are you sure you want to delete ${firstName} ${lastName}?`,
-      text: 'You will not be able to recover this imaginary file!',
+      text: 'The user account cannot be recovered again!',
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#DD6B55',

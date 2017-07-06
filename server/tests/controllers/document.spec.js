@@ -154,7 +154,7 @@ describe('Document controller', () => {
         });
     });
   });
-  describe('GET /api/roles/', () => {
+  describe('GET /api/documents/', () => {
     it('should allow Admin to get all documents', (done) => {
       request
         .get('/api/documents')
@@ -165,7 +165,7 @@ describe('Document controller', () => {
           done();
         });
     });
-    it(`should allow allow regular
+    it(`should allow regular
         user to get all documents`, (done) => {
       request
         .get('/api/documents')
@@ -315,6 +315,28 @@ describe('Document controller', () => {
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
+          done();
+        });
+    });
+  });
+  describe('GET /api/users/:id/documents/', () => {
+    it('should allow use get all his documents', (done) => {
+      request
+        .get('/api/users/1/documents')
+        .set({ 'x-access-token': adminToken })
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body.documents).to.be.an('array');
+          done();
+        });
+    });
+    it(`should allow user get other users documents
+        user to get all documents`, (done) => {
+      request
+        .get('/api/users/1/documents')
+        .set({ 'x-access-token': regular1Token })
+        .end((err, res) => {
+          expect(res).to.have.status(401);
           done();
         });
     });

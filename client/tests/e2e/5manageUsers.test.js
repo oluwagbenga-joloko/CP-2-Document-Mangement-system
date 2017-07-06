@@ -4,6 +4,7 @@ require('dotenv').config();
 module.exports = { // adapted from: https://git.io/vodU0
   'manage users': function (browser) {
     browser
+     .resizeWindow(1280, 800)
       .url('http://localhost:7000/#/login')
       .waitForElementVisible('body')
       .waitForElementVisible('input[name=email]', 5000)

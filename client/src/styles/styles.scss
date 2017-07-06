@@ -351,14 +351,40 @@ a[role=button], .pagination li
       header, main, footer {
         padding-left: 0 !important;
       }
-    }  
-@media only screen and (max-width : 600px) {
   #edit-document {
     margin-left: 0px;
     bottom: 15px;
     border-bottom-width: 20px;
     margin-bottom: 0px;
     margin-top: 0px;
+  } 
+  .logo1, .logo2 {
+ font-size: 60px
+  }
+  .logo {
+    margin-top: 20px;
+  }
+  .signup_body, .login_body {
+    margin-top: 10px;
+  }
+  main{
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  .editProfile-body{
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+  .sweet-alert {
+    margin-top: -173px;
+    top: 210px !important;
+    h2, p {
+      font-size: 14px !important;
+      line-height: 20px !important;
+      margin-top: 0px !important;
+      margin-bottom: 10px !important;
+      border-bottom-width: 20px;
+   }
+  }   
+}
 
-  }  
-}   

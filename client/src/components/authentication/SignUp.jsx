@@ -133,7 +133,7 @@ export class SignUp extends Component {
           <h1 className="center-align">
             <span className="logo1">Document</span>
             <span className="logo2">It</span>
-          </h1><h1 className="logintext center-align ">
+          </h1><h1 className="logintext center-align hide-on-small-only">
             Manage all your Documents in one Place
           </h1>
         </div>
@@ -153,7 +153,7 @@ export class SignUp extends Component {
                     onSubmit={(e) => { e.preventDefault(); }}
                   >
                     <div className="row">
-                      <div className="input-field col s6">
+                      <div className="input-field col s12 m6 ">
                         <i className="material-icons prefix">account_box</i>
                         <input
                           id="first_name"
@@ -167,7 +167,7 @@ export class SignUp extends Component {
                           className="active"
                         >First Name</label>
                       </div>
-                      <div className="input-field col s6">
+                      <div className="input-field col s12 m6">
                         <i className="material-icons prefix">account_box</i>
                         <input
                           id="last_name"
@@ -201,7 +201,7 @@ export class SignUp extends Component {
                       </div>
                     </div>
                     <div className="row">
-                      <div className="input-field col s6">
+                      <div className="input-field col s12 m6 ">
                         <i className="material-icons prefix">lock_outline</i>
                         <input
                           id="password"
@@ -215,7 +215,7 @@ export class SignUp extends Component {
                           className="active"
                         >Password</label>
                       </div>
-                      <div className="input-field col s6">
+                      <div className="input-field col s12 m6">
                         <i className="material-icons prefix">lock_outline</i>
                         <input
                           id="rePassword"

@@ -4,7 +4,6 @@ $primaryDark:#004383;
 $secondary: #e00049;
 $background: #FFFFFF;
 $font4:  'Pacifico', cursive;
-// $font2: 'Oswald', sans-serif;
 $font3: 'Roboto Slab', serif;
 $font1: 'Open Sans', sans-serif;
 $font2: 'Roboto', sans-serif;
@@ -23,13 +22,8 @@ $font2: 'Roboto', sans-serif;
  header, main, footer {
       padding-left: 300px;
     }
-/**
- * Demo Styles
- */
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
+main {
+  margin-top: 30px;
 }
 
 body {
@@ -39,9 +33,6 @@ body {
   min-height: 100%;
   font-family: $font1
 }
-/**
- * Footer Styles
- */
 
 footer {
   position: absolute;
@@ -56,31 +47,6 @@ footer {
     color: white;
     padding: 4px 0px !important;
 }
-// main:after {
-//   content: "";
-//   display: block;
-// }
-// footer , main:after {
-//   /* .push must be the same height as footer */
-//     height: 142px; 
-// }
-// body {
-//   display: flex;
-//   flex-direction: column;
-// }
-// main {
-//   flex: 1 0 auto;
-// }
-
-// body {
-//     display: flex;
-//     min-height: 100vh;
-//     flex-direction: column;
-//   }
-
-//   main {
-//     flex: 1 0 auto;
-//   }
 
     @media only screen and (max-width : 992px) {
       header, main, footer {
@@ -94,15 +60,15 @@ footer {
     background: $secondary;
     color: white;
   float: right;
+  &:hover,&:visited,&:focus,&:disabled &:disabled:visited{
+  background: $secondary !important; 
+  }
 }
 .login {
   background: $primary !important;
   position: absolute !important;
   width: 100% !important;
   min-height: 100% !important;
-}
-.form {
-  // margin-top: 150px;
 }
 .login-content{
   padding-left: 12px !important;
@@ -172,9 +138,13 @@ input[type=search] {
 }
 .loginbtn {
   background: $secondary;
-  &:hover,&:visited,&:focus{
-  background: $secondary;
+  &:hover,&:visited,&:focus,&:disabled &:disabled:visited{
+  background: $secondary !important;
+  color: white !important;
   };
+  &:disabled {
+    opacity: 0.7 !important;
+  }
 }
 .error {
   margin-left: 40px;
@@ -205,14 +175,19 @@ nav {
 .side_nav_avatar {
   margin-top: 17px;
   color: white;
-  font-size: 40px;
+  font-size: 42px;
 }
 .side_nav_name {
+  margin-top: 0px;
   font-size: 15px;
   color:white;
   font-family: $font2;
 }
+.nav-icon {
+  margin-bottom: 0px !important;
+}
 .userView {
+  padding-top: 0px !important;
   padding-bottom: 200px;
 }
 .nav_divider {
@@ -366,4 +341,8 @@ min-height: 250px !important;
 .create-title-input {
   font-weight: bold;
   margin-top: 5px !important;
+}
+a[role=button], .pagination li
+{
+  cursor: pointer;
 }

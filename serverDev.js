@@ -1,3 +1,4 @@
+/* eslint-disable  import/no-extraneous-dependencies*/
 import express from 'express';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
@@ -5,10 +6,10 @@ import log from 'npmlog';
 import path from 'path';
 import webpack from 'webpack';
 import config from './webpack.config.dev';
-import roleRouter from './server/routes/RoleRoutes';
-import userRouter from './server/routes/UserRoutes';
-import documentRouter from './server/routes/DocumentRoutes';
-import searchRouter from './server/routes/SearchRoutes';
+import roleRouter from './server/routes/roleRoutes';
+import userRouter from './server/routes/userRoutes';
+import documentRouter from './server/routes/documentRoutes';
+import searchRouter from './server/routes/searchRoutes';
 
 const app = express();
 const port = process.env.PORT || 7900;

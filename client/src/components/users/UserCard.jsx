@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-
 const UserCard = ({
   firstName,
   lastName,
@@ -13,9 +12,10 @@ const UserCard = ({
 }) => (
   <li className="collection-item avatar">
     <i className="material-icons circle user-icon">perm_identity</i>
-    <span className="title">Title: {roleTitle}</span>
+    <span className="title">Role: {roleTitle}</span>
     { userRoleId !== 1 &&
       <a
+        tabIndex={0}
         role="button"
         className="waves-effect waves-light btn deleteUser right-align"
         onClick={(e) => {

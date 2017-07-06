@@ -9,7 +9,7 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: 'Title cannot be empty'
+          msg: 'please enter a title'
         },
         is: {
           args: /^[a-zA-Z ]+$/,
@@ -22,11 +22,11 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: 'access cannot be empty'
+          msg: 'please select an access'
         },
         isIn: {
           args: [['public', 'private', 'role']],
-          msg: 'access can either be public ,private or role'
+          msg: 'access can either be public, private or role'
         }
       }
     },
@@ -35,7 +35,7 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: 'Content cannot be empty'
+          msg: 'please enter content'
         }
       }
     },

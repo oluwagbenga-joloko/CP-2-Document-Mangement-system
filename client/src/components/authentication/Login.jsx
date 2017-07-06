@@ -1,19 +1,18 @@
 /* global $ */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import toastr from 'toastr';
-import { login } from '../../actions/AuthAction';
-
+import { login } from '../../actions/authActions';
 
 /**
  * @desc the login Component
  * @class Login
  * @extends {Component}
  */
-class Login extends Component {
+export class Login extends Component {
     /**
      * Creates an instance of Login.
      * @param {any} props property of element
@@ -41,7 +40,6 @@ class Login extends Component {
     const name = event.target.name;
     const value = event.target.value;
     this.setState({ [name]: value, showError: false });
-    const that = this;
     $('#loginForm').validate({
       rules: {
         password: {
@@ -64,15 +62,15 @@ class Login extends Component {
         },
       },
       errorElement: 'div',
-      errorPlacement(error, element) {
+      errorPlacement: (error, element) => {
         error.insertAfter(element);
       },
-      submitHandler() {
-        that.props.login(that.state).then(() => {
+      submitHandler: () => {
+        this.props.login(this.state).then(() => {
           toastr.success('Login successfully');
         }).catch(() => {
-          that.setState({
-            errorMessage: that.props.message,
+          this.setState({
+            errorMessage: this.props.message,
             showError: true
           });
         });
@@ -108,6 +106,12 @@ class Login extends Component {
           <div className="row">
             <div className="col s10  offset-s1">
               <div className="card form z-depth-4">
+                {
+                this.props.loading &&
+                  <div className="progress">
+                    <div className="indeterminate" />
+                  </div>
+               }
                 <div className="card-content login-content">
                   <form
                     id="loginForm"
@@ -150,18 +154,19 @@ class Login extends Component {
                     }
                     <div className="row">
                       <button
+                        disabled={this.props.loading}
                         className={`btn waves-effect 
                          waves-light col s6 offset-s3 
                         z-depth-4 loginbtn`}
                         type="submit"
                       >Login
-              </button>
+                    </button>
                     </div>
 
                   </form>
                   <div className="divider" />
                   <p className="center-align">Don`t have an account ?
-                    <Link className="center-align" to="/">Sign Up</Link>
+                    <a className="center-align" href="/#/">Sign Up</a>
                   </p>
                 </div>
               </div>
@@ -172,17 +177,32 @@ class Login extends Component {
     );
   }
 }
+/**
+ * @desc maps dispatch to props;
+ * @param {*} dispatch dispatch
+ * @returns {*} action to be dispatched
+ */
 const mapDispatchToProps = dispatch => bindActionCreators({ login }, dispatch);
+/**
+ * @desc maps state to props;
+ * @param {*} state sore state
+ * @returns {*} store state
+ */
 const mapStateToProps = state => ({
   userId: state.authReducer.userId,
   message: state.authReducer.message,
+  loading: state.ajaxCallReducer.loading
 });
 Login.defaultProps = {
-  status: false,
-  login: () => undefined
+  userId: undefined,
+  message: undefined,
+  loading: false,
 };
 Login.propTypes = {
-  status: PropTypes.bool,
+  loading: PropTypes.bool,
+  userId: PropTypes.number,
+  login: PropTypes.func.isRequired,
+  message: PropTypes.string,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

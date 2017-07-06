@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 module.exports = {
-  up(queryInterface, Sequelize) {
+  up(queryInterface) {
     return queryInterface.bulkInsert('Users', [
       {
         firstName: process.env.ADMIN_FIRST_NAME,
@@ -44,7 +44,7 @@ module.exports = {
     ], {});
   },
 
-  down(queryInterface, Sequelize) {
+  down(queryInterface) {
     return queryInterface.bulkDelete('Users', {
       email: [
         process.env.ADMIN_EMAIL,

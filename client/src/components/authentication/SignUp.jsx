@@ -4,14 +4,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import toastr from 'toastr';
-import { Redirect, Link } from 'react-router-dom';
-import { signUp } from '../../actions/AuthAction';
+import { Redirect } from 'react-router-dom';
+import { signUp } from '../../actions/authActions';
+
 /**
  * @desc signUp Component
  * @class SignUp
  * @extends {Component}
  */
-class SignUp extends Component {
+export class SignUp extends Component {
   /**
    * Creates an instance of SignUp.
    * @param {any} props property of Component
@@ -51,7 +52,6 @@ class SignUp extends Component {
       this.setState({ showError: false });
     }
     this.setState({ [name]: value });
-    const that = this;
     $('#signupForm').validate({
       rules: {
         firstName: {
@@ -67,7 +67,7 @@ class SignUp extends Component {
         password: {
           required: true,
           minlength: 5,
-          nowhitespace: true,
+          nowhitespace: true
         },
         email: {
           nowhitespace: true,
@@ -95,19 +95,18 @@ class SignUp extends Component {
         password: {
           required: 'Please provide a password',
           minlength: 'Your password must be at least 5 characters long'
-        },
+        }
       },
       errorElement: 'div',
       errorPlacement(error, element) {
         error.insertAfter(element);
       },
-      submitHandler() {
-        that.props.signUp(that.state).then(() => {
+      submitHandler: () => {
+        this.props.signUp(this.state).then(() => {
           toastr.success('Account created successfully');
         }).catch(() => {
-          console.log(that.props.message);
-          that.setState({
-            errorMessage: that.props.message,
+          this.setState({
+            errorMessage: this.props.message,
             showError: true
           });
         });
@@ -124,7 +123,7 @@ class SignUp extends Component {
       return (<Redirect
         push
         to={{
-          pathname: '/dashboard/generaldocuments',
+          pathname: '/dashboard/generaldocuments'
         }}
       />);
     }
@@ -134,8 +133,7 @@ class SignUp extends Component {
           <h1 className="center-align">
             <span className="logo1">Document</span>
             <span className="logo2">It</span>
-          </h1>
-          <h1 className="logintext center-align ">
+          </h1><h1 className="logintext center-align ">
             Manage all your Documents in one Place
           </h1>
         </div>
@@ -143,6 +141,12 @@ class SignUp extends Component {
           <div className="row">
             <div className="col s10  offset-s1">
               <div className="card form z-depth-4">
+                {
+                this.props.loading &&
+                  <div className="progress">
+                    <div className="indeterminate" />
+                  </div>
+               }
                 <div className="card-content login-content">
                   <form
                     id="signupForm"
@@ -228,10 +232,10 @@ class SignUp extends Component {
                     </div>
                     <div className="row">
                       <button
+                        disabled={this.props.loading}
                         className={`btn waves-effect waves-light 
                         col s6 offset-s3 z-depth-4 loginbtn`}
                         type="submit"
-
                       >Sign Up
               </button>
                     </div>
@@ -239,7 +243,7 @@ class SignUp extends Component {
                   </form>
                   <div className="divider" />
                   <p className="center-align">Have an account ?
-                    <Link className="center-align" to="/login"> login</Link>
+                     <a className="center-align" href="/#/login"> login</a>
                   </p>
                 </div>
               </div>
@@ -250,19 +254,32 @@ class SignUp extends Component {
     );
   }
 }
+/**
+ * @desc maps dispatch to props;
+ * @param {*} dispatch dispatch
+ * @returns {*} action to be dispatched
+ */
 const mapDispatchToProps = dispatch => bindActionCreators({ signUp }, dispatch);
+/**
+ * @desc maps state to props;
+ * @param {*} state sore state
+ * @returns {*} store state
+ */
 const mapStateToProps = state => ({
   userId: state.authReducer.userId,
-  message: state.authReducer.message
-
+  message: state.authReducer.message,
+  loading: state.ajaxCallReducer.loading
 });
 SignUp.defaultProps = {
-  status: false,
-  signUp: () => undefined
+  loading: false,
+  message: undefined,
+  userId: undefined
 };
 SignUp.propTypes = {
-  status: PropTypes.func,
-  signUp: PropTypes.func,
+  userId: PropTypes.number,
+  loading: PropTypes.bool,
+  message: PropTypes.string,
+  signUp: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

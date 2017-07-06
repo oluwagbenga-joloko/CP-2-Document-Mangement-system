@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import swal from 'sweetalert';
 import ReactPaginate from 'react-paginate';
 import queryString from 'query-string';
 import {
   getUserDocuments,
   deleteDocument
-} from '../../actions/DocumentActions';
+} from '../../actions/documentActions';
 import SearchBar from '../dashboard/SearchBar.jsx';
 import DocumentCard from './DocumentCard.jsx';
 
@@ -26,6 +25,7 @@ class UserDocuments extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      access: '',
       query: '',
       limit: 12,
       pageCount: null,
@@ -66,7 +66,9 @@ class UserDocuments extends Component {
   componentWillReceiveProps(nextProps) {
     const parsed = queryString.parse(nextProps.location.search);
     if (this.props.location.search !== nextProps.location.search) {
-      this.setState({ query: parsed.query ? parsed.query : '' });
+      this.setState({ query: parsed.query ? parsed.query : '',
+        access: parsed.access ? parsed.access : ''
+      });
       const payload = {
         query: parsed.query ? parsed.query : '',
         limit: 12,
@@ -76,7 +78,6 @@ class UserDocuments extends Component {
       this.props.getUserDocuments(payload);
     } else {
       this.setState({
-        access: parsed.access ? parsed.access : '',
         documents: nextProps.documents
       });
     }
@@ -90,7 +91,9 @@ class UserDocuments extends Component {
   handleChange(event) {
     event.preventDefault();
     this.setState({ access: event.target.value });
-    this.props.history.replace(`${this.props.location.pathname}?query=&page=${1}&access=${event.target.value}`);
+    const queryUrl =
+    `query=&page=${1}&access=${event.target.value}`;
+    this.props.history.replace(`${this.props.location.pathname}?${queryUrl}`);
   }
   /**
    * @desc handles paginate click
@@ -101,30 +104,17 @@ class UserDocuments extends Component {
   handlePageClick(data) {
     const selected = data.selected;
     const page = selected + 1;
-    this.props.history.replace(`${this.props.location.pathname}?query=${this.state.query}&page=${page}&access=${this.state.access}`);
+    const queryUrl =
+    `query=${this.state.query}&page=${page}&access=${this.state.access}`;
+    this.props.history.replace(`${this.props.location.pathname}?${queryUrl}`);
   }
   /**
    * @desc hanldes delete of document
-   * @param {string} title title of element to be deleted
    * @param {number} id id of element to be deleted
    * @returns {*} has no return value;
    * @memberof UserDocuments
    */
-  handleDelete(title, id) {
-    swal({
-      title: `Are you sure you want to delete this document with title ${title}?`,
-      text: 'You will not be able to recover this document again!',
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#DD6B55',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel plx!',
-      closeOnConfirm: true,
-      closeOnCancel: false
-    },
-(isConfirm) => {
-  if (isConfirm) {
-    swal('Deleted!', 'Your document has been deleted.', 'success');
+  handleDelete(id) {
     this.props.deleteDocument(id).then(() => {
       const parsed = queryString.parse(this.props.location.search);
       this.setState({ query: parsed.query ? parsed.query : '' });
@@ -136,10 +126,6 @@ class UserDocuments extends Component {
       };
       this.props.getUserDocuments(payload);
     });
-  } else {
-    swal('Cancelled', 'Your document is safe :)', 'error');
-  }
-});
   }
   /**
    * @desc renders html
@@ -156,9 +142,11 @@ class UserDocuments extends Component {
           access: document.access,
           id: document.id,
           creator: `${document.User.firstName} ${document.User.lastName}`,
-          deleteDocument: this.handleDelete
+          deleteDocument: this.handleDelete,
+          userId: this.props.userId,
+          ownerId: document.userId,
         };
-        return <DocumentCard {...props} />;
+        return <DocumentCard key={document.id} {...props} />;
       });
     } else {
       documents = null;
@@ -205,25 +193,25 @@ class UserDocuments extends Component {
           {
           this.state.documents.length === 0 && !this.props.loading &&
           <div className="center-align">
-            <h4>No documents found</h4>
+            <h4 className="no-documents">No documents found</h4>
           </div>
         }
           { this.state.documents.length >= 1 &&
-          <div>
+          <div className="document-list">
             <div className="row" >
               {documents}
             </div>
           </div>
         }
-          { this.state.showPaginate &&
+          { this.state.showPaginate && this.state.documents.length > 0 &&
           <div className="center-align">
             <ReactPaginate
               previousLabel={'previous'}
               nextLabel={'next'}
-              forcePage={this.props.metaData.page - 1}
+              forcePage={this.props.pagination.page - 1}
               breakLabel={<a href="">...</a>}
               breakClassName={'break-me'}
-              pageCount={this.props.metaData.pageCount}
+              pageCount={this.props.pagination.pageCount}
               marginPagesDisplayed={2}
               pageRangeDisplayed={5}
               onPageChange={this.handlePageClick}
@@ -239,30 +227,46 @@ class UserDocuments extends Component {
     );
   }
 }
+/**
+ * @desc maps dispatch to props;
+ * @param {*} dispatch dispatch
+ * @returns {*} action to be dispatched
+ */
 const mapDispatchToProps = dispatch => bindActionCreators({
   getUserDocuments,
   deleteDocument
 }, dispatch);
-
+/**
+ * @desc maps state to props;
+ * @param {*} state sore state
+ * @returns {*} store state
+ */
 const mapStateToProps = state => ({
   documents: state.documentReducer.userDocuments,
-  metaData: state.documentReducer.userDocumentsMetaData,
+  pagination: state.documentReducer.userDocumentspagination,
   userId: state.authReducer.userId,
   loading: state.ajaxCallReducer.loading,
 });
 UserDocuments.propTypes = {
+  userId: PropTypes.number.isRequired,
   documents: PropTypes.arrayOf(PropTypes.shape).isRequired,
   getUserDocuments: PropTypes.func.isRequired,
   deleteDocument: PropTypes.func.isRequired,
-  count: PropTypes.number.isRequired,
+  pagination: PropTypes.shape({
+    page: PropTypes.number.isRequired,
+    pageCount: PropTypes.number.isRequired })
+    .isRequired,
   location: PropTypes.shape({
     search: PropTypes.string,
     pathname: PropTypes.string
-  }).isRequired,
+  })
+  .isRequired,
   loading: PropTypes.bool.isRequired,
   history: PropTypes.shape({
     replace: PropTypes.func.isRequired
-  }).isRequired
+  })
+  .isRequired
 
 };
 export default connect(mapStateToProps, mapDispatchToProps)(UserDocuments);
+export { UserDocuments };

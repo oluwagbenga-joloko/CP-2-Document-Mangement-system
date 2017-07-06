@@ -3,12 +3,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
-import swal from 'sweetalert';
 import ReactPaginate from 'react-paginate';
 import {
   deleteDocument,
   searchDocuments
-} from '../../actions/DocumentActions';
+} from '../../actions/documentActions';
 import DocumentCard from './DocumentCard.jsx';
 import SearchBar from '../dashboard/SearchBar.jsx';
 /**
@@ -16,7 +15,7 @@ import SearchBar from '../dashboard/SearchBar.jsx';
  * @class GeneralDocument
  * @extends {Component}
  */
-class GeneralDocuments extends Component {
+export class GeneralDocuments extends Component {
   /**
    * Creates an instance of GeneralDocument.
    * @param {any} props property of element
@@ -64,7 +63,8 @@ class GeneralDocuments extends Component {
   componentWillReceiveProps(nextProps) {
     const parsed = queryString.parse(nextProps.location.search);
     if (this.props.location.search !== nextProps.location.search) {
-      this.setState({ query: parsed.query ? parsed.query : '' });
+      this.setState({ query: parsed.query ? parsed.query : '',
+        access: parsed.access ? parsed.access : 'all' });
       const payload = {
         query: parsed.query ? parsed.query : '',
         limit: 12,
@@ -74,7 +74,6 @@ class GeneralDocuments extends Component {
       this.props.searchDocuments(payload);
     } else {
       this.setState({
-        access: parsed.access ? parsed.access : 'all',
         documents: nextProps.documents
       });
     }
@@ -87,20 +86,6 @@ class GeneralDocuments extends Component {
    * @memberof GeneralDocument
    */
   handleDelete(title, id) {
-    swal({
-      title: `Are you sure you want to delete this document with Title ${title}?`,
-      text: 'You will not be able to recover this document again!',
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#DD6B55',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel plx!',
-      closeOnConfirm: true,
-      closeOnCancel: false
-    },
-(isConfirm) => {
-  if (isConfirm) {
-    swal('Deleted!', 'Your Document has been deleted.', 'success');
     this.props.deleteDocument(id).then(() => {
       const parsed = queryString.parse(this.props.location.search);
       const payload = {
@@ -111,10 +96,6 @@ class GeneralDocuments extends Component {
       };
       this.props.searchDocuments(payload);
     });
-  } else {
-    swal('Cancelled', 'Your Document is safe :)', 'error');
-  }
-});
   }
   /**
    * @param {any} event  html event
@@ -125,7 +106,11 @@ class GeneralDocuments extends Component {
   handleChange(event) {
     event.preventDefault();
     this.setState({ access: event.target.value });
-    this.props.history.replace(`${this.props.location.pathname}?query=&page=${1}&access=${event.target.value}`);
+    const queryUrl =
+    `query=&page=${1}&access=${event.target.value}`;
+
+    this.props.history.replace(
+      `${this.props.location.pathname}?${queryUrl}`);
   }
   /**
    * @desc hanldes pagination
@@ -136,7 +121,9 @@ class GeneralDocuments extends Component {
   handlePageClick(data) {
     const selected = data.selected;
     const page = selected + 1;
-    this.props.history.replace(`${this.props.location.pathname}?query=${this.state.query}&page=${page}&access=${this.state.access}`);
+    const queryUrl =
+     `query=${this.state.query}&page=${page}&access=${this.state.access}`;
+    this.props.history.replace(`${this.props.location.pathname}?${queryUrl}`);
   }
   /**
    * @desc renders html
@@ -158,7 +145,7 @@ class GeneralDocuments extends Component {
           ownerId: document.userId,
           roleId: this.props.user.roleId,
         };
-        return <DocumentCard {...props} />;
+        return <DocumentCard key={document.id} {...props} />;
       });
     } else {
       documents = null;
@@ -205,26 +192,26 @@ class GeneralDocuments extends Component {
           {
           this.state.documents.length === 0 && !this.props.loading &&
           <div className="center-align">
-            <h4>No documents found</h4>
+            <h4 className="no-documents">No documents found</h4>
           </div>
         }
           { this.state.documents.length >= 1 &&
           <div>
-            <div className="row">
+            <div className="row document-list">
               {documents}
             </div>
           </div>
         }
 
-          {this.state.showPaginate &&
+          {this.state.showPaginate && this.state.documents.length > 0 &&
           <div className="center-align">
             <ReactPaginate
-              forcePage={this.props.metaData.page - 1}
+              forcePage={this.props.pagination.page - 1}
               previousLabel={'previous'}
               nextLabel={'next'}
               breakLabel={<a href="">...</a>}
               breakClassName={'break-me'}
-              pageCount={this.props.metaData.pageCount}
+              pageCount={this.props.pagination.pageCount}
               marginPagesDisplayed={2}
               pageRangeDisplayed={5}
               onPageChange={this.handlePageClick}
@@ -240,19 +227,34 @@ class GeneralDocuments extends Component {
     );
   }
 }
+/**
+ * @desc maps dispatch to props;
+ * @param {*} dispatch dispatch
+ * @returns {*} action to be dispatched
+ */
 const mapDispatchToProps = dispatch => bindActionCreators({
   deleteDocument,
   searchDocuments
 }, dispatch);
-
+/**
+ * @desc maps state to props;
+ * @param {*} state sore state
+ * @returns {*} store state
+ */
 const mapStateToProps = state => ({
   documents: state.documentReducer.generalDocuments,
-  metaData: state.documentReducer.generalDocumentsMetaData,
+  pagination: state.documentReducer.generalDocumentspagination,
   userId: state.authReducer.userId,
   user: state.userReducer.currentUser,
   loading: state.ajaxCallReducer.loading,
 });
 GeneralDocuments.propTypes = {
+  history: PropTypes.shape({
+    replace: PropTypes.func.isRequired
+  }).isRequired,
+  user: PropTypes.shape({
+    roleId: PropTypes.number.isRequired
+  }).isRequired,
   documents: PropTypes.arrayOf(PropTypes.shape).isRequired,
   location: PropTypes.shape({
     search: PropTypes.string,
@@ -260,9 +262,11 @@ GeneralDocuments.propTypes = {
   }).isRequired,
   searchDocuments: PropTypes.func.isRequired,
   deleteDocument: PropTypes.func.isRequired,
-  count: PropTypes.number.isRequired,
   userId: PropTypes.number.isRequired,
-  roleId: PropTypes.number.isRequired,
-  loading: PropTypes.number.isRequired
+  loading: PropTypes.bool.isRequired,
+  pagination: PropTypes.shape({
+    page: PropTypes.number,
+    pageCount: PropTypes.number
+  }).isRequired
 };
 export default connect(mapStateToProps, mapDispatchToProps)(GeneralDocuments);

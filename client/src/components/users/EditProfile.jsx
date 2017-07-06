@@ -3,15 +3,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 import { updateUser, getCurrentUser } from '../../actions/userActions';
+
 
 /**
  * @desc EditProfile Component
  * @class EditProfile
  * @extends {Component}
  */
-class EditProfile extends Component {
+export class EditProfile extends Component {
   /**
    * Creates an instance of EditProfile.
    * @param {any} props property of Component
@@ -31,20 +31,6 @@ class EditProfile extends Component {
     };
     this.handleChange = this.handleChange.bind(this);
   }
-   /**
-   * @desc runs before component recieves props;
-   * @param {any} nextProps property of element;
-   * @return {null} no return value;
-   * @memberof SignUp
-   */
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.status.success) {
-      this.setState({
-        errorMsg: nextProps.status.msg,
-        showError: true
-      });
-    }
-  }
 /**
  * @desc handles change of form input
  * @param {any} event html event
@@ -59,7 +45,6 @@ class EditProfile extends Component {
       this.setState({ showError: false });
     }
     this.setState({ [name]: value });
-    const that = this;
     $('#signupForm').validate({
       rules: {
         firstName: {
@@ -104,8 +89,10 @@ class EditProfile extends Component {
       errorPlacement(error, element) {
         error.insertAfter(element);
       },
-      submitHandler() {
-        that.props.updateUser(that.state);
+      submitHandler: () => {
+        this.props.updateUser(this.state).then(() => {
+          this.props.getCurrentUser(this.props.user.id);
+        });
       }
     });
   }
@@ -213,18 +200,26 @@ class EditProfile extends Component {
 ;
   }
 }
+/**
+ * @desc maps dispatch to props;
+ * @param {*} dispatch dispatch
+ * @returns {*} action to be dispatched
+ */
 const mapDispatchToProps = dispatch => bindActionCreators({
-  updateUser
+  updateUser,
+  getCurrentUser
 }, dispatch);
+/**
+ * @desc maps state to props;
+ * @param {*} state sore state
+ * @returns {*} store state
+ */
 const mapStateToProps = state => ({
   user: state.userReducer.currentUser,
 });
-EditProfile.defaultProps = {
-  status: false,
-  signUp: () => undefined
-};
 EditProfile.propTypes = {
-  status: PropTypes.func,
+  updateUser: PropTypes.func.isRequired,
+  getCurrentUser: PropTypes.func.isRequired,
   user: PropTypes.shape({
     firstName: PropTypes.string,
     lastName: PropTypes.string,

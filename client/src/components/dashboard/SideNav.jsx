@@ -8,19 +8,18 @@ const SideNav = ({ user, url, logout }) => (
       <li>
         <div className="userView">
           <div className="background side_nav_head" />
-          <div className="row">
-            <div className="col s3 ">
-              <i className="material-icons side_nav_avatar">person_outline</i>
-            </div>
-            <div className="col s9">
-              <p className="side_nav_name">{user.firstName} {user.lastName}</p>
-            </div>
+          <div className="row center-align nav-icon">
+            <i className="material-icons side_nav_avatar ">account_box</i>
           </div>
+          <p
+            className="side_nav_name center-align"
+          >{user.firstName} {user.lastName}</p>
         </div></li>
       <li><div className="divider nav_divider" /></li>
       <li>
         <Link
           to={`${url}/createdocument`}
+          id="createdocument"
           className="waves-effect side-nav-link"
         >
           <i className="material-icons side-nav-link-av">add_circle</i>
@@ -28,13 +27,18 @@ const SideNav = ({ user, url, logout }) => (
         </Link>
       </li>
       <li>
-        <Link to={`${url}`} className="waves-effect side-nav-link">
+        <Link
+          to={`${url}`}
+          id="my-documents"
+          className="waves-effect side-nav-link"
+        >
           <i className="material-icons side-nav-link-av">folder</i>
         My documents
         </Link>
       </li>
       <li>
         <Link
+          id="general-documents"
           className="waves-effect side-nav-link"
           to={`${url}/generalDocuments`}
         >
@@ -43,7 +47,11 @@ const SideNav = ({ user, url, logout }) => (
         </Link>
       </li>
       <li>
-        <Link className="waves-effect side-nav-link" to={`${url}/editprofile`}>
+        <Link
+          id="edit-profile"
+          className="waves-effect side-nav-link"
+          to={`${url}/editprofile`}
+        >
           <i className="material-icons side-nav-link-av">mode_edit</i>
           Edit Profile
         </Link>
@@ -51,8 +59,9 @@ const SideNav = ({ user, url, logout }) => (
       {user.roleId === 1 &&
       <li>
         <Link
+          id="manage-users"
           className="waves-effect side-nav-link"
-          to={`${url}/users?q=&offset=0&limit=10`}
+          to={`${url}/users`}
         >
           <i className="material-icons side-nav-link-av">people</i>
           Manage users
@@ -61,7 +70,9 @@ const SideNav = ({ user, url, logout }) => (
       }
       <li>
         <a
-          className="waves-effect side-nav-link"
+          tabIndex={0}
+          role="button"
+          className="waves-effect side-nav-link logout"
           onClick={(e) => { e.preventDefault(); logout(); }}
         >
           <i className="material-icons side-nav-link-av">exit_to_app</i>
@@ -69,12 +80,6 @@ const SideNav = ({ user, url, logout }) => (
         </a>
       </li>
     </ul>
-    <a
-      data-activates="slide-out"
-      className="button-collapse waves-effect waves-light"
-    >
-      <i className="material-icons">dashboard</i>
-    </a>
   </div>
 );
 

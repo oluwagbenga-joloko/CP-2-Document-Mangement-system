@@ -40,19 +40,13 @@ footer {
   bottom: 0;
   left: 0;
   text-align: center;
-  padding: 0 0 0 300px !important;
+  padding-top: 0 !important;
   background-color:  $primary !important;
 }
 .footer-copyright {
     color: white;
     padding: 4px 0px !important;
 }
-
-    @media only screen and (max-width : 992px) {
-      header, main, footer {
-        padding-left: 0;
-      }
-    }
 .deleteUser {
       padding-left: 10px;
     padding-right: 10px;
@@ -346,3 +340,15 @@ a[role=button], .pagination li
 {
   cursor: pointer;
 }
+.single-doc-loader {
+  color: #e00049;
+  margin: auto;
+  display: block;
+  padding-top: 0px;
+  top: 50px;
+}
+  @media only screen and (max-width : 992px) {
+      header, main, footer {
+        padding-left: 0 !important;
+      }
+    }   

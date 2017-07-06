@@ -85,7 +85,7 @@ export class GeneralDocuments extends Component {
    * @returns {*} has no return value;
    * @memberof GeneralDocument
    */
-  handleDelete(title, id) {
+  handleDelete(id) {
     this.props.deleteDocument(id).then(() => {
       const parsed = queryString.parse(this.props.location.search);
       const payload = {

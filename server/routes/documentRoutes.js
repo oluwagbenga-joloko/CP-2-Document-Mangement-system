@@ -104,8 +104,6 @@ DocumentRouter.route('/:id')
  *     responses:
  *       200:
  *         description: Successfully deleted
- *       schema:
- *           $ref: '#/definitions/Documents'
  */
 .delete(authentication.verifyUser, documentController.delete)
 /**

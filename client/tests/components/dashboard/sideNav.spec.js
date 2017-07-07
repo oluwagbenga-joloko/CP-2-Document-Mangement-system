@@ -14,7 +14,7 @@ const props = {
 const wrapper = mount(<MemoryRouter><SideNav {...props} /></MemoryRouter>);
 chai.use(chaiEnzyme());
 describe('SideNav component', () => {
-  it('should render without crasshing', () => {
+  it('should render without crashing', () => {
     expect(wrapper).to.be.present();
   });
   it('should call logout function when logout link is clicked', () => {

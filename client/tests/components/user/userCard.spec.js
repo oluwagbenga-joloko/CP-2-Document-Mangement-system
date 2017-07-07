@@ -21,7 +21,7 @@ const wrapper = mount(<UserCard {...props} />);
 
 chai.use(chaiEnzyme());
 describe('UserCard component', () => {
-  it('it renders without crasshing', () => {
+  it('it renders without crashing', () => {
     expect(wrapper).to.be.present();
   });
   it('should call deleteUser when delete icon is clicked', () => {

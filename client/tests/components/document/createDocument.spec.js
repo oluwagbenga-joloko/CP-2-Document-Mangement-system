@@ -37,7 +37,7 @@ let wrapper = shallow(<CreateDocument {...props} />);
 
 chai.use(chaiEnzyme());
 describe('CreateDocument component', () => {
-  it('it renders without crasshing', () => {
+  it('it renders without crashing', () => {
     expect(wrapper).to.be.present();
   });
   it('should call change state on on input change', () => {

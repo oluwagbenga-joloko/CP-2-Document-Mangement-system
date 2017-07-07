@@ -18,16 +18,16 @@ let newProps;
 
 chai.use(chaiEnzyme());
 describe('Dashboard component', () => {
-  it('it renders without crasshing', () => {
+  it('it renders without crashing', () => {
     wrapper = shallow(<Dashboard {...props} />);
     expect(wrapper).to.be.present();
   });
-  it('it renders without crasshing', () => {
+  it('should not render elements if userId is undefined ', () => {
     newProps = { ...props, userId: undefined };
     wrapper = shallow(<Dashboard {...newProps} />);
-    expect(wrapper).to.be.present();
+    expect(wrapper.find('TopNav')).not.to.be.present();
   });
-  it('it renders without crasshing', () => {
+  it('it renders right right elements', () => {
     newProps = { ...props, user: { firstName: 'test', lastName: 'test' } };
     wrapper = shallow(<Dashboard {...newProps} />);
     expect(wrapper).to.be.present();

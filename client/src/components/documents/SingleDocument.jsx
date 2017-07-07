@@ -77,7 +77,7 @@ export class SingleDocument extends Component {
               <Link
                 id="edit-document"
                 className={`btn waves-effect
-              waves-light col s6 offset-s3 z-depth-4 save-btn`}
+              waves-light col m6 offset-m3 offset-s0 z-depth-4 save-btn`}
                 to={`/dashboard/editdocuments/${this.props.match.params.id}`}
               >
                 <i className="material-icons left">mode_edit</i>

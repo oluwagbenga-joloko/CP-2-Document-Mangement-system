@@ -18,7 +18,7 @@ wrapper.update();
 
 chai.use(chaiEnzyme());
 describe('SearchBar component', () => {
-  it('it renders without crasshing', () => {
+  it('it renders without crashing', () => {
     expect(true).to.equal(true);
     expect(wrapper).to.be.present();
   });

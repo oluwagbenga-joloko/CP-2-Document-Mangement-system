@@ -46,7 +46,7 @@ let wrapper;
 wrapper = shallow(<UserDocuments {...props} />);
 chai.use(chaiEnzyme());
 describe('UserDocuments component', () => {
-  it('should renders without crasshing and ', () => {
+  it('should renders without crashing and ', () => {
     expect(wrapper).to.be.present();
   });
   it('calls update getUserDocuments action on mount', () => {

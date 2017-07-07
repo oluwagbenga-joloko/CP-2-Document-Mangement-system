@@ -36,7 +36,7 @@ let wrapper = mount(
 
 chai.use(chaiEnzyme());
 describe('SingleDocument component', () => {
-  it('should renders without crasshing', () => {
+  it('should renders without crashing', () => {
     expect(wrapper).to.be.present();
   });
   it('should call getDocument on mount', () => {

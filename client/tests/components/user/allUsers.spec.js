@@ -53,7 +53,7 @@ let wrapper;
 wrapper = shallow(<AllUsers {...props} />);
 chai.use(chaiEnzyme());
 describe('GeneralDocuments component', () => {
-  it('should renders without crasshing and ', () => {
+  it('should renders without crashing and ', () => {
     expect(wrapper).to.be.present();
   });
   it('calls update searchDocuments action on mount', () => {

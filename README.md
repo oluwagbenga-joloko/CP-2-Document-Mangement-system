@@ -45,8 +45,10 @@ Follow the steps below to setup a local development environment. First ensure yo
 -   Run `npm run build` to build the dist folder and run the application.
 
 ## Testing
+-   set you NODE_ENV to `test`
 -   Run DB migrate command with `npm run migrate`.
--   Run Test `npm test:server` to run client side tests.
+-   Run Test `npm test` to run client and server side tests.
+-   Run e2e test with `npm test e2e` (ensure application is running)
 -   You can undo the migrations by running this command `npm run db:migrate:undo`.
 
 

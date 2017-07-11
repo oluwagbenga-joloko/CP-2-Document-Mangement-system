@@ -2,6 +2,7 @@
 // youre Evironment Variables in .env
 const SCREENSHOT_PATH = './screenshots/';
 const BINPATH = './node_modules/nightwatch/bin/';
+const seleniumDownload = require('selenium-download');
 
 // we use a nightwatch.conf.js file so we can
 // include comments and helper functions
@@ -51,7 +52,7 @@ module.exports = {
 
 require('fs').stat(`${BINPATH}selenium.jar`, (err, stat) => { // got it?
   if (err || !stat || stat.size < 1) {
-    require('selenium-download').ensure(BINPATH, (error) => {
+    seleniumDownload.ensure(BINPATH, (error) => {
       if (error) throw new Error(error); // no point continuing so exit!
      // console.log('✔ Selenium & Chromedriver downloaded to:', BINPATH);
     });
@@ -86,7 +87,7 @@ function imgpath(browser) {
   meta.push(a.version ? a.version : 'any');
   meta.push(a.name); // this is the test filename so always exists.
   const metadata = meta.join('~').toLowerCase().replace(/ /g, '');
-  return `${SCREENSHOT_PATH + metadata}_${padLeft(FILECOUNT++)}_`;
+  return `${SCREENSHOT_PATH + metadata}_${padLeft(FILECOUNT += 1)}_`;
 }
 
 module.exports.imgpath = imgpath;

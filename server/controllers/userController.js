@@ -41,6 +41,7 @@ const userController = {
     const offset = req.query.offset;
     return User
     .findAndCountAll({
+      attributes: { exclude: ['password'] },
       limit: limit || null,
       offset: offset || null,
       include: [{
@@ -219,6 +220,7 @@ const userController = {
     .findAndCountAll({
       limit,
       offset,
+      attributes: { exclude: ['password'] },
       where: {
         $or: [
           { firstName: { $ilike: `%${req.query.q}%` } },

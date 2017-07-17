@@ -9,21 +9,6 @@ import {
   updateDocument
   } from '../../actions/documentActions';
 
-const STYLES = {
-  container: {
-    fontFamily: 'Open Sans, sans-serif',
-    padding: '0 25px'
-  },
-  output: {
-    border: '1px solid #999',
-    borderRadius: 5,
-    fontFamily: 'Courier New, monospace',
-    padding: 10,
-    height: 250,
-    overflow: 'auto'
-  }
-};
-
 /**
  * @desc compeent used to creat update and view document
  * @class CreateDocument
@@ -169,7 +154,7 @@ export class CreateDocument extends Component {
               </select>
             </div>
           </div>
-          <div style={STYLES.container} className="row">
+          <div className="row TinyMCE-container">
             <TinyMCE
               content={this.state.content}
               onChange={this.handleEditorChange}

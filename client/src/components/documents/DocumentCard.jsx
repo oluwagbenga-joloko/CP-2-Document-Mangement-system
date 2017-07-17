@@ -98,8 +98,7 @@ DocumentCard.propTypes = {
   userId: PropTypes.number.isRequired,
   ownerId: PropTypes.number.isRequired,
   creator: PropTypes.string.isRequired,
-  deleteDocument: PropTypes.func.isRequired,
-  roleId: PropTypes.number
+  deleteDocument: PropTypes.func.isRequired
 };
 
 export default DocumentCard;

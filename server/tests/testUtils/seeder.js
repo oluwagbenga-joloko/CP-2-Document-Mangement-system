@@ -3,9 +3,9 @@ import fakeData from './fakeData';
 import db from '../../models';
 
 const validAdmin = fakeData.validAdmin,
-  regulerUser1 = fakeData.regulerUser1,
-  regulerUser2 = fakeData.regulerUser2,
-  regulerUser3 = fakeData.regulerUser3;
+  firstRegularUser = fakeData.firstRegularUser,
+  secondRegularUser = fakeData.secondRegularUser,
+  thirdRegularUser = fakeData.thirdRegularUser;
 /**
  * @class seeder
  */
@@ -58,9 +58,9 @@ class Seeder {
    */
   static populateUserTable() {
     return db.User.create(validAdmin)
-     .then(() => db.User.create(regulerUser1)
-       .then(() => db.User.create(regulerUser2)
-         .then(() => db.User.create(regulerUser3))));
+     .then(() => db.User.create(firstRegularUser)
+       .then(() => db.User.create(secondRegularUser)
+         .then(() => db.User.create(thirdRegularUser))));
   }
   /**
    * @desc it popultes the document table
@@ -70,16 +70,16 @@ class Seeder {
    */
   static populateDocumentTable() {
     const documents = [
-      fakeData.privateDocument1,
-      fakeData.privateDocument2,
-      fakeData.privateDocument3,
-      fakeData.publicDocument1,
-      fakeData.publicDocument2,
-      fakeData.publicDocument3,
-      fakeData.publicDocument4,
-      fakeData.roleDocument1,
-      fakeData.roleDocument2,
-      fakeData.roleDocument3,
+      fakeData.firstPrivateDocument,
+      fakeData.secondPrivateDocument,
+      fakeData.thirdPrivateDocument,
+      fakeData.firstPublicDocument,
+      fakeData.secondPublicDocument,
+      fakeData.thirdPublicDocument,
+      fakeData.fourthPublicDocument,
+      fakeData.firstRoleDocument,
+      fakeData.secondRoleDocument,
+      fakeData.thirdRoleDocument,
     ];
     return db.Document.bulkCreate(documents);
   }

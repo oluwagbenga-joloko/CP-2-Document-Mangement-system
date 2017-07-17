@@ -14,9 +14,9 @@ const request = chai.request(app),
   noPasswordUser = fakeData.noPasswordUser,
   invalidEmailUser = fakeData.invalidEmailUser,
   invalidPasswordUser = fakeData.invalidPasswordUser,
-  regulerUser1 = fakeData.regulerUser1,
-  regulerUser5 = fakeData.regulerUser3,
-  regulerUser4 = fakeData.regulerUser4;
+  firstRegularUser = fakeData.firstRegularUser,
+  secondRegularUser = fakeData.thirdRegularUser,
+  thirdRegularUser = fakeData.fourthRegularUser;
 let adminToken, regularToken;
 
 describe('User controller', () => {
@@ -88,10 +88,11 @@ describe('User controller', () => {
     });
   });
   describe('POST /api/users/login', () => {
-    it('it should registered users login and return a token.', (done) => {
+    it('should registered users login and return a token.', (done) => {
       request
         .post('/api/users/login')
-        .send({ email: regulerUser1.email, password: regulerUser1.password })
+        .send({ email: firstRegularUser.email,
+          password: firstRegularUser.password })
         .end((err, res) => {
           regularToken = res.body.token;
           expect(res).to.have.status(200);
@@ -104,7 +105,7 @@ describe('User controller', () => {
        invalid password login.`, (done) => {
       request
         .post('/api/users/login')
-        .send({ email: regulerUser1.email, password: 'invalid' })
+        .send({ email: firstRegularUser.email, password: 'invalid' })
         .end((err, res) => {
           expect(res).to.have.status(404);
           expect(res.body.token).to.equal(undefined);
@@ -136,7 +137,7 @@ describe('User controller', () => {
     });
   });
   describe('GET /api/users/', () => {
-    it('should admin to view all users', (done) => {
+    it('should allow admin to view all users', (done) => {
       request
         .get('/api/users/')
         .set({ 'x-access-token': adminToken })
@@ -160,14 +161,14 @@ describe('User controller', () => {
     });
   });
   describe('Get /api/users/:id', () => {
-    it('should admin to view any users profile', (done) => {
+    it('should allow admin to view any users profile', (done) => {
       request
         .get('/api/users/2')
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.user).to.not.equal(undefined);
-          expect(res.body.user.email).to.equal(regulerUser1.email);
+          expect(res.body.user.email).to.equal(firstRegularUser.email);
           expect(res.body.user).to.be.a('object');
           done();
         });
@@ -199,7 +200,7 @@ describe('User controller', () => {
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.user).to.not.equal(undefined);
-          expect(res.body.user.email).to.equal(regulerUser1.email);
+          expect(res.body.user.email).to.equal(firstRegularUser.email);
           expect(res.body.user).to.be.a('object');
           done();
         });
@@ -217,7 +218,7 @@ describe('User controller', () => {
     });
   });
   describe('PUT /api/users/', () => {
-    it(`should  not allow all users to edit 
+    it(`should not allow users to edit 
       their profile with invalid details`, (done) => {
       request
         .put('/api/users/2')
@@ -244,37 +245,25 @@ describe('User controller', () => {
       request
         .put('/api/users/2')
         .set({ 'x-access-token': regularToken })
-        .send(regulerUser4)
+        .send(thirdRegularUser)
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.message).to.equal('profile update success');
           done();
         });
     });
-
-    it('should allow all users to edit their profile', (done) => {
-      request
-        .put('/api/users/2')
-        .set({ 'x-access-token': regularToken })
-        .send(regulerUser4)
-        .end((err, res) => {
-          expect(res).to.have.status(200);
-          expect(res.body.message).to.equal('profile update success');
-          done();
-        });
-    });
-    it('should  not allow users to edit other users profile', (done) => {
+    it('should not allow users to edit other users profile', (done) => {
       request
         .put('/api/users/3')
         .set({ 'x-access-token': regularToken })
-        .send({ regulerUser5 })
+        .send({ secondRegularUser })
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.message).to.equal('unauthorized');
           done();
         });
     });
-    it('should  allow admin update user role only for invalid user', (done) => {
+    it('should allow admin update user role', (done) => {
       request
         .put('/api/users/abc')
         .set({ 'x-access-token': adminToken })
@@ -284,7 +273,7 @@ describe('User controller', () => {
           done();
         });
     });
-    it(`should  allow admin update user
+    it(`should not allow admin update user
       role only for non existent user`, (done) => {
       request
         .put('/api/users/56656')
@@ -295,7 +284,7 @@ describe('User controller', () => {
           done();
         });
     });
-    it('should  allow admin update user role only', (done) => {
+    it('should allow admin update user role only', (done) => {
       request
         .put('/api/users/2')
         .set({ 'x-access-token': adminToken })
@@ -303,14 +292,14 @@ describe('User controller', () => {
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.user.roleId).to.equal(3);
-          expect(res.body.user.firstName).to.equal(regulerUser4.firstName);
-          expect(res.body.user.lastName).to.equal(regulerUser4.lastName);
+          expect(res.body.user.firstName).to.equal(thirdRegularUser.firstName);
+          expect(res.body.user.lastName).to.equal(thirdRegularUser.lastName);
           expect(res.body.user.fistName).to.not.equal('bola');
           expect(res.body.user.lastName).to.not.equal('mark');
           done();
         });
     });
-    it('should  allow admin update user  user  to Admin', (done) => {
+    it('should not allow admin update a regular user to an Admin', (done) => {
       request
         .put('/api/users/2')
         .set({ 'x-access-token': adminToken })
@@ -352,7 +341,7 @@ describe('User controller', () => {
           done();
         });
     });
-    it(`should not allow not allow regular user delete 
+    it(`should not allow regular user delete 
        other users profile`, (done) => {
       request
         .delete('/api/users/4')

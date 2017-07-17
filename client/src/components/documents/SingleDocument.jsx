@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import renderHTML from 'react-render-html';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   getDocument,
-  } from '../../actions/documentActions';
+} from '../../actions/documentActions';
+
 /**
  * @desc compeent used to creat update and view document
  * @class SingleDocument
@@ -84,10 +86,8 @@ export class SingleDocument extends Component {
         Edit
         </Link>
         }
-
             </div>
           </div>
-
           <div className="divider" />
           <p className="single-doc-access">
             <span className="doc-sub-header">Access: </span>
@@ -101,8 +101,8 @@ export class SingleDocument extends Component {
           <div className="divider" />
           <div
             className="innerhtml margin-5px"
-            dangerouslySetInnerHTML={{ __html: this.state.content }}
           />
+          {renderHTML(this.state.content)}
         </div>
    }
       </div>

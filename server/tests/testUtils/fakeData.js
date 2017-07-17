@@ -44,35 +44,28 @@ const fakeData = {
     roleId: 1,
     password: faker.internet.password()
   },
-  regulerUser1: {
+  firstRegularUser: {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     email: faker.internet.email(),
     roleId: 2,
     password: faker.internet.password()
   },
-  regulerUser2: {
+  secondRegularUser: {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     email: faker.internet.email(),
     roleId: 2,
     password: faker.internet.password()
   },
-  regulerUser3: {
+  thirdRegularUser: {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     email: faker.internet.email(),
     roleId: 2,
     password: faker.internet.password()
   },
-  regulerUser4: {
-    firstName: faker.name.firstName(),
-    lastName: faker.name.lastName(),
-    email: faker.internet.email(),
-    roleId: 2,
-    password: faker.internet.password()
-  },
-  regulerUser5: {
+  fourthRegularUser: {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     email: faker.internet.email(),
@@ -96,70 +89,70 @@ const fakeData = {
     content: faker.lorem.paragraphs(),
     access: 'fakeAccess',
   },
-  publicDocument1: {
+  firstPublicDocument: {
     userId: 2,
     title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'public',
     ownerRoleId: 2
   },
-  publicDocument2: {
+  secondPublicDocument: {
     userId: 2,
     title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'public',
     ownerRoleId: 2
   },
-  publicDocument3: {
+  thirdPublicDocument: {
     userId: 2,
     title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'public',
     ownerRoleId: 2,
   },
-  publicDocument4: {
+  fourthPublicDocument: {
     userId: 1,
     title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'public',
     ownerRoleId: 1
   },
-  roleDocument1: {
+  firstRoleDocument: {
     userId: 3,
     title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'role',
     ownerRoleId: 2
   },
-  roleDocument2: {
+  secondRoleDocument: {
     userId: 3,
     title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'role',
     ownerRoleId: 2,
   },
-  roleDocument3: {
+  thirdRoleDocument: {
     userId: 1,
     title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'role',
     ownerRoleId: 1
   },
-  privateDocument1: {
+  firstPrivateDocument: {
     userId: 4,
     title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'private',
     ownerRoleId: 2
   },
-  privateDocument2: {
+  secondPrivateDocument: {
     userId: 4,
     title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),
     access: 'private',
     ownerRoleId: 2
   },
-  privateDocument3: {
+  thirdPrivateDocument: {
     userId: 1,
     title: faker.lorem.words(),
     content: faker.lorem.paragraphs() + faker.lorem.paragraphs(),

@@ -36,17 +36,17 @@ let wrapper = mount(
 
 chai.use(chaiEnzyme());
 describe('SingleDocument component', () => {
-  it('should renders without crashing', () => {
+  it('should render without crashing', () => {
     expect(wrapper).to.be.present();
   });
   it('should call getDocument on mount', () => {
     expect(props.getDocument.called).to.equal(true);
   });
-  it('it should show edit button when ownerid is equal to userId', () => {
+  it('should show edit button when ownerId is equal to userId', () => {
     expect(wrapper.find('.save-btn')).to.be.present();
   });
-  it(`it should not show edit button when
-   ownerid not is equal to userId`, () => {
+  it(`should not show edit button when
+   ownerId not is equal to userId`, () => {
     const newProps = { ...props, document };
     wrapper = mount(
       <MemoryRouter><SingleDocument {...newProps} /></MemoryRouter>);

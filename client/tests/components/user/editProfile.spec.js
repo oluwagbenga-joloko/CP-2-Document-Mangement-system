@@ -44,7 +44,7 @@ describe('UserCard component', () => {
   it('should render without crashing', () => {
     expect(wrapper).to.be.present();
   });
-  it('it should call handle change on handlechange on input change', () => {
+  it('should call handlechange on input change', () => {
     wrapper = mount(<EditProfile {...props} />);
     const handleChange = spy(wrapper.instance(), 'handleChange');
     wrapper.update();

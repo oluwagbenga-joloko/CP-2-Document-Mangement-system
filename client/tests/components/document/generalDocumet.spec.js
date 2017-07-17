@@ -48,10 +48,10 @@ let wrapper;
 wrapper = shallow(<GeneralDocuments {...props} />);
 chai.use(chaiEnzyme());
 describe('GeneralDocuments component', () => {
-  it('should renders without crashing and ', () => {
+  it('should renders without crashing', () => {
     expect(wrapper).to.be.present();
   });
-  it('calls update searchDocuments action on mount', () => {
+  it('should call searchDocuments action on mount', () => {
     expect(props.searchDocuments.called).to.equal(true);
   });
   it('should change state.access on props.access change', () => {
@@ -79,7 +79,7 @@ describe('GeneralDocuments component', () => {
     wrapper.update();
     expect(wrapper.instance().state.access).to.equal('all');
   });
-  it('should call change state on select change', () => {
+  it('should change state on select change', () => {
     const newProps = { ...props, location: { search: '', pathname: '' } };
     wrapper = shallow(<GeneralDocuments {...newProps} />);
     const select = wrapper.find('select');

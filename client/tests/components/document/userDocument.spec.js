@@ -46,10 +46,10 @@ let wrapper;
 wrapper = shallow(<UserDocuments {...props} />);
 chai.use(chaiEnzyme());
 describe('UserDocuments component', () => {
-  it('should renders without crashing and ', () => {
+  it('should render without crashing', () => {
     expect(wrapper).to.be.present();
   });
-  it('calls update getUserDocuments action on mount', () => {
+  it('calls getUserDocuments action on mount', () => {
     expect(props.getUserDocuments.called).to.equal(true);
   });
   it('should change state on props change', () => {
@@ -65,7 +65,7 @@ describe('UserDocuments component', () => {
     wrapper.setProps({ documents });
     expect(wrapper.instance().state.documents).to.eql(documents);
   });
-  it('should set state.access as "" when location.search is empty', () => {
+  it('should set state.access to "" when location.search is empty', () => {
     wrapper.setProps({ location: {
       search: '',
       pathname: ''

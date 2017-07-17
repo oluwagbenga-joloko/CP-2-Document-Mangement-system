@@ -7,7 +7,7 @@
     "migrate": "sequelize db:migrate",
     "e2e": "node_modules/.bin/nightwatch --config nightwatch.conf.js",
     "migrate:undo": "sequelize db:migrate:undo:all",
-    "start":"babel-node serverProd.js",
+    "start": "babel-node serverProd.js",
     "seed": "sequelize db:seed --seed roles.js && sequelize db:seed --seed users.js && sequelize db:seed --seed documents.js  ",
     "start:dev": "nodemon --exec babel-node serverDev.js",
     "test": "NODE_ENV=test nyc --reporter=text  --reporter=html --extension .jsx ./node_modules/mocha/bin/_mocha client/tests/testSetup.js client/tests/components/**/*spec.js client/tests/**/*spec.js server/tests/**/*.spec.js --timeout=60000",
@@ -16,7 +16,7 @@
     "clean-dist": "npm run remove-dist && mkdir -p client/dist",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "remove-dist": "node_modules/.bin/rimraf client/dist",
-    "test:models":"NODE_ENV=test nyc --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha --compilers js:babel-register server/tests/models/*.spec.js --timeout=60000",
+    "test:models": "NODE_ENV=test nyc --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha --compilers js:babel-register server/tests/models/*.spec.js --timeout=60000",
     "build:html": "./node_modules/.bin/babel-node tools/buildHtml.js",
     "prebuild": "npm-run-all build:html",
     "build": "./node_modules/.bin/babel-node tools/build.js",
@@ -72,6 +72,7 @@
     "react-dom": "^15.5.4",
     "react-paginate": "^4.4.2",
     "react-redux": "^5.0.5",
+    "react-render-html": "^0.5.0",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
     "react-router-redux": "^4.0.8",
@@ -80,6 +81,7 @@
     "redux-immutable-state-invariant": "^2.0.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
+    "selenium-download": "^2.0.10",
     "sequelize": "^3.30.4",
     "strip": "^3.0.0",
     "striptags": "^3.0.1",
@@ -88,8 +90,7 @@
     "sweetalert": "^1.1.3",
     "tinymce": "^4.6.4",
     "toastr": "^2.1.2",
-    "webpack": "^2.6.1",
-    "selenium-download": "^2.0.10"
+    "webpack": "^2.6.1"
   },
   "devDependencies": {
     "babel-plugin-istanbul": "^4.1.4",

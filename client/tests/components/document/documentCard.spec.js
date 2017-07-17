@@ -20,7 +20,7 @@ const wrapper = mount(<DocumentCard {...props} />);
 
 chai.use(chaiEnzyme());
 describe('DocumentCard component', () => {
-  it('it renders without crashing', () => {
+  it('should render without crashing', () => {
     expect(wrapper).to.be.present();
   });
   it('should call deleteDocument when delete icon is clicked', () => {

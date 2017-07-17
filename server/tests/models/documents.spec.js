@@ -3,15 +3,15 @@ import fakeData from '../testUtils/fakeData';
 import db, { Document } from '../../models';
 import seeder from '../testUtils/seeder';
 
-const document1 = fakeData.publicDocument1,
-  document2 = fakeData.publicDocument2,
+const sampleDocument = fakeData.firstPublicDocument,
+  updateDocument = fakeData.secondPublicDocument,
   invalidAccessDocument = fakeData.invalidAccessDocument,
   emptyTitleDocument = fakeData.emptyTitleDocument,
   emptyContentDocument = fakeData.emptyContentDocument;
 
-let document1Id;
+let sampleDocumentId;
 
-describe('Document Model', () => {
+describe('Model tests', () => {
   before((done) => {
     db.sequelize.sync({ force: true }).then(() => {
       seeder.populateRoleTable().then(() => {
@@ -26,17 +26,17 @@ describe('Document Model', () => {
       done();
     });
   });
-  describe('docuemt model', () => {
+  describe('Document model', () => {
     it('should create a document', (done) => {
-      Document.create(document1).then((document) => {
-        document1Id = document.id;
-        expect(document1.title).to.equal(document.title);
-        expect(document1.access).to.equal(document.access);
-        expect(document1.content).to.equal(document.content);
+      Document.create(sampleDocument).then((document) => {
+        sampleDocumentId = document.id;
+        expect(sampleDocument.title).to.equal(document.title);
+        expect(sampleDocument.access).to.equal(document.access);
+        expect(sampleDocument.content).to.equal(document.content);
         done();
       });
     });
-    it('should not create document invalid access', (done) => {
+    it('should not create document with invalid access', (done) => {
       Document.create(invalidAccessDocument)
        .catch((error) => {
          expect(error.errors[0].message).to.equal(
@@ -73,16 +73,16 @@ describe('Document Model', () => {
        });
     });
     it('should update a Document', (done) => {
-      Document.findById(document1Id).then((document) => {
-        document.update(document2).then((updateDocument) => {
-          expect(updateDocument.title).to.equal(document2.title);
-          expect(updateDocument.content).to.equal(document2.content);
+      Document.findById(sampleDocumentId).then((document) => {
+        document.update(updateDocument).then((updatedDocument) => {
+          expect(updatedDocument.title).to.equal(updateDocument.title);
+          expect(updatedDocument.content).to.equal(updateDocument.content);
           done();
         });
       });
     });
     it('should delete a Document', (done) => {
-      Document.findById(document1Id).then((document) => {
+      Document.findById(sampleDocumentId).then((document) => {
         document.destroy().then((res) => {
           expect(res).to.eql([]);
           done();

@@ -10,16 +10,16 @@ import seeder from '../testUtils/seeder';
 
 chai.use(chaiHttp);
 const request = chai.request(app),
-  privateDocument1 = fakeData.privateDocument1,
-  publicDocument1 = fakeData.publicDocument1,
-  roleDocument1 = fakeData.roleDocument1,
+  privateDocument = fakeData.firstPrivateDocument,
+  publicDocument = fakeData.firstPublicDocument,
+  roleDocument = fakeData.firstRoleDocument,
   adminUser = fakeData.validAdmin,
-  regulerUser1 = fakeData.regulerUser1,
-  regulerUser2 = fakeData.regulerUser2;
+  firstRegularUser = fakeData.firstRegularUser,
+  secondRegularUser = fakeData.secondRegularUser;
 
 let adminToken,
-  regular1Token,
-  regular2Token;
+  firstUserToken,
+  secondUserToken;
 describe('Search: document and user controller', () => {
   before((done) => {
     seeder.init().then(() => {
@@ -31,15 +31,17 @@ describe('Search: document and user controller', () => {
         });
       request
         .post('/api/users/login')
-        .send({ email: regulerUser1.email, password: regulerUser1.password })
+        .send({ email: firstRegularUser.email,
+          password: firstRegularUser.password })
         .end((err, res) => {
-          regular1Token = res.body.token;
+          firstUserToken = res.body.token;
         });
       request
         .post('/api/users/login')
-        .send({ email: regulerUser2.email, password: regulerUser2.password })
+        .send({ email: secondRegularUser.email,
+          password: secondRegularUser.password })
         .end((err, res) => {
-          regular2Token = res.body.token;
+          secondUserToken = res.body.token;
           done();
         });
     });
@@ -52,10 +54,10 @@ describe('Search: document and user controller', () => {
     });
   });
   describe('GET /api/search/documents/?q={}', () => {
-    it('it should allow users search for documents', (done) => {
+    it('should allow users search for documents', (done) => {
       request
         .get('/api/search/documents/?q=i')
-        .set({ 'x-access-token': regular1Token })
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.documents).to.not.equal(undefined);
@@ -63,31 +65,31 @@ describe('Search: document and user controller', () => {
           done();
         });
     });
-    it(`it should allow users search 
+    it(`should allow users search 
       for documents public documents`, (done) => {
       request
-        .get(`/api/search/documents/?q=${publicDocument1.title}&access=public`)
-        .set({ 'x-access-token': regular1Token })
+        .get(`/api/search/documents/?q=${publicDocument.title}&access=public`)
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.documents).to.not.equal(undefined);
           expect(res.body.documents).to.be.an('array');
           const searchDocument = res.body.documents.filter((document) => {
-            if (document.title === publicDocument1.title) {
+            if (document.title === publicDocument.title) {
               return document;
             }
             return undefined;
           });
-          expect(searchDocument[0].title).to.equal(publicDocument1.title);
-          expect(searchDocument[0].content).to.equal(publicDocument1.content);
+          expect(searchDocument[0].title).to.equal(publicDocument.title);
+          expect(searchDocument[0].content).to.equal(publicDocument.content);
           done();
         });
     });
-    it(`it should allow not allow users
+    it(`should allow not allow users
        search for private document`, (done) => {
       request
         .get('/api/search/documents/?q=a')
-        .set({ 'x-access-token': regular1Token })
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.documents).to.not.equal(undefined);
@@ -109,26 +111,26 @@ describe('Search: document and user controller', () => {
           done();
         });
     });
-    it('it should allow allow users search for role document', (done) => {
+    it('should allow allow users search for role document', (done) => {
       request
-        .get(`/api/search/documents/?q=${roleDocument1.title}&access=role`)
-        .set({ 'x-access-token': regular1Token })
+        .get(`/api/search/documents/?q=${roleDocument.title}&access=role`)
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.documents).to.not.equal(undefined);
           expect(res.body.documents).to.be.an('array');
           const searchDocument = res.body.documents.filter((document) => {
-            if (document.title === roleDocument1.title) {
+            if (document.title === roleDocument.title) {
               return document;
             }
             return undefined;
           });
-          expect(searchDocument[0].ownerRoleId).to.eql(regulerUser1.roleId);
-          expect(searchDocument[0].title).to.eql(roleDocument1.title);
+          expect(searchDocument[0].ownerRoleId).to.eql(firstRegularUser.roleId);
+          expect(searchDocument[0].title).to.eql(roleDocument.title);
           done();
         });
     });
-    it('should return no docuements found for invalid search query', (done) => {
+    it('should return no documents found for invalid search query', (done) => {
       request
         .get('/api/search/documents/?q=98fdfdfbfdkfjafkajkfdhf')
         .set({ 'x-access-token': adminToken })
@@ -159,30 +161,30 @@ describe('Search: document and user controller', () => {
     });
   });
   describe('GET /api/search/users/?q={}', () => {
-    it('it should allow Admin search for users', (done) => {
+    it('should allow Admin search for users', (done) => {
       request
-        .get(`/api/search/users/?q=${regulerUser1.firstName}`)
+        .get(`/api/search/users/?q=${firstRegularUser.firstName}`)
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.users).to.not.equal(undefined);
           expect(res.body.users).to.be.an('array');
           const searchUser = res.body.users.filter((user) => {
-            if (user.firstName === regulerUser1.firstName) {
+            if (user.firstName === firstRegularUser.firstName) {
               return user;
             }
             return undefined;
           });
-          expect(searchUser[0].firstName).to.equal(regulerUser1.firstName);
-          expect(searchUser[0].lastName).to.equal(regulerUser1.lastName);
-          expect(searchUser[0].email).to.equal(regulerUser1.email);
+          expect(searchUser[0].firstName).to.equal(firstRegularUser.firstName);
+          expect(searchUser[0].lastName).to.equal(firstRegularUser.lastName);
+          expect(searchUser[0].email).to.equal(firstRegularUser.email);
           done();
         });
     });
-    it('it should not allow regular user search for users', (done) => {
+    it('should not allow regular user search for users', (done) => {
       request
-        .get(`/api/search/users/?q=${regulerUser2.firstName}`)
-        .set({ 'x-access-token': regular1Token })
+        .get(`/api/search/users/?q=${secondRegularUser.firstName}`)
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.message).to.equal('unauthorized');
@@ -192,10 +194,10 @@ describe('Search: document and user controller', () => {
     });
   });
   describe('GET /api/search/userdocuments/?q={}', () => {
-    it('it should allow users search for documents', (done) => {
+    it('should allow users search for documents', (done) => {
       request
         .get('/api/search/userdocuments/?q=')
-        .set({ 'x-access-token': regular1Token })
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.documents).to.not.equal(undefined);
@@ -203,36 +205,37 @@ describe('Search: document and user controller', () => {
           done();
         });
     });
-    it(`should allow  return no documents if no
+    it(`should return no documents if no
      documents match the search`, (done) => {
       request
         .get('/api/search/userdocuments/?q=dfdfdfdfafdfafadfaf&access=public')
-        .set({ 'x-access-token': regular1Token })
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(404);
           expect(res.body.message).to.equal('no documents found ');
           done();
         });
     });
-    it(`it should allow users search their 
-    own documents public documents`, (done) => {
+    it(`should allow users search for their 
+    own public documents`, (done) => {
       request
-        .get(`/api/search/userdocuments/?q=${publicDocument1.title}&access=public`)
-        .set({ 'x-access-token': regular1Token })
+        .get(`/api/search/userdocuments/?q=${publicDocument.title}`
+        + '&access=public')
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.documents).to.not.equal(undefined);
           expect(res.body.documents).to.be.an('array');
           const searchDocument = res.body.documents.filter((document) => {
-            if (document.title === publicDocument1.title) {
+            if (document.title === publicDocument.title) {
               return document;
             }
             return undefined;
           });
           expect(searchDocument[0].User.firstName)
-          .to.equal(regulerUser1.firstName);
-          expect(searchDocument[0].title).to.equal(publicDocument1.title);
-          expect(searchDocument[0].content).to.equal(publicDocument1.content);
+          .to.equal(firstRegularUser.firstName);
+          expect(searchDocument[0].title).to.equal(publicDocument.title);
+          expect(searchDocument[0].content).to.equal(publicDocument.content);
           done();
         });
     });

@@ -1,5 +1,8 @@
 import React from 'react';
-
+/**
+ * @desc Top Navigation component
+ * @returns {*} html
+ */
 const TopNav = () => (
   <header>
     <nav>

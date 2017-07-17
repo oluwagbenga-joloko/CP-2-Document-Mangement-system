@@ -80,7 +80,6 @@ export class GeneralDocuments extends Component {
   }
   /**
    * @desc hanldes delete of document
-   * @param {string} title title of element to be deleted
    * @param {number} id id of element to be deleted
    * @returns {*} has no return value;
    * @memberof GeneralDocument

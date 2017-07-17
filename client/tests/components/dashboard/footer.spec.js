@@ -9,7 +9,7 @@ const url = 'https://github.com/andela-ojoloko/CP-2-Document-Mangement-system';
 
 chai.use(chaiEnzyme());
 describe('footer component', () => {
-  it('it renders without crashing', () => {
+  it('should render without crashing', () => {
     expect(wrapper).to.be.present();
   });
   it(`should contain a link with href 

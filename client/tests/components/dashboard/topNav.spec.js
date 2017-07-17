@@ -8,11 +8,7 @@ const wrapper = mount(<TopNav />);
 
 chai.use(chaiEnzyme());
 describe('TopNav component', () => {
-  it('it renders without crashing', () => {
+  it('should render without crashing', () => {
     expect(wrapper).to.be.present();
   });
-  // it('it should contain the right with text "DocumentIt"', () => {
-  //   expect(wrapper.find('#logo1')).to.have.text('Document');
-  //   expect(wrapper.find('#logo2')).to.not.have.text('it');
-  // });
 });

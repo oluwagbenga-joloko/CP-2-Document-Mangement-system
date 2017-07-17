@@ -3,10 +3,10 @@ import fakeData from '../testUtils/fakeData';
 import db, { Role } from '../../models';
 
 
-const role1 = fakeData.generateRandomRole();
-const role2 = fakeData.generateRandomRole();
+const sampleRole = fakeData.generateRandomRole();
+const updateRole = fakeData.generateRandomRole();
 const emptyRole = fakeData.emptyRole;
-let role1Id;
+let sampleRoleId;
 
 describe('Role Model', () => {
   before((done) => {
@@ -21,9 +21,9 @@ describe('Role Model', () => {
   });
   describe('Role Model', () => {
     it('should create a role', (done) => {
-      Role.create(role1).then((role) => {
-        role1Id = role.id;
-        expect(role.title).to.equal(role1.title);
+      Role.create(sampleRole).then((role) => {
+        sampleRoleId = role.id;
+        expect(role.title).to.equal(sampleRole.title);
         done();
       });
     });
@@ -35,15 +35,15 @@ describe('Role Model', () => {
        });
     });
     it('should update role', (done) => {
-      Role.findById(role1Id).then((role) => {
-        role.update(role2).then((updateRole) => {
-          expect(updateRole.title).to.equal(role2.title);
+      Role.findById(sampleRoleId).then((role) => {
+        role.update(updateRole).then((updatetedRole) => {
+          expect(updatetedRole.title).to.equal(updateRole.title);
           done();
         });
       });
     });
     it('should delete a role', (done) => {
-      Role.findById(role1Id).then((role) => {
+      Role.findById(sampleRoleId).then((role) => {
         role.destroy().then((res) => {
           expect(res).to.eql([]);
           done();

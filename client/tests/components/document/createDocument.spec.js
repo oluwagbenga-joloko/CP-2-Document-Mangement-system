@@ -37,10 +37,10 @@ let wrapper = shallow(<CreateDocument {...props} />);
 
 chai.use(chaiEnzyme());
 describe('CreateDocument component', () => {
-  it('it renders without crashing', () => {
+  it('should render without crashing', () => {
     expect(wrapper).to.be.present();
   });
-  it('should call change state on on input change', () => {
+  it('should change state on input change', () => {
     const input = wrapper.find('input[id="title"]');
     input.simulate('change', {
       preventDefault: () => {
@@ -75,7 +75,7 @@ describe('CreateDocument component', () => {
     expect(props.updateDocument.called).to.equal(true);
   });
   it(`should not show save button if 
-    documentownerid is not equal to userid`, () => {
+    documentOwnerId is not equal to userId`, () => {
     const newDocument = { ...document, userId: 34 };
     wrapper.setProps({ document: newDocument });
     expect(wrapper.find('button[type="submit"]')).not.to.be.present();

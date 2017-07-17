@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
+/**
+ * @desc side Navigation component
+ * @param {object} props
+ * @returns {*} html
+ */
 const SideNav = ({ user, url, logout }) => (
   <div>
     <ul id="slide-out" className="side-nav z-depth-3 fixed">

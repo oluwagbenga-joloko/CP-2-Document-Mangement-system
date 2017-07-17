@@ -10,24 +10,24 @@ import seeder from '../testUtils/seeder';
 chai.use(chaiHttp);
 const request = chai.request(app),
   adminUser = fakeData.validAdmin,
-  regulerUser1 = fakeData.regulerUser1,
-  regulerUser2 = fakeData.regulerUser2,
+  firstRegularUser = fakeData.firstRegularUser,
+  secondRegularUser = fakeData.secondRegularUser,
   emtptyTitleDocument = fakeData.emtptyTitleDocument,
   emptyContentDocument = fakeData.emptyContentDocument,
-  privateDocument1 = fakeData.generateRandomDocument('private'),
-  publicDocument1 = fakeData.generateRandomDocument('public'),
-  publicDocument2 = fakeData.generateRandomDocument('public'),
+  privateDocument = fakeData.generateRandomDocument('private'),
+  firstPublicDocument = fakeData.generateRandomDocument('public'),
+  secondPublicDocument = fakeData.generateRandomDocument('public'),
 
-  roleDocument1 = fakeData.generateRandomDocument('role'),
-  updateDocument1 = fakeData.generateRandomDocument('role'),
+  roleDocument = fakeData.generateRandomDocument('role'),
+  updateDocument = fakeData.generateRandomDocument('role'),
   invalidAccessDocument = fakeData.generateRandomDocument('radnom');
 
 let adminToken,
-  regular1Token,
-  regular2Token,
-  privateDocId1,
-  roleDocId1,
-  publicDocId2;
+  firstUserToken,
+  secondUserToken,
+  privateDocumentId,
+  roleDocumentId,
+  publicDocumentId;
 
 describe('Document controller', () => {
   before((done) => {
@@ -40,15 +40,17 @@ describe('Document controller', () => {
         });
       request
         .post('/api/users/login')
-        .send({ email: regulerUser1.email, password: regulerUser1.password })
+        .send({ email: firstRegularUser.email,
+          password: firstRegularUser.password })
         .end((err, res) => {
-          regular1Token = res.body.token;
+          firstUserToken = res.body.token;
         });
       request
         .post('/api/users/login')
-        .send({ email: regulerUser2.email, password: regulerUser2.password })
+        .send({ email: secondRegularUser.email,
+          password: secondRegularUser.password })
         .end((err, res) => {
-          regular2Token = res.body.token;
+          secondUserToken = res.body.token;
           done();
         });
     });
@@ -64,64 +66,65 @@ describe('Document controller', () => {
     it('should allow users to create private access documents', (done) => {
       request
         .post('/api/documents')
-        .set({ 'x-access-token': regular1Token })
-        .send(privateDocument1)
+        .set({ 'x-access-token': firstUserToken })
+        .send(privateDocument)
         .end((err, res) => {
           expect(res).to.have.status(201);
-          expect(res.body.document.title).to.equal(privateDocument1.title);
-          privateDocId1 = res.body.document.id;
+          expect(res.body.document.title).to.equal(privateDocument.title);
+          privateDocumentId = res.body.document.id;
           done();
         });
     });
-    it('should not allow users with invalid token create documents', (done) => {
+    it(`should not allow users with invalid
+    token to create a document`, (done) => {
       request
         .post('/api/documents')
         .set({ 'x-access-token': 'invalid token' })
-        .send(publicDocument2)
+        .send(secondPublicDocument)
         .end((err, res) => {
           expect(res).to.have.status(401);
           done();
         });
     });
-    it('should not allow users without token create documents', (done) => {
+    it('should not allow users without token to create a document', (done) => {
       request
         .post('/api/documents')
-        .send(publicDocument2)
+        .send(secondPublicDocument)
         .end((err, res) => {
           expect(res).to.have.status(401);
           done();
         });
     });
-    it('should allow users to create public access documents', (done) => {
+    it('should allow users to create a public access document', (done) => {
       request
         .post('/api/documents')
-        .set({ 'x-access-token': regular2Token })
-        .send(publicDocument1)
+        .set({ 'x-access-token': secondUserToken })
+        .send(firstPublicDocument)
         .end((err, res) => {
           expect(res).to.have.status(201);
-          expect(res.body.document.title).to.equal(publicDocument1.title);
-          publicDocId2 = res.body.document.id;
+          expect(res.body.document.title).to.equal(firstPublicDocument.title);
+          publicDocumentId = res.body.document.id;
           done();
         });
     });
-    it('should allow users to create role access documents', (done) => {
+    it('should allow users to create a role access document', (done) => {
       request
         .post('/api/documents')
-        .set({ 'x-access-token': regular1Token })
-        .send(roleDocument1)
+        .set({ 'x-access-token': firstUserToken })
+        .send(roleDocument)
         .end((err, res) => {
           expect(res).to.have.status(201);
-          expect(res.body.document.title).to.equal(roleDocument1.title);
-          roleDocId1 = res.body.document.id;
+          expect(res.body.document.title).to.equal(roleDocument.title);
+          roleDocumentId = res.body.document.id;
           done();
         });
     });
 
-    it(`should not allow users to create 
-       documents with invalid access`, (done) => {
+    it(`should not allow users to create a 
+       document with invalid access`, (done) => {
       request
         .post('/api/documents')
-        .set({ 'x-access-token': regular1Token })
+        .set({ 'x-access-token': firstUserToken })
         .send(invalidAccessDocument)
         .end((err, res) => {
           expect(res).to.have.status(400);
@@ -131,10 +134,11 @@ describe('Document controller', () => {
           done();
         });
     });
-    it('should not allow users to create  documents empty title', (done) => {
+    it('should not allow users to create'
+    + ' a document with empty title', (done) => {
       request
         .post('/api/documents')
-        .set({ 'x-access-token': regular1Token })
+        .set({ 'x-access-token': firstUserToken })
         .send(emtptyTitleDocument)
         .end((err, res) => {
           expect(res).to.have.status(400);
@@ -142,10 +146,11 @@ describe('Document controller', () => {
           done();
         });
     });
-    it('should not allow users to create  documents empty content', (done) => {
+    it('should not allow users to create a'
+    + ' document with empty content', (done) => {
       request
         .post('/api/documents')
-        .set({ 'x-access-token': regular1Token })
+        .set({ 'x-access-token': firstUserToken })
         .send(emptyContentDocument)
         .end((err, res) => {
           expect(res).to.have.status(400);
@@ -169,7 +174,7 @@ describe('Document controller', () => {
         user to get all documents`, (done) => {
       request
         .get('/api/documents')
-        .set({ 'x-access-token': regular1Token })
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.documents).to.be.an('array');
@@ -180,7 +185,7 @@ describe('Document controller', () => {
   describe('GET /api/documents/:id', () => {
     it('should not allow admin retrieve private documents', (done) => {
       request
-        .get(`/api/documents/${privateDocId1}`)
+        .get(`/api/documents/${privateDocumentId}`)
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(401);
@@ -188,54 +193,54 @@ describe('Document controller', () => {
           done();
         });
     });
-    it(`should not allow regular user retrieve
-       private documents he did not create`, (done) => {
+    it(`should not allow regular user retrieve a
+       private document that he did not create`, (done) => {
       request
-        .get(`/api/documents/${privateDocId1}`)
-        .set({ 'x-access-token': regular2Token })
+        .get(`/api/documents/${privateDocumentId}`)
+        .set({ 'x-access-token': secondUserToken })
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.message).to.equal('unauthorized');
           done();
         });
     });
-    it(`it should allow regular user retrieve 
-        private documents he created`, (done) => {
+    it(`should allow a regular user retrieve 
+        private documents he/she created`, (done) => {
       request
-        .get(`/api/documents/${privateDocId1}`)
-        .set({ 'x-access-token': regular1Token })
+        .get(`/api/documents/${privateDocumentId}`)
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.document.title).to.equal(privateDocument1.title);
+          expect(res.body.document.title).to.equal(privateDocument.title);
           done();
         });
     });
-    it('it should allow allow regular users retrieve public', (done) => {
+    it('should allow regular users retrieve public documents', (done) => {
       request
-        .get(`/api/documents/${publicDocId2}`)
-        .set({ 'x-access-token': regular1Token })
+        .get(`/api/documents/${publicDocumentId}`)
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.document.title).to.equal(publicDocument1.title);
+          expect(res.body.document.title).to.equal(firstPublicDocument.title);
           done();
         });
     });
-    it(`it should allow allow regular 
-       users retrieve role doucuments`, (done) => {
+    it(`should allow allow regular 
+       users retrieve role documents`, (done) => {
       request
-        .get(`/api/documents/${roleDocId1}`)
-        .set({ 'x-access-token': regular1Token })
+        .get(`/api/documents/${roleDocumentId}`)
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.document.title).to.equal(roleDocument1.title);
+          expect(res.body.document.title).to.equal(roleDocument.title);
           done();
         });
     });
-    it(`it should allow allow regular users
-       retrieve role doucuments`, (done) => {
+    it(`should allow allow regular users
+       retrieve a non-existent document`, (done) => {
       request
         .get('/api/documents/233333')
-        .set({ 'x-access-token': regular1Token })
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(404);
           expect(res.body.message).to.equal('document not found');
@@ -244,11 +249,12 @@ describe('Document controller', () => {
     });
   });
   describe('PUT /api/documents/:id', () => {
-    it('it should allow users update documents they did not create', (done) => {
+    it(`should not allow users update
+     documents they did not create`, (done) => {
       request
-        .put(`/api/documents/${publicDocId2}`)
-        .set({ 'x-access-token': regular1Token })
-        .send(updateDocument1)
+        .put(`/api/documents/${publicDocumentId}`)
+        .set({ 'x-access-token': firstUserToken })
+        .send(updateDocument)
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.message).to.equal('unauthorized');
@@ -258,8 +264,8 @@ describe('Document controller', () => {
     it('it should not allow users update documents that dont exist', (done) => {
       request
         .put('/api/documents/44444')
-        .set({ 'x-access-token': regular1Token })
-        .send(updateDocument1)
+        .set({ 'x-access-token': firstUserToken })
+        .send(updateDocument)
         .end((err, res) => {
           expect(res).to.have.status(404);
           expect(res.body.message).to.equal('document not found');
@@ -268,12 +274,12 @@ describe('Document controller', () => {
     });
     it('it should allow users update documents created by them', (done) => {
       request
-        .put(`/api/documents/${privateDocId1}`)
-        .set({ 'x-access-token': regular1Token })
-        .send(updateDocument1)
+        .put(`/api/documents/${privateDocumentId}`)
+        .set({ 'x-access-token': firstUserToken })
+        .send(updateDocument)
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.document.title).to.equal(updateDocument1.title);
+          expect(res.body.document.title).to.equal(updateDocument.title);
           done();
         });
     });
@@ -282,8 +288,8 @@ describe('Document controller', () => {
     it(`it should allow not allow users delete
       documents they did not create`, (done) => {
       request
-        .delete(`/api/documents/${publicDocId2}`)
-        .set({ 'x-access-token': regular1Token })
+        .delete(`/api/documents/${publicDocumentId}`)
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.message).to.equal('unauthorized');
@@ -293,25 +299,25 @@ describe('Document controller', () => {
     it('it should not allow users delete documents that dont exist', (done) => {
       request
         .delete('/api/documents/44444')
-        .set({ 'x-access-token': regular1Token })
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(404);
           expect(res.body.message).to.equal('document not found');
           done();
         });
     });
-    it('it should allow users delete documents created by them', (done) => {
+    it('should allow users delete documents created by them', (done) => {
       request
-        .delete(`/api/documents/${privateDocId1}`)
-        .set({ 'x-access-token': regular1Token })
+        .delete(`/api/documents/${privateDocumentId}`)
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
           done();
         });
     });
-    it('it should allow admin delete any users document', (done) => {
+    it('should allow admin delete any users document', (done) => {
       request
-        .delete(`/api/documents/${publicDocId2}`)
+        .delete(`/api/documents/${publicDocumentId}`)
         .set({ 'x-access-token': adminToken })
         .end((err, res) => {
           expect(res).to.have.status(200);
@@ -320,7 +326,7 @@ describe('Document controller', () => {
     });
   });
   describe('GET /api/users/:id/documents/', () => {
-    it('should allow use get all his documents', (done) => {
+    it('should allow user get all his documents', (done) => {
       request
         .get('/api/users/1/documents')
         .set({ 'x-access-token': adminToken })
@@ -330,11 +336,10 @@ describe('Document controller', () => {
           done();
         });
     });
-    it(`should allow user get other users documents
-        user to get all documents`, (done) => {
+    it('should allow user get other users documents', (done) => {
       request
         .get('/api/users/1/documents')
-        .set({ 'x-access-token': regular1Token })
+        .set({ 'x-access-token': firstUserToken })
         .end((err, res) => {
           expect(res).to.have.status(401);
           done();

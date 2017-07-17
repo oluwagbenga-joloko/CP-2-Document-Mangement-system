@@ -18,7 +18,7 @@ let newProps;
 
 chai.use(chaiEnzyme());
 describe('Dashboard component', () => {
-  it('it renders without crashing', () => {
+  it('should render without crashing', () => {
     wrapper = shallow(<Dashboard {...props} />);
     expect(wrapper).to.be.present();
   });
@@ -27,7 +27,7 @@ describe('Dashboard component', () => {
     wrapper = shallow(<Dashboard {...newProps} />);
     expect(wrapper.find('TopNav')).not.to.be.present();
   });
-  it('it renders right right elements', () => {
+  it('should renders right right elements', () => {
     newProps = { ...props, user: { firstName: 'test', lastName: 'test' } };
     wrapper = shallow(<Dashboard {...newProps} />);
     expect(wrapper).to.be.present();

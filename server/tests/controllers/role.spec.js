@@ -9,9 +9,9 @@ import seeder from '../testUtils/seeder';
 chai.use(chaiHttp);
 const request = chai.request(app),
   adminUser = fakeData.validAdmin,
-  regulerUser1 = fakeData.regulerUser1,
-  randomRole1 = fakeData.generateRandomRole(),
-  randomRole2 = fakeData.generateRandomRole(),
+  regularUser = fakeData.firstRegularUser,
+  firstRole = fakeData.generateRandomRole(),
+  secondRole = fakeData.generateRandomRole(),
   invalidRole = fakeData.invalidRole,
   emptyRole = fakeData.emptyRole,
   updateRole = fakeData.generateRandomRole();
@@ -28,7 +28,7 @@ describe('Role controller', () => {
         });
       request
         .post('/api/users/login')
-        .send({ email: regulerUser1.email, password: regulerUser1.password })
+        .send({ email: regularUser.email, password: regularUser.password })
         .end((err, res) => {
           regularToken = res.body.token;
           done();
@@ -47,7 +47,7 @@ describe('Role controller', () => {
       request
         .post('/api/roles')
         .set({ 'x-access-token': adminToken })
-        .send(randomRole1)
+        .send(firstRole)
         .end((err, res) => {
           expect(res).to.have.status(201);
           done();
@@ -58,7 +58,7 @@ describe('Role controller', () => {
       request
         .post('/api/roles')
         .set({ 'x-access-token': adminToken })
-        .send(randomRole1)
+        .send(firstRole)
         .end((err, res) => {
           expect(res).to.have.status(409);
           expect(res.body.role).to.equal(undefined);
@@ -67,7 +67,7 @@ describe('Role controller', () => {
         });
     });
     it(`should not allow admin to create roles with 
-        invalid characters to be created`, (done) => {
+        invalid characters`, (done) => {
       request
         .post('/api/roles')
         .set({ 'x-access-token': adminToken })
@@ -96,7 +96,7 @@ describe('Role controller', () => {
       request
         .post('/api/roles')
         .set({ 'x-access-token': regularToken })
-        .send(randomRole2)
+        .send(secondRole)
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.message).to.equal('unauthorized');
@@ -115,7 +115,7 @@ describe('Role controller', () => {
           expect(res.body.roles).to.be.an('array');
           expect(res.body.roles[0].title).to.be.equal('Admin');
           expect(res.body.roles[1].title).to.be.equal('Regular user');
-          expect(res.body.roles[3].title).to.be.equal(randomRole1.title);
+          expect(res.body.roles[3].title).to.be.equal(firstRole.title);
           done();
         });
     });
@@ -132,7 +132,7 @@ describe('Role controller', () => {
       request
         .get('/api/roles')
         .set({ 'x-access-token': regularToken })
-        .send(randomRole2)
+        .send(secondRole)
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.message).to.equal('unauthorized');
@@ -177,7 +177,7 @@ describe('Role controller', () => {
       request
         .get('/api/roles/2')
         .set({ 'x-access-token': regularToken })
-        .send(randomRole2)
+        .send(secondRole)
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.message).to.equal('unauthorized');
@@ -238,7 +238,7 @@ describe('Role controller', () => {
       request
         .put('/api/roles/3')
         .set({ 'x-access-token': adminToken })
-        .send(randomRole1)
+        .send(firstRole)
         .end((err, res) => {
           expect(res).to.have.status(409);
           expect(res.body.role).to.equal(undefined);
@@ -288,7 +288,7 @@ describe('Role controller', () => {
       request
         .put('/api/roles/4')
         .set({ 'x-access-token': regularToken })
-        .send(randomRole2)
+        .send(secondRole)
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.message).to.equal('unauthorized');
@@ -306,7 +306,7 @@ describe('Role controller', () => {
           done();
         });
     });
-    it('it should allow not allow admin to delete admin roles', (done) => {
+    it('should not allow admin to delete admin role', (done) => {
       request
         .delete('/api/roles/1')
         .set({ 'x-access-token': adminToken })
@@ -316,8 +316,8 @@ describe('Role controller', () => {
           done();
         });
     });
-    it(`it should allow not allow admin
-        to delete Regular user roles`, (done) => {
+    it(`should  not allow admin
+        to delete Regular user role`, (done) => {
       request
         .delete('/api/roles/2')
         .set({ 'x-access-token': adminToken })
@@ -328,7 +328,7 @@ describe('Role controller', () => {
           done();
         });
     });
-    it(`it shouldnot allow admin to delete non
+    it(`should not allow admin to delete non
        existent roles`, (done) => {
       request
         .delete('/api/roles/56666')
@@ -339,7 +339,7 @@ describe('Role controller', () => {
           done();
         });
     });
-    it(`it should allow admin to delete roles that exists 
+    it(`should allow admin to delete roles that exists 
        and are not admin or regular role`, (done) => {
       request
         .delete('/api/roles/3')
@@ -349,11 +349,11 @@ describe('Role controller', () => {
           done();
         });
     });
-    it('it should not allow regular users to delete roles', (done) => {
+    it('should not allow regular users to delete roles', (done) => {
       request
         .delete('/api/roles/4')
         .set({ 'x-access-token': regularToken })
-        .send(randomRole2)
+        .send(secondRole)
         .end((err, res) => {
           expect(res).to.have.status(401);
           expect(res.body.message).to.equal('unauthorized');

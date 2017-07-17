@@ -1,7 +1,7 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable no-unused-vars */
 require('babel-register')();
 const spy = require('sinon').spy;
-
-
 const jsdom = require('jsdom').jsdom;
 
 const exposedProperties = ['window', 'navigator', 'document', 'node'];
@@ -40,4 +40,4 @@ global.$ = spy(() => ({
   },
   on: spy(),
 }));
-documentRef = document;
+const documentRef = document;

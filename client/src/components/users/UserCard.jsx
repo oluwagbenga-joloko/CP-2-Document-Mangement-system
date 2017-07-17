@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+/**
+ * @desc UserCard component
+ * @returns {*} html
+ * @param {object} props
+ */
 const UserCard = ({
   firstName,
   lastName,

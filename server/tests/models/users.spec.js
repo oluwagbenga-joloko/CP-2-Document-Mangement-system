@@ -10,7 +10,7 @@ const user1 = fakeData.generateRandomUser(2),
   invalidEmailUser = fakeData.invalidEmailUser;
 let user1Id;
 
-describe('Role Model', () => {
+describe('Model tests', () => {
   before((done) => {
     db.sequelize.sync({ force: true }).then(() => {
       seeder.populateRoleTable().then(() => {
@@ -46,7 +46,7 @@ describe('Role Model', () => {
          done();
        });
     });
-    it('should fail if email exists', (done) => {
+    it('should fail if password is empty', (done) => {
       User.create(invalidPasswordUser)
        .catch((error) => {
          expect(error.errors[0].message).to.equal('password cannot be empty');

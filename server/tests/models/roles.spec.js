@@ -8,7 +8,7 @@ const updateRole = fakeData.generateRandomRole();
 const emptyRole = fakeData.emptyRole;
 let sampleRoleId;
 
-describe('Role Model', () => {
+describe('Model tests', () => {
   before((done) => {
     db.sequelize.sync({ force: true }).then(() => {
       done();
@@ -27,7 +27,7 @@ describe('Role Model', () => {
         done();
       });
     });
-    it('should fail if title is empty', (done) => {
+    it('should fail if role title is empty', (done) => {
       Role.create(emptyRole).then()
        .catch((error) => {
          expect(error.errors[0].message).to.equal('title cannot be empty');

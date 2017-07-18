@@ -10,7 +10,10 @@ import { createDocumentSuccess,
     searchDocumentsFailure,
 } from '../../src/actions/documentActions';
 
-let action, newState, payload;
+let action;
+let newState;
+let payload;
+
 describe('documentReducer', () => {
   it('it should return initial state', () => {
     newState = documentReducer(undefined, {});

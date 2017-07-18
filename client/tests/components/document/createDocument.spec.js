@@ -3,40 +3,24 @@ import chaiEnzyme from 'chai-enzyme';
 import React from 'react';
 import { spy } from 'sinon';
 import { shallow } from 'enzyme';
-// import { MemoryRouter } from 'react-router';
 import { CreateDocument }
 from '../../../src/components/documents/CreateDocument';
+import { document, user } from '../../testData';
 
 
 const props = {
-  user: {
-    firstName: 'bolaf',
-    lastName: 'yemi',
-    email: 'bola@gmail.com',
-    id: 20,
-  },
-  document: {
-    title: 'test',
-    content: 'test',
-    access: 'public',
-    userId: 20,
-  },
+  user,
+  document,
   getDocument: spy(() => new Promise((resolve) => { resolve(); })),
   createDocument: spy(() => new Promise((resolve) => { resolve(); })),
   updateDocument: spy(() => new Promise((resolve) => { resolve(); })),
   history: { push: spy() },
   match: { params: {} }
 };
-const document = {
-  title: 'testing',
-  content: 'test',
-  access: 'public',
-  userId: 20,
-};
 let wrapper = shallow(<CreateDocument {...props} />);
 
 chai.use(chaiEnzyme());
-describe('CreateDocument component', () => {
+describe('CreateDocument Component', () => {
   it('should render without crashing', () => {
     expect(wrapper).to.be.present();
   });
@@ -58,14 +42,14 @@ describe('CreateDocument component', () => {
     wrapper.find('form').simulate('submit', { preventDefault() {} });
     expect(props.createDocument.called).to.equal(true);
   });
-  it('should  call get document on mount when document id is present', () => {
+  it('should  call getdocument on mount when document id is present', () => {
     const newProps = { ...props, match: { params: { id: 2 } } };
     wrapper = shallow(<CreateDocument {...newProps} />);
     expect(props.getDocument.called).to.equal(true);
   });
   it('should show save button if documentownerid is equal to userid', () => {
     wrapper.setProps({ document: props.document });
-    wrapper.setProps({ document });
+    wrapper.setProps({ document: { ...document, title: 'testing' } });
     expect(wrapper.find('button[type="submit"]')).to.be.present();
   });
 

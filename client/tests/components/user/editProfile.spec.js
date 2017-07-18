@@ -5,32 +5,18 @@ import { spy } from 'sinon';
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
-// import { MemoryRouter } from 'react-router';
 import ConnectedEditprofile, { EditProfile }
 from '../../../src/components/users/EditProfile';
+import { user } from '../../testData';
 
-const mockStore = configureMockStore(),
-  store = mockStore({
-    userReducer: {
-      currentUser: {
-        firstName: 'test',
-        lastName: 'test',
-        email: 'public',
-        userId: 20,
-        id: 10,
-        roleId: 23,
-      },
-    }
-  });
+const mockStore = configureMockStore();
+const store = mockStore({
+  userReducer: {
+    currentUser: user
+  }
+});
 const props = {
-  user: {
-    firstName: 'test',
-    lastName: 'test',
-    email: 'public',
-    userId: 20,
-    id: 10,
-    roleId: 23,
-  },
+  user,
   getCurrentUser: spy(() => new Promise((resolve) => { resolve(); })),
   updateUser: spy(() => new Promise((resolve) => { resolve(); })),
 };

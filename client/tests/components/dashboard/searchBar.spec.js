@@ -28,7 +28,7 @@ describe('SearchBar component', () => {
     expect(input.props().value).to.equal('testing');
     expect(handleChange.called).to.equal(true);
   });
-  it('should call handleSubmit on submit', () => {
+  it('should call handleSubmit on form submit', () => {
     const button = wrapper.find('button[type="submit"]');
     wrapper.update();
     button.simulate('submit');

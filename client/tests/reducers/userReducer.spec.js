@@ -5,8 +5,9 @@ import { getCurrentUserSuccess,
   searchUserSuccess, searchUserFailure
 } from '../../src/actions/userActions';
 
-let action, newState, payload;
-
+let action;
+let newState;
+let payload;
 describe('userReducer', () => {
   it('it should return initial state', () => {
     newState = userReducer(undefined, {});

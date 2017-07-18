@@ -20,5 +20,4 @@ const TopNav = () => (
     </nav>
   </header>
     );
-
 export default TopNav;

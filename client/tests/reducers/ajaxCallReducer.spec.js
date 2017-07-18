@@ -4,7 +4,8 @@ import actionTypes from '../../src/actions/actionTypes';
 import { ajaxCallError,
      beginAjaxCall } from '../../src/actions/ajaxStatusActions';
 
-let action, newState;
+let action;
+let newState;
 
 describe('ajaxCallReducer', () => {
   it('it should return initial state', () => {

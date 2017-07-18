@@ -9,16 +9,16 @@ import ConnectedLogin, { Login }
 from '../../../src/components/authentication/Login';
 
 
-const mockStore = configureMockStore(),
-  store = mockStore({
-    authReducer: {
-      userId: undefined,
-      message: ''
-    },
-    ajaxCallReducer: {
-      loading: false
-    }
-  });
+const mockStore = configureMockStore();
+const store = mockStore({
+  authReducer: {
+    userId: undefined,
+    message: ''
+  },
+  ajaxCallReducer: {
+    loading: false
+  }
+});
 const props = {
   loading: false,
   userId: undefined,

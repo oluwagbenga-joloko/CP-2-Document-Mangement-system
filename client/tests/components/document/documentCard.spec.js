@@ -5,14 +5,10 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import DocumentCard
 from '../../../src/components/documents/DocumentCard';
+import { document } from '../../testData';
 
 const props = {
-  title: 'test',
-  content: 'test',
-  access: 'public',
-  userId: 20,
-  id: 10,
-  creator: 'nire ajayi',
+  ...document,
   ownerId: 20,
   deleteDocument: sinon.spy(() => new Promise(() => { Promise.resolve(); })),
 };

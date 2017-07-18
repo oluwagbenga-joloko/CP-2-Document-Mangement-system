@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { updateUser, getCurrentUser } from '../../actions/userActions';
 
-
 /**
  * @desc EditProfile Component
  * @class EditProfile

@@ -7,19 +7,18 @@ import fakeData from '../testUtils/fakeData';
 import db from '../../models';
 import seeder from '../testUtils/seeder';
 
-
 chai.use(chaiHttp);
-const request = chai.request(app),
-  privateDocument = fakeData.firstPrivateDocument,
-  publicDocument = fakeData.firstPublicDocument,
-  roleDocument = fakeData.firstRoleDocument,
-  adminUser = fakeData.validAdmin,
-  firstRegularUser = fakeData.firstRegularUser,
-  secondRegularUser = fakeData.secondRegularUser;
+const request = chai.request(app);
+const privateDocument = fakeData.firstPrivateDocument;
+const publicDocument = fakeData.firstPublicDocument;
+const roleDocument = fakeData.firstRoleDocument;
+const adminUser = fakeData.validAdmin;
+const firstRegularUser = fakeData.firstRegularUser;
+const secondRegularUser = fakeData.secondRegularUser;
 
-let adminToken,
-  firstUserToken,
-  secondUserToken;
+let adminToken;
+let firstUserToken;
+let secondUserToken;
 describe('Search: document and user controller', () => {
   before((done) => {
     seeder.init().then(() => {

@@ -3,15 +3,14 @@ import fakeData from '../testUtils/fakeData';
 import db, { Document } from '../../models';
 import seeder from '../testUtils/seeder';
 
-const sampleDocument = fakeData.firstPublicDocument,
-  updateDocument = fakeData.secondPublicDocument,
-  invalidAccessDocument = fakeData.invalidAccessDocument,
-  emptyTitleDocument = fakeData.emptyTitleDocument,
-  emptyContentDocument = fakeData.emptyContentDocument;
-
+const sampleDocument = fakeData.firstPublicDocument;
+const updateDocument = fakeData.secondPublicDocument;
+const invalidAccessDocument = fakeData.invalidAccessDocument;
+const emptyTitleDocument = fakeData.emptyTitleDocument;
+const emptyContentDocument = fakeData.emptyContentDocument;
 let sampleDocumentId;
 
-describe('Model tests', () => {
+describe('Models', () => {
   before((done) => {
     db.sequelize.sync({ force: true }).then(() => {
       seeder.populateRoleTable().then(() => {
@@ -26,7 +25,7 @@ describe('Model tests', () => {
       done();
     });
   });
-  describe('Document model', () => {
+  describe('Document', () => {
     it('should create a document', (done) => {
       Document.create(sampleDocument).then((document) => {
         sampleDocumentId = document.id;

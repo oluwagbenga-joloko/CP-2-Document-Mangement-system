@@ -6,8 +6,8 @@ import swal from 'sweetalert';
 import queryString from 'query-string';
 import ReactPaginate from 'react-paginate';
 import { getAllUsers, deleteUser, searchUser } from '../../actions/userActions';
-import SearchBar from '../dashboard/SearchBar.jsx';
-import UserCard from './UserCard.jsx';
+import SearchBar from '../dashboard/SearchBar';
+import UserCard from './UserCard';
 
 
 /**

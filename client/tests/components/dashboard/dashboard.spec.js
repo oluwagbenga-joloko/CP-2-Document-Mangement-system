@@ -12,7 +12,6 @@ const props = {
   logout: sinon.spy(() => new Promise(() => { Promise.resolve(); })),
   getCurrentUser: sinon.spy(() => new Promise(() => { Promise.resolve(); }))
 };
-
 let wrapper;
 let newProps;
 
@@ -27,7 +26,7 @@ describe('Dashboard component', () => {
     wrapper = shallow(<Dashboard {...newProps} />);
     expect(wrapper.find('TopNav')).not.to.be.present();
   });
-  it('should renders right right elements', () => {
+  it('should render right elements', () => {
     newProps = { ...props, user: { firstName: 'test', lastName: 'test' } };
     wrapper = shallow(<Dashboard {...newProps} />);
     expect(wrapper).to.be.present();

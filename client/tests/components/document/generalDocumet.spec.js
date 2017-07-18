@@ -6,39 +6,16 @@ import { shallow } from 'enzyme';
 
 import { GeneralDocuments }
 from '../../../src/components/documents/GeneralDocuments';
+import { documents, pagination, user, location } from '../../testData';
 
-const documents = [{
-  id: 90,
-  title: 'test',
-  content: 'test',
-  access: 'public',
-  userId: 20,
-  User: { firstName: 'bola', lastName: 'bola' }
-}];
 
 const props = {
-  user: { roleId: 1 },
+  user,
   userId: 20,
-  documents: [{
-    id: 5,
-    title: 'test',
-    content: 'test',
-    access: 'public',
-    userId: 20,
-    User: { firstName: 'bola', lastName: 'bola' }
-  },
-  ],
-  pagination: {
-    pageCount: 10,
-    page: 2,
-  },
-  location: {
-    search: '?access=public&query=test&page=4',
-    pathname: ''
-  },
+  documents,
+  pagination,
+  location,
   loading: false,
-  match: { params: { id: 12 }
-  },
   searchDocuments: sinon.spy(() => new Promise((resolve) => { resolve(); })),
   deleteDocument: sinon.spy(() => new Promise((resolve) => { resolve(); })),
   history: { replace: sinon.spy() }

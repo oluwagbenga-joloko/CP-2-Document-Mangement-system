@@ -3,7 +3,6 @@ import actionTypes from '../actions/actionTypes';
 const actionTypeEndsInSuccess = type =>
 (type.substring(type.length - 8) === '_SUCCESS');
 
-
 const ajaxCallReducer = (state = { loading: false }, action) => {
   switch (true) {
     case action.type === actionTypes.BEGIN_AJAX_CALL:

@@ -6,28 +6,26 @@ import fakeData from '../testUtils/fakeData';
 import db from '../../models';
 import seeder from '../testUtils/seeder';
 
-
 chai.use(chaiHttp);
-const request = chai.request(app),
-  adminUser = fakeData.validAdmin,
-  firstRegularUser = fakeData.firstRegularUser,
-  secondRegularUser = fakeData.secondRegularUser,
-  emtptyTitleDocument = fakeData.emtptyTitleDocument,
-  emptyContentDocument = fakeData.emptyContentDocument,
-  privateDocument = fakeData.generateRandomDocument('private'),
-  firstPublicDocument = fakeData.generateRandomDocument('public'),
-  secondPublicDocument = fakeData.generateRandomDocument('public'),
+const request = chai.request(app);
+const adminUser = fakeData.validAdmin;
+const firstRegularUser = fakeData.firstRegularUser;
+const secondRegularUser = fakeData.secondRegularUser;
+const emtptyTitleDocument = fakeData.emtptyTitleDocument;
+const emptyContentDocument = fakeData.emptyContentDocument;
+const privateDocument = fakeData.generateRandomDocument('private');
+const firstPublicDocument = fakeData.generateRandomDocument('public');
+const secondPublicDocument = fakeData.generateRandomDocument('public');
+const roleDocument = fakeData.generateRandomDocument('role');
+const updateDocument = fakeData.generateRandomDocument('role');
+const invalidAccessDocument = fakeData.generateRandomDocument('radnom');
 
-  roleDocument = fakeData.generateRandomDocument('role'),
-  updateDocument = fakeData.generateRandomDocument('role'),
-  invalidAccessDocument = fakeData.generateRandomDocument('radnom');
-
-let adminToken,
-  firstUserToken,
-  secondUserToken,
-  privateDocumentId,
-  roleDocumentId,
-  publicDocumentId;
+let adminToken;
+let firstUserToken;
+let secondUserToken;
+let privateDocumentId;
+let roleDocumentId;
+let publicDocumentId;
 
 describe('Document controller', () => {
   before((done) => {
@@ -261,7 +259,7 @@ describe('Document controller', () => {
           done();
         });
     });
-    it('it should not allow users update documents that dont exist', (done) => {
+    it('should not allow users update documents that don`t exist', (done) => {
       request
         .put('/api/documents/44444')
         .set({ 'x-access-token': firstUserToken })
@@ -272,7 +270,7 @@ describe('Document controller', () => {
           done();
         });
     });
-    it('it should allow users update documents created by them', (done) => {
+    it('should allow users update documents they created', (done) => {
       request
         .put(`/api/documents/${privateDocumentId}`)
         .set({ 'x-access-token': firstUserToken })
@@ -285,7 +283,7 @@ describe('Document controller', () => {
     });
   });
   describe('DELETE /api/documents/:id', () => {
-    it(`it should allow not allow users delete
+    it(`should allow not allow users delete
       documents they did not create`, (done) => {
       request
         .delete(`/api/documents/${publicDocumentId}`)

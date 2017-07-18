@@ -62,7 +62,9 @@ export default {
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         use: 'url?limit=10000&mimetype=image/svg+xml'
       }
-
     ]
-  }
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
 };

@@ -5,7 +5,9 @@ import { loginSuccess, loginFaliure,
    signUpFaliure, signUpSuccess, logout } from '../../src/actions/authActions';
 
 
-let action, newState, payload;
+let action;
+let newState;
+let payload;
 
 describe('authReducer', () => {
   it('it should return initial state', () => {

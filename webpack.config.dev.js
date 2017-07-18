@@ -63,5 +63,8 @@ export default {
         use: 'url?limit=10000&mimetype=image/svg+xml'
       }
     ]
-  }
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
 };

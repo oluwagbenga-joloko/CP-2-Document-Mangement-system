@@ -8,8 +8,8 @@ import {
   deleteDocument,
   searchDocuments
 } from '../../actions/documentActions';
-import DocumentCard from './DocumentCard.jsx';
-import SearchBar from '../dashboard/SearchBar.jsx';
+import DocumentCard from './DocumentCard';
+import SearchBar from '../dashboard/SearchBar';
 /**
  * @desc GeneralDocument component
  * @class GeneralDocument

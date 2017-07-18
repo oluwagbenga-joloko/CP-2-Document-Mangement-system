@@ -5,10 +5,11 @@ import { MemoryRouter } from 'react-router';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 import SideNav from '../../../src/components/dashboard/SideNav';
+import { user } from '../../testData';
 
 const props = {
   url: 'dashboard',
-  user: { firstName: 'bola', lastName: 'yemi', roleId: 1 },
+  user,
   logout: sinon.spy(() => new Promise(() => { Promise.resolve(); }))
 };
 const wrapper = mount(<MemoryRouter><SideNav {...props} /></MemoryRouter>);

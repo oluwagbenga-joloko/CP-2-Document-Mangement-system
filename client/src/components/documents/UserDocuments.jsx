@@ -8,8 +8,8 @@ import {
   getUserDocuments,
   deleteDocument
 } from '../../actions/documentActions';
-import SearchBar from '../dashboard/SearchBar.jsx';
-import DocumentCard from './DocumentCard.jsx';
+import SearchBar from '../dashboard/SearchBar';
+import DocumentCard from './DocumentCard';
 
 /**
  * @desc Userdocuments component

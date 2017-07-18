@@ -5,40 +5,12 @@ import moxios from 'moxios';
 import actionTypes from '../../src/actions/actionTypes';
 import { getCurrentUser, searchUser, deleteUser, updateUser
     } from '../../src/actions/userActions';
+import { users, search, user } from '../testData';
 
-let expectedActions, store;
-const middlewares = [thunk],
-  mockStore = configureMockStore(middlewares);
-const users = [
-  {
-    firstName: 'bola',
-    lastName: 'olawale',
-    email: 'bolaolawale@gmail.com',
-    roleId: 2,
-    id: 2
-  },
-  {
-    firstName: 'bola',
-    lastName: 'olawale',
-    email: 'bolaolawale@gmail.com',
-    roleId: 2,
-    id: 2
-  }
-];
-
-const user = {
-  firstName: 'bola',
-  lastName: 'olawale',
-  email: 'bolaolawale@gmail.com',
-  roleId: 2,
-  id: 2
-};
-const search = {
-  query: '',
-  limit: 2,
-  offset: 2,
-}
-;
+let expectedActions;
+let store;
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 
 describe('async UserActions ', () => {
   afterEach(() => {
@@ -66,7 +38,7 @@ describe('async UserActions ', () => {
   });
   it(` does not creates 
     ${actionTypes.GET_CURRENT_USER_SUCCESS}
-     when get getCurrentUser action user succeeds`, () => {
+     when get getCurrentUser action user fails `, () => {
     moxios.stubRequest('api/users/2', {
       status: 402,
       response: { user }
@@ -84,7 +56,7 @@ describe('async UserActions ', () => {
   it(`creates 
     ${actionTypes.SEARCH_USER_SUCCESS} and 
     ${actionTypes.BEGIN_AJAX_CALL}
-     when get searchUser action user succeeds`, () => {
+     when searchUser action user succeeds`, () => {
     const { query, offset, limit } = search;
     const queryString = `q=${query}&offset=${offset}&limit=${limit}`;
     moxios.stubRequest(`api/search/users/?${queryString}`, {

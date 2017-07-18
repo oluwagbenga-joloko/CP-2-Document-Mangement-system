@@ -3,46 +3,14 @@ import chaiEnzyme from 'chai-enzyme';
 import React from 'react';
 import sinon from 'sinon';
 import { shallow } from 'enzyme';
-
 import { AllUsers }
 from '../../../src/components/users/AllUsers';
-
-const users = [{
-  firstName: 'bola',
-  lastName: 'shola',
-  email: 'bola@gmail.com',
-  id: 22,
-  Role: { title: 'regular user' },
-  roleId: 2,
-}];
+import { users, pagination, location } from '../../testData';
 
 const props = {
-  users: [
-    {
-      firstName: 'bola',
-      lastName: 'shola',
-      email: 'bola@gmail.com',
-      id: 20,
-      Role: { title: 'regular user' },
-      roleId: 2,
-    },
-    {
-      firstName: 'admin',
-      lastName: 'admin',
-      email: 'admin@gmail.com',
-      id: 1,
-      Role: { title: 'Admin' },
-      roleId: 1,
-    }
-  ],
-  pagination: {
-    pageCount: 10,
-    page: 2,
-  },
-  location: {
-    search: '?query=test&page=4',
-    pathname: ''
-  },
+  users,
+  pagination,
+  location,
   loading: false,
   searchUser: sinon.spy(() => new Promise((resolve) => { resolve(); })),
   deleteUser: sinon.spy(() => new Promise((resolve) => { resolve(); })),

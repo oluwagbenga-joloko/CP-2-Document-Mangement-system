@@ -3,14 +3,13 @@ import fakeData from '../testUtils/fakeData';
 import db, { User } from '../../models';
 import seeder from '../testUtils/seeder';
 
-
-const user1 = fakeData.generateRandomUser(2),
-  user2 = fakeData.generateRandomUser(2),
-  invalidPasswordUser = fakeData.invalidPasswordUser,
-  invalidEmailUser = fakeData.invalidEmailUser;
+const user1 = fakeData.generateRandomUser(2);
+const user2 = fakeData.generateRandomUser(2);
+const invalidPasswordUser = fakeData.invalidPasswordUser;
+const invalidEmailUser = fakeData.invalidEmailUser;
 let user1Id;
 
-describe('Model tests', () => {
+describe('Models', () => {
   before((done) => {
     db.sequelize.sync({ force: true }).then(() => {
       seeder.populateRoleTable().then(() => {
@@ -23,7 +22,7 @@ describe('Model tests', () => {
       done();
     });
   });
-  describe('User model', () => {
+  describe('User', () => {
     it('should create a user', (done) => {
       User.create(user1).then((user) => {
         user1Id = user.id;

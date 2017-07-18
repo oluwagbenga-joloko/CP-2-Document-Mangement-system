@@ -283,8 +283,8 @@ describe('Document controller', () => {
     });
   });
   describe('DELETE /api/documents/:id', () => {
-    it(`should allow not allow users delete
-      documents they did not create`, (done) => {
+    it(`should not allow users delete a
+      document they did not create`, (done) => {
       request
         .delete(`/api/documents/${publicDocumentId}`)
         .set({ 'x-access-token': firstUserToken })

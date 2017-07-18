@@ -213,7 +213,7 @@ describe('async documentActions ', () => {
   it(`creates
     ${actionTypes.BEGIN_AJAX_CALL} and
      ${actionTypes.DELETE_DOCUMENT_SUCCESS} 
-     when deleteDocument succeeds`, () => {
+     when deleteDocument action succeeds`, () => {
     moxios.stubRequest('api/documents/2', {
       status: 200,
       response: { message: 'document deleted' }

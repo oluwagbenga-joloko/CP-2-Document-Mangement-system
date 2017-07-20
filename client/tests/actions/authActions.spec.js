@@ -7,10 +7,10 @@ import actionTypes from '../../src/actions/actionTypes';
 import { login, signUp } from '../../src/actions/authActions';
 
 const token = jwt.sign({ id: 15 }, 'secret', { expiresIn: 60 * 60 });
-
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-let expectedActions, store;
+let expectedActions;
+let store;
 
 describe('async authActions ', () => {
   afterEach(() => {
@@ -22,7 +22,7 @@ describe('async authActions ', () => {
 
 
   it(`creates ${actionTypes.BEGIN_AJAX_CALL} and 
-    ${actionTypes.LOGIN_SUCCESS} when login has been completed`, () => {
+    ${actionTypes.LOGIN_SUCCESS} when login succeeds`, () => {
     moxios.stubRequest('/api/users/login', {
       status: 200,
       response: { message: 'login successfull', token }
@@ -39,7 +39,7 @@ describe('async authActions ', () => {
   });
   it(`creates ${actionTypes.BEGIN_AJAX_CALL} ,
      ${actionTypes.AJAX_CALL_ERROR} and
-     ${actionTypes.LOGIN_FALUIRE} when login has been completed`, () => {
+     ${actionTypes.LOGIN_FALUIRE} when login fails`, () => {
     moxios.stubRequest('/api/users/login', {
       status: 400,
       response: { message: 'invalid password' }
@@ -61,7 +61,7 @@ describe('async authActions ', () => {
     });
   });
   it(`creates ${actionTypes.BEGIN_AJAX_CALL} and
-    ${actionTypes.SIGN_UP_SUCCESS} when signUp has been completed`, () => {
+    ${actionTypes.SIGN_UP_SUCCESS} when signUp succeeds`, () => {
     moxios.stubRequest('/api/users', {
       status: 201,
       response: { message: 'sign up successfull', token }
@@ -82,7 +82,7 @@ describe('async authActions ', () => {
   });
   it(`creates ${actionTypes.BEGIN_AJAX_CALL} ,
      ${actionTypes.AJAX_CALL_ERROR} and
-     ${actionTypes.SIGN_UP_FALUIRE} when signUp has been completed`, () => {
+     ${actionTypes.SIGN_UP_FALUIRE} when signUp fails`, () => {
     moxios.stubRequest('/api/users', {
       status: 404,
       response: { message: 'email exists' }

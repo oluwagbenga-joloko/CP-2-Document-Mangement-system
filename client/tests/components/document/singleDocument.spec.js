@@ -6,29 +6,12 @@ import { mount } from 'enzyme';
 import { MemoryRouter } from 'react-router';
 import { SingleDocument }
 from '../../../src/components/documents/SingleDocument';
+import { document, user, match } from '../../testData';
 
-const document = {
-  title: 'test',
-  content: 'test',
-  access: 'public',
-  userId: 201,
-};
 const props = {
-  user: {
-    firstName: 'bolaf',
-    lastName: 'yemi',
-    email: 'bola@gmail.com',
-    id: 20,
-  },
-  document: {
-    title: 'test',
-    content: 'test',
-    access: 'public',
-    userId: 20,
-  },
-  match: { params: { id: 12 }
-
-  },
+  user,
+  document,
+  match,
   getDocument: spy(id => new Promise((resolve) => { resolve(id); })),
 };
 let wrapper = mount(

@@ -8,7 +8,7 @@ const updateRole = fakeData.generateRandomRole();
 const emptyRole = fakeData.emptyRole;
 let sampleRoleId;
 
-describe('Model tests', () => {
+describe('Models', () => {
   before((done) => {
     db.sequelize.sync({ force: true }).then(() => {
       done();
@@ -19,7 +19,7 @@ describe('Model tests', () => {
       done();
     });
   });
-  describe('Role Model', () => {
+  describe('Role', () => {
     it('should create a role', (done) => {
       Role.create(sampleRole).then((role) => {
         sampleRoleId = role.id;

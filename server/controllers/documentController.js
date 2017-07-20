@@ -17,8 +17,8 @@ const documentController = {
       }));
   },
   list(req, res) {
-    const offset = Number(req.query.offset),
-      limit = Number(req.query.limit);
+    const offset = Number(req.query.offset);
+    const limit = Number(req.query.limit);
     let accessQuery;
     if (req.decoded.roleId === 1) {
       accessQuery =
@@ -140,9 +140,9 @@ const documentController = {
    .catch(error => res.status(400).send({ error }));
   },
   search(req, res) {
-    const offset = Number(req.query.offset),
-      limit = Number(req.query.limit),
-      search = req.query.q || '';
+    const offset = Number(req.query.offset);
+    const limit = Number(req.query.limit);
+    const search = req.query.q || '';
     let accessQuery;
     if (req.query.access === 'public') {
       accessQuery = { access: 'public', };

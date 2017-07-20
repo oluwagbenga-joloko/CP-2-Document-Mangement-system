@@ -7,15 +7,16 @@ import db from '../../models';
 import seeder from '../testUtils/seeder';
 
 chai.use(chaiHttp);
-const request = chai.request(app),
-  adminUser = fakeData.validAdmin,
-  regularUser = fakeData.firstRegularUser,
-  firstRole = fakeData.generateRandomRole(),
-  secondRole = fakeData.generateRandomRole(),
-  invalidRole = fakeData.invalidRole,
-  emptyRole = fakeData.emptyRole,
-  updateRole = fakeData.generateRandomRole();
-let adminToken, regularToken;
+const request = chai.request(app);
+const adminUser = fakeData.validAdmin;
+const regularUser = fakeData.firstRegularUser;
+const firstRole = fakeData.generateRandomRole();
+const secondRole = fakeData.generateRandomRole();
+const invalidRole = fakeData.invalidRole;
+const emptyRole = fakeData.emptyRole;
+const updateRole = fakeData.generateRandomRole();
+let adminToken;
+let regularToken;
 
 describe('Role controller', () => {
   before((done) => {

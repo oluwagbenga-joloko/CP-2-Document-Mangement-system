@@ -3,16 +3,12 @@ import chaiEnzyme from 'chai-enzyme';
 import React from 'react';
 import { spy } from 'sinon';
 import { mount } from 'enzyme';
-// import { MemoryRouter } from 'react-router';
 import UserCard
 from '../../../src/components/users/UserCard';
+import { user } from '../../testData';
 
 const props = {
-  firstName: 'test',
-  lastName: 'test',
-  email: 'public',
-  userId: 20,
-  id: 10,
+  ...user,
   userRoleId: 23,
   roleTitle: 'admin',
   deleteUser: spy(() => new Promise(() => { Promise.resolve(); })),

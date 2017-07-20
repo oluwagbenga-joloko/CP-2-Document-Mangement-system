@@ -7,38 +7,12 @@ import { createDocument,
       getDocument, getUserDocuments, updateDocument,
       searchDocuments, deleteDocument
     } from '../../src/actions/documentActions';
+import { documents, pagination, document, search } from '../testData';
 
-let expectedActions, store;
-const middlewares = [thunk],
-  mockStore = configureMockStore(middlewares),
-  document = {
-    id: 2,
-    title: 'pigs is pigs',
-    content: 'pigs are great',
-    access: 'public'
-  },
-  documents = [{
-    title: 'test',
-    content: 'test',
-    access: 'public',
-    userId: 20,
-    User: { firstName: 'bola', lastName: 'bola' }
-  },
-  {
-    title: 'test',
-    content: 'test',
-    access: 'public',
-    userId: 20,
-    User: { firstName: 'bola', lastName: 'bola' }
-  }],
-  pagination = { pageCount: 3, currentPage: 10 },
-  search = {
-    query: '',
-    access: '',
-    limit: 1,
-    offset: 1,
-
-  };
+let expectedActions;
+let store;
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 
 describe('async documentActions ', () => {
   afterEach(() => {
@@ -239,7 +213,7 @@ describe('async documentActions ', () => {
   it(`creates
     ${actionTypes.BEGIN_AJAX_CALL} and
      ${actionTypes.DELETE_DOCUMENT_SUCCESS} 
-     when deleteDocument succeeds`, () => {
+     when deleteDocument action succeeds`, () => {
     moxios.stubRequest('api/documents/2', {
       status: 200,
       response: { message: 'document deleted' }

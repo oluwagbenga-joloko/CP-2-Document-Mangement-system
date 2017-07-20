@@ -2,10 +2,10 @@ import log from 'npmlog';
 import fakeData from './fakeData';
 import db from '../../models';
 
-const validAdmin = fakeData.validAdmin,
-  firstRegularUser = fakeData.firstRegularUser,
-  secondRegularUser = fakeData.secondRegularUser,
-  thirdRegularUser = fakeData.thirdRegularUser;
+const validAdmin = fakeData.validAdmin;
+const firstRegularUser = fakeData.firstRegularUser;
+const secondRegularUser = fakeData.secondRegularUser;
+const thirdRegularUser = fakeData.thirdRegularUser;
 /**
  * @class seeder
  */

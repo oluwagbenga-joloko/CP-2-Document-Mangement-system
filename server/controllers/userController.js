@@ -214,8 +214,8 @@ const userController = {
       message: 'email and password required' });
   },
   search(req, res) {
-    const limit = Number(req.query.limit) || null,
-      offset = Number(req.query.offset) || null;
+    const limit = Number(req.query.limit) || null;
+    const offset = Number(req.query.offset) || null;
     return User
     .findAndCountAll({
       limit,

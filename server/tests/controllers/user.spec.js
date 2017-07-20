@@ -7,17 +7,17 @@ import db from '../../models';
 import seeder from '../testUtils/seeder';
 
 chai.use(chaiHttp);
-
-const request = chai.request(app),
-  adminUser = fakeData.validAdmin,
-  validUser = fakeData.generateRandomUser(),
-  noPasswordUser = fakeData.noPasswordUser,
-  invalidEmailUser = fakeData.invalidEmailUser,
-  invalidPasswordUser = fakeData.invalidPasswordUser,
-  firstRegularUser = fakeData.firstRegularUser,
-  secondRegularUser = fakeData.thirdRegularUser,
-  thirdRegularUser = fakeData.fourthRegularUser;
-let adminToken, regularToken;
+const request = chai.request(app);
+const adminUser = fakeData.validAdmin;
+const validUser = fakeData.generateRandomUser();
+const noPasswordUser = fakeData.noPasswordUser;
+const invalidEmailUser = fakeData.invalidEmailUser;
+const invalidPasswordUser = fakeData.invalidPasswordUser;
+const firstRegularUser = fakeData.firstRegularUser;
+const secondRegularUser = fakeData.thirdRegularUser;
+const thirdRegularUser = fakeData.fourthRegularUser;
+let adminToken;
+let regularToken;
 
 describe('User controller', () => {
   before((done) => {
